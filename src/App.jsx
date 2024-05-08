@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "./Components/Layout";
+import Layout_Grid from './Components/Layout_Grid'
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 const App = () => {
@@ -9,7 +9,7 @@ const App = () => {
       <Router>
         <Routes>
 
-          <Route path="/"  Component= {Layout} />
+          <Route path="/"  Component= {Layout_Grid} />
          
 
         </Routes>
