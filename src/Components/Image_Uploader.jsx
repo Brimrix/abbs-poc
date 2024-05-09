@@ -1,11 +1,36 @@
 import React, { useState } from 'react';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { Flex, message, Upload } from 'antd';
+
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
   reader.readAsDataURL(img);
 };
+
+
+function getImageInfoFromBase64(base64Data) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.src = base64Data;
+
+    image.onload = function() {
+      console.log('Width:', this.width);
+      console.log('Height:', this.height);
+    };
+
+    image.onerror = function() {
+      reject(new Error('Failed to load image from base64 string.'));
+    };
+  });
+}
+
+
+
+
+
+
+
 const beforeUpload = (file) => {
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
   if (!isJpgOrPng) {
@@ -20,25 +45,28 @@ const beforeUpload = (file) => {
 const Image_Upload = () => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
+
+
   const handleChange = (info) => {
 
     
-    
-    if (info.file.status === 'uploading') {
+    if (info.file.status) {
+
       setLoading(true);
-      // A CONSOLE HERE
-      console.log(info.file.name);
-      return;
-    }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, (url) => {
+      // THIS CODE IS INTENTED FOR TESTING PURPOSE ONLY IT MUST BE REMOVED THOROUGHLY 
+         getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
-        // A CONSOLE HERE
-        console.log(imageUrl);
+        // The Image URL is now base64
+        getImageInfoFromBase64(imageUrl);
+
+
       });
+      return;
+
+
     }
+
   };
   const uploadButton = (
     <button
@@ -65,8 +93,9 @@ const Image_Upload = () => {
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
         beforeUpload={beforeUpload}
+        // beforeUpload={() => false}
         onChange={handleChange}
       >
         {imageUrl ? (

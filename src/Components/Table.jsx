@@ -59,7 +59,7 @@ const TableComponent = () => {
           upload: <Image_Upload />, 
           height: 0,
           widht: 0,
-          price: <InputNumber />,
+          price: <InputNumber min={0} max={1000} precision={2}  />,
           quantity: <InputNumber />,
           amount: 0,
 
@@ -67,7 +67,7 @@ const TableComponent = () => {
    
       const handleAdd = () => {
         setCounter(counter+1);
-        setDataSource(prev => [...prev, {key: counter+1, image_name: '', upload: <Image_Upload />, height: '-', widht: '-', price: <InputNumber />, quantity: <InputNumber />, amount: 0}]);
+        setDataSource(prev => [...prev, {key: counter+1, image_name: '', upload: <Image_Upload />, height: '-', widht: '-', price: <InputNumber min={0} max={1000} precision={2} />, quantity: <InputNumber />, amount: 0}]);
       }
       
       return (
