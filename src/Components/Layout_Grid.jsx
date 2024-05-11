@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Menu.css'
+import './Layout.css'
 import {
   AppstoreOutlined,
   BarChartOutlined,
@@ -8,58 +8,33 @@ import {
   TeamOutlined,
   UploadOutlined,
   UserOutlined,
-  SettingOutlined,
+  // SettingOutlined,
   CalendarOutlined,
   DownloadOutlined,
   PrinterOutlined,
   FileOutlined,
-  BarsOutlined,
+  // BarsOutlined,
   MessageOutlined,
   QuestionCircleOutlined,
 
 } from '@ant-design/icons';
-
-import { Layout, Menu, theme, Input, ConfigProvider, DatePicker  } from 'antd';
 import TableComponent from './Table';
+import { Layout, Menu, theme, Input, DatePicker  } from 'antd';
+import Sider_main from './Sider_main';
+
 
 const { Header, Content, Footer, Sider } = Layout;
 const {Search} = Input;
+
+
 const primary_color = "#0B6E4F";
 const secondary_color = "#FA9F42";
 
 
-const items = [ 
-  {
-  key: 1, 
-  icon: <UserOutlined />,
-  label: 'Dashboard',
-}, 
-{
-  key: 2,
-  icon: <BarChartOutlined />,
-  label: "Create New Bill"
-},
-
-{
-  key: 3,
-  icon: <UploadOutlined />,
-  label: "Upload Images"
-},
-{
-  key: 4,
-  icon: <SettingOutlined />,
-  label: "Settings"
-}
-
-];
 
 
 const Layout_Grid = () => {
-  const [collapse, setCollapse] = useState(false);
-  const handleClick = () => {
-    setCollapse(!collapse);
-  }
-
+  
 
   const iconStyle = {float: "right", color: "white", fontSize: "30px", cursor: "pointer"};
   const Secondary_Nav_Icon_style={color: "white", fontSize: "30px", backgroundColor: secondary_color, padding: "6px", borderRadius: "20%", cursor:"pointer", height: "30px", width: "30px"}
@@ -67,37 +42,9 @@ const Layout_Grid = () => {
   return (
     <Layout>
 
-
+    <Sider_main />
      
-     {/* Sider */}
-
-     <Sider
-        collapsed={collapse}
-        collapsible
-        width={"320px"}
-        trigger = {null}
-        style={{
-          overflow: 'auto',
-          height: '100vh',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          backgroundColor: primary_color,
-        }}
-      >
-           
-           <BarsOutlined onClick={handleClick} style={{float: 'right', color: "white", fontSize: "28px", padding: "25px"}} />
-       
-
-       
-  
-        <Menu theme='dark'  mode="inline" style={{backgroundColor: primary_color}} defaultSelectedKeys={['5']} items={items} />
-
-        
-      </Sider>
-
-    {/* Sider End */}
-
+   
       <Layout>
 
       
@@ -130,6 +77,8 @@ const Layout_Grid = () => {
         </div>
        
         </Header>
+
+        {/* The Second Header directly below the Main Header */}
 
         <Header className='bg-white d-flex align-items-center justify-content-between'>
       

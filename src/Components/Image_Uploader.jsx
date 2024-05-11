@@ -8,21 +8,30 @@ const getBase64 = (img, callback) => {
   reader.readAsDataURL(img);
 };
 
+// I have now rowIndex and Name of the image file coming
 
-function getImageInfoFromBase64(base64Data) {
-  return new Promise((resolve, reject) => {
+function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex) {
+  // return new Promise((resolve, reject) => {
     const image = new Image();
     image.src = base64Data;
 
     image.onload = function() {
-      console.log('Width:', this.width);
-      console.log('Height:', this.height);
+
+      const Image_width = this.width;
+      const Image_height = this.height;
+      const image_name = imageInfo.name;
+   
+
+      setDimensions({Image_width, Image_height, image_name, rowIndex});
+    
+      
+
     };
 
-    image.onerror = function() {
-      reject(new Error('Failed to load image from base64 string.'));
-    };
-  });
+  //   image.onerror = function() {
+  //     reject(new Error('Failed to load image from base64 string.'));
+  //   };
+  // });
 }
 
 
@@ -42,7 +51,10 @@ const beforeUpload = (file) => {
   }
   return isJpgOrPng && isLt2M;
 };
-const Image_Upload = () => {
+
+// Get the props from the table component to set the row dimensions provided by the user
+
+const Image_Upload = ({setDimensions, rowIndex}) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
 
@@ -53,14 +65,13 @@ const Image_Upload = () => {
     if (info.file.status) {
 
       setLoading(true);
-      // THIS CODE IS INTENTED FOR TESTING PURPOSE ONLY IT MUST BE REMOVED THOROUGHLY 
-         getBase64(info.file.originFileObj, (url) => {
+
+        getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
-        // The Image URL is now base64
-        getImageInfoFromBase64(imageUrl);
-
-
+        
+        getImageInfoFromBase64(imageUrl, setDimensions, info.file.originFileObj, rowIndex);
+      
       });
       return;
 
@@ -93,7 +104,7 @@ const Image_Upload = () => {
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
         beforeUpload={beforeUpload}
         // beforeUpload={() => false}
         onChange={handleChange}
@@ -103,7 +114,9 @@ const Image_Upload = () => {
             src={imageUrl}
             alt="avatar"
             style={{
-              width: '100%',
+              width: '100px',
+              height: '100px',
+              borderRadius: "50%"
             }}
           />
         ) : (
