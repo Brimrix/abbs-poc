@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { Flex, message, Upload } from 'antd';
-
+import { Flex, message, Upload, Typography } from 'antd';
+import './ImageUploaderStyle.css'
+import {
+   FileAddOutlined 
+} from '@ant-design/icons';
+const {Paragraph} = Typography;
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
@@ -11,7 +15,6 @@ const getBase64 = (img, callback) => {
 // I have now rowIndex and Name of the image file coming
 
 function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex) {
-  // return new Promise((resolve, reject) => {
     const image = new Image();
     image.src = base64Data;
 
@@ -27,16 +30,7 @@ function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex) 
       
 
     };
-
-  //   image.onerror = function() {
-  //     reject(new Error('Failed to load image from base64 string.'));
-  //   };
-  // });
-}
-
-
-
-
+  }
 
 
 
@@ -52,7 +46,9 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 
-// Get the props from the table component to set the row dimensions provided by the user
+// Get the props from the table component to set the row dimensions for the table  provided by the user
+// SetDimensions is a function which will update the state of dimensions object so that the row entry is updated after 
+// obtaining the height and width of the image.
 
 const Image_Upload = ({setDimensions, rowIndex}) => {
   const [loading, setLoading] = useState(false);
@@ -98,33 +94,28 @@ const Image_Upload = ({setDimensions, rowIndex}) => {
     </button>
   );
   return (
-    <Flex gap="middle" wrap>
       <Upload
+        
         name="avatar"
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
         action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
         beforeUpload={beforeUpload}
-        // beforeUpload={() => false}
         onChange={handleChange}
       >
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt="avatar"
-            style={{
-              width: '100px',
-              height: '100px',
-              borderRadius: "50%"
-            }}
-          />
-        ) : (
-          uploadButton
-        )}
+      
+        <div style={{color: '#0B6E4F'}} className='d-flex align-items-center justify-content-between'>
+         
+
+      <FileAddOutlined  />
+      <Typography.Text>Select File</Typography.Text> 
+
+
+        </div>
+      
       </Upload>
     
-    </Flex>
   );
 };
 export default Image_Upload;

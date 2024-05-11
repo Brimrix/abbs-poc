@@ -8,24 +8,23 @@ import {
   TeamOutlined,
   UploadOutlined,
   UserOutlined,
-  // SettingOutlined,
+  QuestionCircleFilled,
   CalendarOutlined,
   DownloadOutlined,
   PrinterOutlined,
   FileOutlined,
-  // BarsOutlined,
   MessageOutlined,
-  QuestionCircleOutlined,
-
+  BellFilled
 } from '@ant-design/icons';
 import TableComponent from './Table';
-import { Layout, Menu, theme, Input, DatePicker  } from 'antd';
+import { Layout, Menu, theme, Input, DatePicker, Typography, Button, InputNumber, Space, Badge  } from 'antd';
+import CardResult from './Card';
 import Sider_main from './Sider_main';
 
 
 const { Header, Content, Footer, Sider } = Layout;
 const {Search} = Input;
-
+const {Paragraph} = Typography;
 
 const primary_color = "#0B6E4F";
 const secondary_color = "#FA9F42";
@@ -58,15 +57,24 @@ const Layout_Grid = () => {
         <Search
           placeholder="Search"
           allowClear
-          style={{width: 300, margin: "10px"}}
+          style={{width: 300, margin: "10px", marginLeft: "320px"}}
          />
 
+
+       
         
 
-        <div style={{color: "black", display: "flex", gap:"10px", marginTop: "5px"}}>
-        
+        <div style={{color: "black", display: "flex", gap:"10px", marginTop: "10px"}}>
+        <Space>
+        <QuestionCircleFilled style={{fontSize: "24px"}} />
+        <Badge dot>
 
-        <img style={{borderRadius: "50%", width: "40px", height: "40px"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5LlhUvmgaHqmmXuH06eS-yFEr6ht7kMxDqA&s" alt="" />
+        <BellFilled style={{fontSize: "24px", cursor:"pointer"}} />
+        </Badge>
+    
+        </Space>
+
+        <img style={{borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5LlhUvmgaHqmmXuH06eS-yFEr6ht7kMxDqA&s" alt="" />
           
           <div className='d-flex flex-column'>
           <h5>John Doe</h5>
@@ -117,6 +125,9 @@ const Layout_Grid = () => {
           style={{
             margin: '24px 16px 0',
             overflow: 'initial',
+            paddingLeft: "30px",
+            paddingRight: "30px"
+
            
           }}
         >
@@ -126,7 +137,19 @@ const Layout_Grid = () => {
         <TableComponent />
       
           </div>
-            
+
+          <div style={{float: "right"}}>
+
+            {/* The Card Component */}
+        
+          <CardResult />
+
+          </div>
+       
+
+
+        
+        
         </Content>
      
       </Layout>

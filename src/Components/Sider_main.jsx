@@ -72,7 +72,6 @@ const Sider_main = () => {
         
       </Sider>
 
-    {/* Sider End */}
     </>
   )
 }
