@@ -28,11 +28,11 @@ const CardResult = () => {
 
    <div className="row gx-5 mt-2">
    <div className="col">
-   <Typography.Text strong={true}>{totalArea}</Typography.Text> 
+   <Typography.Text strong={true}>Total Area</Typography.Text> 
                 
    </div>
    <div className="col">
-   <Typography.Text strong={true}>432,00</Typography.Text> 
+   <Typography.Text strong={true}>{totalArea}</Typography.Text> 
    
          
    </div>
