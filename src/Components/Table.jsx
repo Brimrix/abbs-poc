@@ -2,6 +2,8 @@ import React, {  useEffect, useState } from 'react';
 import { Button, Table, Upload, InputNumber, Typography, message } from 'antd';
 import Image_Upload from './Image_Uploader';
 import './TableStyle.css';
+import { useDispatch } from 'react-redux';
+import { addBillingInfo } from '../redux/Reducers/billSlice';
 
 
 const TableComponent = () => {
@@ -17,7 +19,7 @@ const TableComponent = () => {
     const [quantityIndex, setQuantityIndex] = useState(0);
     const [actualQuantity, setActualQuantity] = useState(0);
 
-    
+    const dispatch = useDispatch();
     const [dimensions, setDimensions] = useState({
       image_name: '',
       height: 0,
@@ -26,7 +28,24 @@ const TableComponent = () => {
     })
     
     
-  
+    const setBillingInfo = () => {
+
+      let totalAmount = 0;
+      let totalArea = 0;
+
+      dataSource.forEach(item => {
+        totalAmount += item.amount;
+      }) 
+      dataSource.forEach(item => {
+        totalArea += item.area;
+      })
+
+      dispatch(addBillingInfo({ totalArea, totalAmount }));
+      console.log("Successfully Dispatched");
+
+    };
+
+
     const columns = [
       {
         title: 'Sr#',
@@ -127,10 +146,10 @@ const TableComponent = () => {
 
           price: <InputNumber min={0} 
           onBlur={() => handleBlurChange(counter)} 
-          onChange={handleInputPriceChange} variant='borderless' max={1000} precision={2}  />,
+          onChange={handleInputPriceChange} variant='filled' max={1000} precision={2}  />,
 
 
-          quantity: <InputNumber min={0} max={1000} 
+          quantity: <InputNumber min={0} max={1000} variant='filled'
           onBlur={() => handleQuantityBlurChange(counter)} onChange={handleInputQuantityChange}/>,
           amount: 0,
           
@@ -158,12 +177,12 @@ const TableComponent = () => {
             height: 0, widht:0, area: 0,
 
 
-             price: <InputNumber variant='borderless' 
-             onBlur={ () => {handleBlurChange(counter-1)} } 
-             onChange={handleInputPriceChange} min={0} max={1000} precision={2} />, 
+             price: <InputNumber variant='filled'
+             onBlur={ () => {handleBlurChange(counter-1)} }
+             onChange={handleInputPriceChange} min={0} max={1000} precision={2}  />, 
 
 
-             quantity: <InputNumber min={0} max={1000} 
+             quantity: <InputNumber min={0} max={1000} variant='filled'
              onBlur={() => handleQuantityBlurChange(counter)} 
              onChange={handleInputQuantityChange}/>,
 
@@ -273,7 +292,6 @@ const TableComponent = () => {
 
        useEffect(()=> {
          
-        console.log("I am triggered by the way", quantityIndex, actualQuantity);
         
         const Obj = { ...dataSource[quantityIndex - 1], amount: 0 };
         
@@ -309,7 +327,13 @@ const TableComponent = () => {
               
        
 
-       }, [quantityChange])
+       }, [quantityChange]);
+
+
+
+       useEffect(() => {
+        setBillingInfo();
+       }, [dataSource])
   
     
       

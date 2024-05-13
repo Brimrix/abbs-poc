@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import  ImageSlice  from './Reducers/ImageSlice';
+import  billSlice  from './Reducers/billSlice';
 import { useStore } from 'react-redux';
 
 
 const store = configureStore({
-  reducer: {ImageSlice},
+  reducer: {billSlice},
 })
 
 export default store;
