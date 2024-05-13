@@ -1,24 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Table, Upload, InputNumber, Typography } from 'antd';
+import React, {  useEffect, useState } from 'react';
+import { Button, Table, Upload, InputNumber, Typography, message } from 'antd';
 import Image_Upload from './Image_Uploader';
 import './TableStyle.css';
 
 
-  
-
 const TableComponent = () => {
 
+ 
     const [counter, setCounter] = useState(0);
     const [tableLoading, setTableLoading] = useState(false);
+    const [priceChange, setPriceChange] = useState(false);
+    const [priceIndex, setPriceIndex] = useState(0);
+    const [ActualPrice, setActualPrice] = useState(0);
+    const [messageApi, contextHolder] = message.useMessage();
     const [dimensions, setDimensions] = useState({
       image_name: '',
       height: 0,
       widht: 0,
       rowIndex: 0
     })
-
-
-
+    
+    
+  
     const columns = [
       {
         title: 'Sr#',
@@ -81,16 +84,41 @@ const TableComponent = () => {
           key: 'amount',
           align: 'center'
         },
+       
+      
     ];
 
 
+    const success = () => {
+      messageApi.open({
+        type: 'success',
+        content: 'Image Upload Successful',
+      });
+    };
+    const error = () => {
+      messageApi.open({
+        type: 'error',
+        content: 'This is an error message',
+      });
+    };
+    const warning = () => {
+      messageApi.open({
+        type: 'warning',
+        content: 'Please Upload Image before setting Price',
+      });
+    };
 
 
 
+    let handleBlurChange = (getPriceIndex) => {
+      setPriceIndex(getPriceIndex);
+      setPriceChange((prev) => !prev);
+    }
 
-
-
-   
+    let handleInputPriceChange = (value) => {
+        setActualPrice(value);
+    }
+    
     const [dataSource, setDataSource] = useState( [
       
      
@@ -101,7 +129,7 @@ const TableComponent = () => {
           height: 0,
           widht: 0,
           area: 0,
-          price: <InputNumber min={0} max={1000} precision={2}  />,
+          price: <InputNumber min={0} onBlur={() => handleBlurChange(counter)} onChange={handleInputPriceChange} variant='borderless' max={1000} precision={2}  />,
           quantity: <InputNumber />,
           amount: 0,
           
@@ -110,12 +138,23 @@ const TableComponent = () => {
       
       
       ])
+
+
    
       useEffect(()=> {
 
         setTableLoading(false);
                 
-        setDataSource(prev => [...prev, {key: counter, image_name: '', upload: <Image_Upload rowIndex={counter-1} setDimensions={setDimensions} />, height: 0, widht:0, area: 0, price: <InputNumber min={0} max={1000} precision={2} />, quantity: <InputNumber />, amount: 0}]);
+        setDataSource(prev => [...prev, 
+          {key: counter, 
+            image_name: '', 
+            upload: <Image_Upload 
+            rowIndex={counter-1} 
+            setDimensions={setDimensions} />, 
+            height: 0, widht:0, area: 0,
+             price: <InputNumber variant='borderless' onBlur={ () => {handleBlurChange(counter-1)} } onChange={handleInputPriceChange} min={0} max={1000} precision={2} />, 
+             quantity: <InputNumber />, 
+             amount: 0}]);
 
        
 
@@ -123,7 +162,6 @@ const TableComponent = () => {
       }, [counter]);
 
    
-
       const handleAdd = () => {
 
         setTableLoading((prev) => !prev);
@@ -150,16 +188,13 @@ const TableComponent = () => {
   
 
       useEffect(() => {
-        
-        if(counter!==0){
-          setTableLoading((prev) => !prev);
-        }
 
-        const modifiedArray = dataSource.map((item, index) => {
+          
+       
+           const modifiedArray = dataSource.map((item, index) => {
           
           
           if (index === dimensions.rowIndex) {
-            
             return {...item, height: dimensions.Image_height, widht: dimensions.Image_width, area: dimensions.Image_height*dimensions.Image_width, image_name: dimensions.image_name}
             
             
@@ -171,13 +206,47 @@ const TableComponent = () => {
           }
           
         });
+        
         setDataSource(modifiedArray);
-
-
-                      
         
       }, [dimensions]);
+
     
+       useEffect(()=> {
+         
+        const Obj = { ...dataSource[priceIndex - 1], amount: 0 };
+        if(priceIndex==0){
+
+          const updatedArray = [...dataSource ];
+          const amount = updatedArray[0].area * ActualPrice;
+          updatedArray[0] = {...updatedArray[0], amount};
+          setDataSource(updatedArray);
+
+        }
+        else{
+
+        
+          const modifiedArray = dataSource.map((item, index) => {
+            
+            if(index==Obj.key){
+              const amount = item.area * ActualPrice;
+              return {...item, amount};
+            }
+          
+            else
+            return item;
+  
+          })
+  
+          setDataSource(modifiedArray);
+
+        }
+              
+       
+
+
+       }, [priceChange])
+  
     
       
       return (
@@ -186,7 +255,10 @@ const TableComponent = () => {
        scroll={{ y: 220 }}
        pagination={false}
 
-        loading={tableLoading} key={counter}  dataSource={dataSource} size={'small'} columns={columns} />
+        loading={tableLoading} 
+        key={counter}  
+        dataSource={dataSource} size={'small'} 
+        columns={columns} />
 
         <Typography.Text strong={true} style={{cursor: "pointer", color: "#0B6E4F"}} onClick={handleAdd}>Add More Rows</Typography.Text>
      
