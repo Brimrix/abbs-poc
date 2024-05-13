@@ -11,8 +11,13 @@ const TableComponent = () => {
     const [tableLoading, setTableLoading] = useState(false);
     const [priceChange, setPriceChange] = useState(false);
     const [priceIndex, setPriceIndex] = useState(0);
-    const [ActualPrice, setActualPrice] = useState(0);
-    const [messageApi, contextHolder] = message.useMessage();
+    const [actualPrice, setActualPrice] = useState(0);
+      
+    const [quantityChange, setQuantityChange] = useState(false);
+    const [quantityIndex, setQuantityIndex] = useState(0);
+    const [actualQuantity, setActualQuantity] = useState(0);
+
+    
     const [dimensions, setDimensions] = useState({
       image_name: '',
       height: 0,
@@ -89,26 +94,6 @@ const TableComponent = () => {
     ];
 
 
-    const success = () => {
-      messageApi.open({
-        type: 'success',
-        content: 'Image Upload Successful',
-      });
-    };
-    const error = () => {
-      messageApi.open({
-        type: 'error',
-        content: 'This is an error message',
-      });
-    };
-    const warning = () => {
-      messageApi.open({
-        type: 'warning',
-        content: 'Please Upload Image before setting Price',
-      });
-    };
-
-
 
     let handleBlurChange = (getPriceIndex) => {
       setPriceIndex(getPriceIndex);
@@ -117,6 +102,15 @@ const TableComponent = () => {
 
     let handleInputPriceChange = (value) => {
         setActualPrice(value);
+    }
+
+    let handleQuantityBlurChange = (getQuantityIndexInputTag) => {
+      setQuantityIndex(getQuantityIndexInputTag);
+      setQuantityChange((prev) => !prev);
+    }
+
+    let handleInputQuantityChange = (value) => {
+      setActualQuantity(value);
     }
     
     const [dataSource, setDataSource] = useState( [
@@ -129,8 +123,15 @@ const TableComponent = () => {
           height: 0,
           widht: 0,
           area: 0,
-          price: <InputNumber min={0} onBlur={() => handleBlurChange(counter)} onChange={handleInputPriceChange} variant='borderless' max={1000} precision={2}  />,
-          quantity: <InputNumber />,
+
+
+          price: <InputNumber min={0} 
+          onBlur={() => handleBlurChange(counter)} 
+          onChange={handleInputPriceChange} variant='borderless' max={1000} precision={2}  />,
+
+
+          quantity: <InputNumber min={0} max={1000} 
+          onBlur={() => handleQuantityBlurChange(counter)} onChange={handleInputQuantityChange}/>,
           amount: 0,
           
 
@@ -146,14 +147,26 @@ const TableComponent = () => {
         setTableLoading(false);
                 
         setDataSource(prev => [...prev, 
+     
+     
           {key: counter, 
+
             image_name: '', 
             upload: <Image_Upload 
             rowIndex={counter-1} 
             setDimensions={setDimensions} />, 
             height: 0, widht:0, area: 0,
-             price: <InputNumber variant='borderless' onBlur={ () => {handleBlurChange(counter-1)} } onChange={handleInputPriceChange} min={0} max={1000} precision={2} />, 
-             quantity: <InputNumber />, 
+
+
+             price: <InputNumber variant='borderless' 
+             onBlur={ () => {handleBlurChange(counter-1)} } 
+             onChange={handleInputPriceChange} min={0} max={1000} precision={2} />, 
+
+
+             quantity: <InputNumber min={0} max={1000} 
+             onBlur={() => handleQuantityBlurChange(counter)} 
+             onChange={handleInputQuantityChange}/>,
+
              amount: 0}]);
 
        
@@ -184,8 +197,6 @@ const TableComponent = () => {
       }
 
 
-     
-  
 
       useEffect(() => {
 
@@ -195,9 +206,17 @@ const TableComponent = () => {
           
           
           if (index === dimensions.rowIndex) {
-            return {...item, height: dimensions.Image_height, widht: dimensions.Image_width, area: dimensions.Image_height*dimensions.Image_width, image_name: dimensions.image_name}
             
+             return {
+
+              ...item, 
+              height: dimensions.Image_height, 
+              widht: dimensions.Image_width, 
+              area: dimensions.Image_height * dimensions.Image_width, 
+              image_name: dimensions.image_name
             
+            }
+                      
           }
           
           else
@@ -215,11 +234,55 @@ const TableComponent = () => {
        useEffect(()=> {
          
         const Obj = { ...dataSource[priceIndex - 1], amount: 0 };
+        
         if(priceIndex==0){
+        
+          const updatedArray = [...dataSource ];
+          const amount = actualPrice;
+
+          updatedArray[0] = {...updatedArray[0], amount};
+          
+          setDataSource(updatedArray);
+        
+        }
+        else{
+
+        
+          const modifiedArray = dataSource.map((item, index) => {
+            
+            if(index==Obj.key){
+              
+                const amount = actualPrice;
+                return {...item, amount};
+            }
+          
+            else
+            return item;
+  
+          })
+          
+          setDataSource(modifiedArray);
+
+        }
+              
+       
+
+       }, [priceChange])
+
+
+
+       useEffect(()=> {
+         
+        console.log("I am triggered by the way", quantityIndex, actualQuantity);
+        
+        const Obj = { ...dataSource[quantityIndex - 1], amount: 0 };
+        
+        if(quantityIndex==0){
 
           const updatedArray = [...dataSource ];
-          const amount = updatedArray[0].area * ActualPrice;
+          const amount = actualQuantity;
           updatedArray[0] = {...updatedArray[0], amount};
+          
           setDataSource(updatedArray);
 
         }
@@ -228,24 +291,25 @@ const TableComponent = () => {
         
           const modifiedArray = dataSource.map((item, index) => {
             
-            if(index==Obj.key){
-              const amount = item.area * ActualPrice;
-              return {...item, amount};
+            if(index==Obj.key-1){
+              
+                const amount =  actualQuantity;
+                return {...item, amount};
             }
           
             else
+
             return item;
   
           })
-  
+          
           setDataSource(modifiedArray);
 
         }
               
        
 
-
-       }, [priceChange])
+       }, [quantityChange])
   
     
       
@@ -260,7 +324,10 @@ const TableComponent = () => {
         dataSource={dataSource} size={'small'} 
         columns={columns} />
 
-        <Typography.Text strong={true} style={{cursor: "pointer", color: "#0B6E4F"}} onClick={handleAdd}>Add More Rows</Typography.Text>
+        <Typography.Text 
+        strong={true}
+         style={{cursor: "pointer", color: "#0B6E4F"}} 
+         onClick={handleAdd}>Add More Rows</Typography.Text>
      
 
         </>
