@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Typography, Card, Button, InputNumber } from 'antd';
 import { useSelector } from 'react-redux';
 
 const CardResult = () => {
 
+  
   const { totalAmount, totalArea } = useSelector(state => state.billSlice.billingInfo);
+
+
+
 
 
   const buttonStyle = {backgroundColor: "#FA9F42", color: "white", width: "135px", height: "38px"};

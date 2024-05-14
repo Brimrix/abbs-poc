@@ -24,10 +24,7 @@ export const billSlice = createSlice({
         }
       };
     },
-    // getBillingInfo: (state) => {
-    //   const { totalAmount, totalArea } = state.billingInfo;
-    //   return { totalAmount, totalArea };
-    // }
+
     getBillingInfo: (state) => {
       const { totalAmount, totalArea } = state.billingInfo;
       return { billingInfo: { totalAmount, totalArea } };
@@ -35,7 +32,6 @@ export const billSlice = createSlice({
   },
 })
 
-// Action creators are generated for each case reducer function
-export const { addBillingInfo, getBillingInfo } = billSlice.actions
+export const { addBillingInfo, getBillingInfo } = billSlice.actions;
 
 export default billSlice.reducer;

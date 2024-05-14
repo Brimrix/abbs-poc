@@ -19,6 +19,7 @@ const TableComponent = () => {
     const [quantityIndex, setQuantityIndex] = useState(0);
     const [actualQuantity, setActualQuantity] = useState(0);
 
+
     const dispatch = useDispatch();
     const [dimensions, setDimensions] = useState({
       image_name: '',
@@ -27,7 +28,10 @@ const TableComponent = () => {
       rowIndex: 0
     })
     
-    
+        // Input tag change tracker
+    let inputTagChangeTracker = 0;
+
+
     const setBillingInfo = () => {
 
       let totalAmount = 0;
@@ -48,10 +52,13 @@ const TableComponent = () => {
 
     const columns = [
       {
+
         title: 'Sr#',
         dataIndex: 'key',
         key: 'key',
-        widht: 5,
+        width: 50,
+        align: 'center'
+        
         
         
       },
@@ -59,14 +66,17 @@ const TableComponent = () => {
         title: 'Description',
         dataIndex: 'image_name',
         key: 'image_name',
-        ellipsis: true
+        ellipsis: true,
+        width: 280,
+        
        
       },
       {
-        title: 'Upload Image',
+        title: 'Image Upload',
         dataIndex: 'upload',
         key: 'address',
-        align: 'center'
+        align: 'center',
+        width: 120
       },
       
       {
@@ -112,16 +122,30 @@ const TableComponent = () => {
       
     ];
 
+    
 
+    let handleBlurChange = (getPriceIndex) => {       
+          
+         
+            if(inputTagChangeTracker){
+              
+              setPriceIndex(getPriceIndex);
+              setPriceChange((prev) => !prev); 
 
-    let handleBlurChange = (getPriceIndex) => {
-      setPriceIndex(getPriceIndex);
-      setPriceChange((prev) => !prev);
-    }
+            }
+            inputTagChangeTracker = 0;
+            
+          
 
-    let handleInputPriceChange = (value) => {
-        setActualPrice(value);
-    }
+        }
+
+    let handleInputPriceChange = (value) => { 
+      inputTagChangeTracker = 1;
+      setActualPrice(value);
+   
+   
+      }
+
 
     let handleQuantityBlurChange = (getQuantityIndexInputTag) => {
       setQuantityIndex(getQuantityIndexInputTag);
@@ -142,6 +166,7 @@ const TableComponent = () => {
           height: 0,
           widht: 0,
           area: 0,
+          actualPrice: 0,
 
 
           price: <InputNumber min={0} 
@@ -165,7 +190,9 @@ const TableComponent = () => {
 
         setTableLoading(false);
                 
-        setDataSource(prev => [...prev, 
+        setDataSource(prev => 
+          
+          [...prev, 
      
      
           {key: counter, 
@@ -186,7 +213,10 @@ const TableComponent = () => {
              onBlur={() => handleQuantityBlurChange(counter)} 
              onChange={handleInputQuantityChange}/>,
 
-             amount: 0}]);
+             amount: 0,
+             actualPrice: 0
+            
+            }]);
 
        
 
@@ -253,14 +283,15 @@ const TableComponent = () => {
        useEffect(()=> {
          
         const Obj = { ...dataSource[priceIndex - 1], amount: 0 };
+        const price = <InputNumber variant='filled' onBlur={ () => {handleBlurChange(priceIndex)} }onChange={handleInputPriceChange} defaultValue={actualPrice} min={0} max={1000} precision={2}  />
+        const amount = actualPrice;
         
         if(priceIndex==0){
         
           const updatedArray = [...dataSource ];
-          const amount = actualPrice;
 
-          updatedArray[0] = {...updatedArray[0], amount};
-          
+          updatedArray[0] = {...updatedArray[0], amount, price, actualPrice};
+
           setDataSource(updatedArray);
         
         }
@@ -268,23 +299,24 @@ const TableComponent = () => {
 
         
           const modifiedArray = dataSource.map((item, index) => {
-            
+
             if(index==Obj.key){
-              
-                const amount = actualPrice;
-                return {...item, amount};
+                
+             return {...item, amount, price, actualPrice};
+                  
             }
           
             else
             return item;
   
           })
-          
+
           setDataSource(modifiedArray);
+          
+         
 
         }
               
-       
 
        }, [priceChange])
 
@@ -345,8 +377,11 @@ const TableComponent = () => {
 
         loading={tableLoading} 
         key={counter}  
+
         dataSource={dataSource} size={'small'} 
         columns={columns} />
+
+        
 
         <Typography.Text 
         strong={true}
