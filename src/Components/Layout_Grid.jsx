@@ -20,6 +20,7 @@ import TableComponent from './Table';
 import { Layout, Menu, theme, Input, DatePicker, Typography, Button, InputNumber, Space, Badge  } from 'antd';
 import CardResult from './Card';
 import Sider_main from './Sider_main';
+import admin from '../assets/admin.png';
 
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -66,19 +67,19 @@ const Layout_Grid = () => {
 
         <div style={{color: "black", display: "flex", gap:"10px", marginTop: "10px"}}>
         <Space>
-        <QuestionCircleFilled style={{fontSize: "24px"}} />
+        <QuestionCircleFilled style={{fontSize: "20px", color: "#898989"}} />
         <Badge dot>
 
-        <BellFilled style={{fontSize: "24px", cursor:"pointer"}} />
+        <BellFilled style={{fontSize: "20px", cursor:"pointer", color: "#898989"}} />
         </Badge>
     
         </Space>
 
-        <img style={{borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5LlhUvmgaHqmmXuH06eS-yFEr6ht7kMxDqA&s" alt="" />
+        <img style={{borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", marginTop: "15px"}} src={admin}  alt="img" />
           
           <div className='d-flex flex-column'>
-          <h5>John Doe</h5>
-          <h6 className='h6'>Admin</h6>      
+          <h5 style={{marginTop:"12px", marginBottom: "0px"}}>John Doe</h5>
+          <h6 style={{color: "#898989"}}>Admin</h6>      
 
           </div>
       
@@ -106,7 +107,7 @@ const Layout_Grid = () => {
 
        </div>
      
-       <div className='d-flex align-items-center gap-3'>
+       <div className='d-flex align-items-center gap-1 me-5'>
           <MessageOutlined style={Secondary_Nav_Icon_style} />
           <DownloadOutlined style={Secondary_Nav_Icon_style} />
           <FileOutlined style={Secondary_Nav_Icon_style} />

@@ -10,9 +10,25 @@
     font-size: 12px !important;
     width: 150px  !important;
     height: 16px !important;
+
   }
+  .ant-table-thead > tr > th:nth-child(2),
+  .ant-table-thead > tr > th:nth-child(3) {
+   
+    border-bottom: 3px solid #FA9F42 !important;
+  }
+
+
+
+
   .ant-table-thead > tr > th {
     height: 5px !important;
     padding: 4px !important;
     color:  #0B6E4F !important;
+   
+
   }
+
+
+
+ 

@@ -24,7 +24,7 @@ const TableComponent = () => {
     const [dimensions, setDimensions] = useState({
       image_name: '',
       height: 0,
-      widht: 0,
+      width: 0,
       rowIndex: 0
     })
     
@@ -56,27 +56,29 @@ const TableComponent = () => {
         title: 'Sr#',
         dataIndex: 'key',
         key: 'key',
-        width: 50,
-        align: 'center'
+        width: '10%',
+        align: 'center',
+      
         
         
         
       },
-      {
-        title: 'Description',
+
+       {
+        title: <span className="column-underlined">Description and Upload Image</span>,
         dataIndex: 'image_name',
         key: 'image_name',
         ellipsis: true,
-        width: 280,
-        
+        width: '25%',
+        align: 'start'        
        
       },
       {
-        title: 'Image Upload',
+        title: '',
         dataIndex: 'upload',
         key: 'address',
         align: 'center',
-        width: 120
+        width: '10%'
       },
       
       {
@@ -88,7 +90,7 @@ const TableComponent = () => {
   
         {
           title: 'Width',
-          dataIndex: 'widht',
+          dataIndex: 'width',
           key: 'width',
           align: 'center'
         },
@@ -148,6 +150,7 @@ const TableComponent = () => {
 
 
     let handleQuantityBlurChange = (getQuantityIndexInputTag) => {
+  
       setQuantityIndex(getQuantityIndexInputTag);
       setQuantityChange((prev) => !prev);
     }
@@ -164,7 +167,7 @@ const TableComponent = () => {
           image_name: "Sublimation 2x3",
           upload: <Image_Upload rowIndex={counter} setDimensions={setDimensions} />, 
           height: 0,
-          widht: 0,
+          width: 0,
           area: 0,
           actualPrice: 0,
 
@@ -201,7 +204,7 @@ const TableComponent = () => {
             upload: <Image_Upload 
             rowIndex={counter-1} 
             setDimensions={setDimensions} />, 
-            height: 0, widht:0, area: 0,
+            height: 0, width:0, area: 0,
 
 
              price: <InputNumber variant='filled'
@@ -251,7 +254,7 @@ const TableComponent = () => {
 
           
        
-           const modifiedArray = dataSource.map((item, index) => {
+         const modifiedArray = dataSource.map((item, index) => {
           
           
           if (index === dimensions.rowIndex) {
@@ -260,7 +263,7 @@ const TableComponent = () => {
 
               ...item, 
               height: dimensions.Image_height, 
-              widht: dimensions.Image_width, 
+              width: dimensions.Image_width, 
               area: dimensions.Image_height * dimensions.Image_width, 
               image_name: dimensions.image_name
             
@@ -372,6 +375,9 @@ const TableComponent = () => {
       return (
         <>
         <Table 
+
+    
+
        scroll={{ y: 220 }}
        pagination={false}
 
@@ -381,7 +387,7 @@ const TableComponent = () => {
         dataSource={dataSource} size={'small'} 
         columns={columns} />
 
-        
+ 
 
         <Typography.Text 
         strong={true}
