@@ -36,7 +36,7 @@ const items = [
   ];
   
 
-const Sider_main = () => {
+const SiderMain = () => {
 
     const [collapse, setCollapse] = useState(false);
   
@@ -77,4 +77,4 @@ const Sider_main = () => {
 }
 
 
-export default Sider_main;
+export default SiderMain;

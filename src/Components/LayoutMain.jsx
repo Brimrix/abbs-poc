@@ -1,27 +1,23 @@
 import React, { useState } from 'react';
 import './Layout.css'
 import {
-  AppstoreOutlined,
   BarChartOutlined,
   CloudOutlined,
   ShopOutlined,
   TeamOutlined,
   UploadOutlined,
   UserOutlined,
-  QuestionCircleFilled,
   CalendarOutlined,
   DownloadOutlined,
   PrinterOutlined,
   FileOutlined,
   MessageOutlined,
-  BellFilled
 } from '@ant-design/icons';
 import TableComponent from './Table';
-import { Layout, Menu, theme, Input, DatePicker, Typography, Button, InputNumber, Space, Badge  } from 'antd';
+import { Layout, Menu, theme, Input, DatePicker, Typography, Button, InputNumber, Space, Badge, Divider  } from 'antd';
 import CardResult from './Card';
-import Sider_main from './Sider_main';
-import admin from '../assets/admin.png';
-
+import SiderMain from './SiderMain';
+import NavbarMain from './NavbarMain';
 
 const { Header, Content, Footer, Sider } = Layout;
 const {Search} = Input;
@@ -42,50 +38,13 @@ const Layout_Grid = () => {
   return (
     <Layout>
 
-    <Sider_main />
+    <SiderMain />
      
    
       <Layout>
 
-      
-        {/* Header is the place directly connected with the Sider */}
-        <Header style={{display: "flex", alignItems: "center", justifyContent: "space-between", backgroundColor:'white'}}>
+      <NavbarMain />
         
-
-
-      
-
-        <Search
-          placeholder="Search"
-          allowClear
-          style={{width: 300, margin: "10px", marginLeft: "320px"}}
-         />
-
-
-       
-        
-
-        <div style={{color: "black", display: "flex", gap:"10px", marginTop: "10px"}}>
-        <Space>
-        <QuestionCircleFilled style={{fontSize: "20px", color: "#898989"}} />
-        <Badge dot>
-
-        <BellFilled style={{fontSize: "20px", cursor:"pointer", color: "#898989"}} />
-        </Badge>
-    
-        </Space>
-
-        <img style={{borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", marginTop: "15px"}} src={admin}  alt="img" />
-          
-          <div className='d-flex flex-column'>
-          <h5 style={{marginTop:"12px", marginBottom: "0px"}}>John Doe</h5>
-          <h6 style={{color: "#898989"}}>Admin</h6>      
-
-          </div>
-      
-        </div>
-       
-        </Header>
 
         {/* The Second Header directly below the Main Header */}
 
@@ -116,6 +75,11 @@ const Layout_Grid = () => {
        </div>
         
       </Header>
+
+      <div style={{marginLeft: "60px", marginRight: "90px"}}>
+      <Divider style={{backgroundColor: '#DCDCDC', marginTop: 0, opacity: '45%'}} />
+      </div>
+
 
      
         
