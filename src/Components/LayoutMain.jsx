@@ -56,7 +56,7 @@ const Layout_Grid = () => {
 
         </Content>
 
-         <div className='d-flex align-items-end justify-content-end p-4' style={{float: "right", border: "2px solid red"}}>
+         <div className='d-flex align-items-end justify-content-end p-4' style={{float: "right"}}>
 
         {/* The Card Component */}
 

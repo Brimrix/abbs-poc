@@ -30,6 +30,7 @@ const TableComponent = () => {
     
         // Input tag change tracker
     let inputTagChangeTracker = 0;
+    let quantityTagChangeTracker = 0;
 
 
     const setBillingInfo = () => {
@@ -57,10 +58,7 @@ const TableComponent = () => {
         dataIndex: 'key',
         key: 'key',
         width: '10%',
-        align: 'center',
-      
-        
-        
+        align: 'center',        
         
       },
 
@@ -126,7 +124,7 @@ const TableComponent = () => {
 
     
 
-    let handleBlurChange = (getPriceIndex) => {       
+    let handleBlurChange = (getPriceIndex) => {      
           
          
             if(inputTagChangeTracker){
@@ -135,10 +133,8 @@ const TableComponent = () => {
               setPriceChange((prev) => !prev); 
 
             }
-            inputTagChangeTracker = 0;
-            
-          
 
+            inputTagChangeTracker = 0;
         }
 
     let handleInputPriceChange = (value) => { 
@@ -150,12 +146,18 @@ const TableComponent = () => {
 
 
     let handleQuantityBlurChange = (getQuantityIndexInputTag) => {
-  
-      setQuantityIndex(getQuantityIndexInputTag);
-      setQuantityChange((prev) => !prev);
+
+      if(quantityTagChangeTracker){
+        setQuantityIndex(getQuantityIndexInputTag);
+        setQuantityChange((prev) => !prev);
+      }        
+      
+      quantityTagChangeTracker = 0;
+     
     }
 
     let handleInputQuantityChange = (value) => {
+      quantityTagChangeTracker = 1;
       setActualQuantity(value);
     }
     
@@ -287,12 +289,13 @@ const TableComponent = () => {
          
         const Obj = { ...dataSource[priceIndex - 1], amount: 0 };
         const price = <InputNumber variant='filled' onBlur={ () => {handleBlurChange(priceIndex)} }onChange={handleInputPriceChange} defaultValue={actualPrice} min={0} max={1000} precision={2}  />
-        const amount = actualPrice;
+        let amount = actualPrice * actualQuantity;
         
         if(priceIndex==0){
         
           const updatedArray = [...dataSource ];
-
+          const area = updatedArray[0].area;
+          amount *= area;
           updatedArray[0] = {...updatedArray[0], amount, price, actualPrice};
 
           setDataSource(updatedArray);
@@ -303,8 +306,9 @@ const TableComponent = () => {
         
           const modifiedArray = dataSource.map((item, index) => {
 
+            let area = item.area;
             if(index==Obj.key){
-                
+             amount *= area;
              return {...item, amount, price, actualPrice};
                   
             }
@@ -333,7 +337,9 @@ const TableComponent = () => {
         if(quantityIndex==0){
 
           const updatedArray = [...dataSource ];
-          const amount = actualQuantity;
+          let amount = actualQuantity * actualPrice;
+          const area = updatedArray[0].area;
+          amount *= area;
           updatedArray[0] = {...updatedArray[0], amount};
           
           setDataSource(updatedArray);
@@ -343,10 +349,11 @@ const TableComponent = () => {
 
         
           const modifiedArray = dataSource.map((item, index) => {
-            
+
+            let area = item.area;
             if(index==Obj.key-1){
-              
-                const amount =  actualQuantity;
+
+                const amount =  actualQuantity * area * actualPrice;
                 return {...item, amount};
             }
           
