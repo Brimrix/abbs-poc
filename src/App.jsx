@@ -1,5 +1,5 @@
 import React from "react";
-import LayoutMain from './Components/LayoutMain'
+import LayoutMain from './components/LayoutMain'
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 const App = () => {

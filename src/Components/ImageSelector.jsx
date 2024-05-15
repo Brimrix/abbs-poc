@@ -50,7 +50,7 @@ const beforeUpload = (file) => {
 // SetDimensions is a function which will update the state of dimensions object so that the row entry is updated after 
 // obtaining the height and width of the image.
 
-const Image_Upload = ({setDimensions, rowIndex}) => {
+const ImageSelector = ({setDimensions, rowIndex}) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
 
@@ -118,4 +118,4 @@ const Image_Upload = ({setDimensions, rowIndex}) => {
     
   );
 };
-export default Image_Upload;
+export default ImageSelector;

@@ -1,6 +1,6 @@
 import React, {  useEffect, useState } from 'react';
 import { Button, Table, Upload, InputNumber, Typography, message } from 'antd';
-import Image_Upload from './Image_Uploader';
+import ImageSelector from './ImageSelector';
 import './TableStyle.css';
 import { useDispatch } from 'react-redux';
 import { addBillingInfo } from '../redux/Reducers/billSlice';
@@ -165,7 +165,7 @@ const TableComponent = () => {
         {
           key: counter+1,
           image_name: "Sublimation 2x3",
-          upload: <Image_Upload rowIndex={counter} setDimensions={setDimensions} />, 
+          upload: <ImageSelector rowIndex={counter} setDimensions={setDimensions} />, 
           height: 0,
           width: 0,
           area: 0,
@@ -201,7 +201,7 @@ const TableComponent = () => {
           {key: counter, 
 
             image_name: '', 
-            upload: <Image_Upload 
+            upload: <ImageSelector 
             rowIndex={counter-1} 
             setDimensions={setDimensions} />, 
             height: 0, width:0, area: 0,
