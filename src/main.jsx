@@ -7,7 +7,6 @@ import { BillProvider } from './context/BillContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 
-  // <Provider store={store}>
 <BillProvider>
 
   <App />
@@ -15,6 +14,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 </BillProvider>     
 
 
-//  </Provider>
  
 )

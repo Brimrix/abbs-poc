@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Typography, Card, Button, InputNumber } from 'antd';
-import { billContext } from '../context/BillContext';
-// import { useSelector } from 'react-redux';
+import { billContext } from '@/context/BillContext';
 
 const CardResult = () => {
 

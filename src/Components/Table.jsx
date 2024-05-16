@@ -1,9 +1,7 @@
 import React, {  useEffect, useState, useContext } from 'react';
 import { Button, Table, Upload, InputNumber, Typography, message } from 'antd';
-import ImageSelector from './ImageSelector';
-import './TableStyle.css';
-// import { useDispatch } from 'react-redux';
-// import { addBillingInfo } from '../redux/Reducers/billSlice';
+import ImageSelector from '@/components/ImageSelector';
+import '@styles/TableStyle.css';
 
 import {billContext} from '../context/BillContext';
 
@@ -25,7 +23,6 @@ const TableComponent = () => {
     const { billData, setBillData } = useContext(billContext);
 
 
-    // const dispatch = useDispatch();
     const [dimensions, setDimensions] = useState({
       image_name: '',
       height: 0,

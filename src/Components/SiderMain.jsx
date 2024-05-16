@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {Layout, Menu, theme} from 'antd';
 import {BarsOutlined, UserOutlined, UploadOutlined, SettingOutlined, BarChartOutlined} from '@ant-design/icons'
 const {Sider} = Layout;
-import './Menu.css';
+import '@styles/Menu.css';
 
 // Data used by component.
 

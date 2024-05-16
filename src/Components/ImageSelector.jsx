@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { Flex, message, Upload, Typography } from 'antd';
-import './ImageUploaderStyle.css'
+import '@styles/ImageUploaderStyle.css';
 import {
    FileAddOutlined 
 } from '@ant-design/icons';

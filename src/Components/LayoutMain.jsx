@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Layout.css'
+import '@styles/ImageUploaderStyle.css'
 import {
   BarChartOutlined,
   CloudOutlined,
@@ -13,12 +13,15 @@ import {
   FileOutlined,
   MessageOutlined,
 } from '@ant-design/icons';
-import TableComponent from './Table';
 import { Layout, Menu, theme, Input, DatePicker, Typography, Button, InputNumber, Space, Badge, Divider  } from 'antd';
-import CardResult from './Card';
-import SiderMain from './SiderMain';
-import NavbarMain from './NavbarMain';
-import ClientSearch from './ClientSearch';
+
+
+import TableComponent from '@/components/Table';
+import CardResult from '@/components/Card';
+import SiderMain from '@/components/SiderMain';
+import NavbarMain from '@/components/NavbarMain';
+import ClientSearch from '@/components/ClientSearch';
+
 
 const { Header, Content, Footer, Sider } = Layout;
 const {Search} = Input;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Layout, Input, DatePicker, Divider, Select  } from 'antd';
 const {Header} = Layout;
-import './ClientSearchStyle.css'
+import '@styles/ClientSearchStyle.css';
 
 import {
 
