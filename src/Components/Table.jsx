@@ -1,11 +1,11 @@
-import React, {  useEffect, useState } from 'react';
+import React, {  useEffect, useState, useContext } from 'react';
 import { Button, Table, Upload, InputNumber, Typography, message } from 'antd';
 import ImageSelector from './ImageSelector';
 import './TableStyle.css';
 // import { useDispatch } from 'react-redux';
 // import { addBillingInfo } from '../redux/Reducers/billSlice';
 
-import billContext from '../context/BillContext';
+import {billContext} from '../context/BillContext';
 
 
 
@@ -22,6 +22,8 @@ const TableComponent = () => {
     const [quantityIndex, setQuantityIndex] = useState(0);
     const [actualQuantity, setActualQuantity] = useState(0);
 
+    const { billData, setBillData } = useContext(billContext);
+
 
     // const dispatch = useDispatch();
     const [dimensions, setDimensions] = useState({
@@ -37,22 +39,8 @@ const TableComponent = () => {
 
 
     const setBillingInfo = () => {
-
-      let totalAmount = 0;
-      let totalArea = 0;
-
-      dataSource.forEach(item => {
-        totalAmount += item.amount;
-      }) 
-      dataSource.forEach(item => {
-        totalArea += item.area;
-      })
-
-      // dispatch(addBillingInfo({ totalArea, totalAmount }));
-      console.log("Successfully Dispatched");
-
+      setBillData(dataSource);
     };
-
 
     const columns = [
       {
@@ -328,6 +316,7 @@ const TableComponent = () => {
          
 
         }
+
               
 
        }, [priceChange])
@@ -385,27 +374,30 @@ const TableComponent = () => {
     
       
       return (
+        
         <>
+
         <Table 
 
     
 
-       scroll={{ y: 220 }}
-       pagination={false}
+      scroll={{ y: 220 }}
+      pagination={false}
 
-        loading={tableLoading} 
-        key={counter}  
+      loading={tableLoading} 
+      key={counter}  
 
-        dataSource={dataSource} size={'small'} 
-        columns={columns} />
+      dataSource={dataSource} size={'small'} 
+      columns={columns} />
 
- 
 
-        <Typography.Text 
-        strong={true}
-         style={{cursor: "pointer", color: "#0B6E4F"}} 
-         onClick={handleAdd}>Add More Rows</Typography.Text>
-     
+
+      <Typography.Text 
+      strong={true}
+      style={{cursor: "pointer", color: "#0B6E4F"}} 
+      onClick={handleAdd}>Add More Rows</Typography.Text>
+
+      
 
         </>
 

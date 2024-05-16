@@ -1,12 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Typography, Card, Button, InputNumber } from 'antd';
-import { useSelector } from 'react-redux';
+import { billContext } from '../context/BillContext';
+// import { useSelector } from 'react-redux';
 
 const CardResult = () => {
 
-  
-  const { totalAmount, totalArea } = useSelector(state => state.billSlice.billingInfo);
 
+  const {billData} = useContext(billContext);
+  const [totalArea, setTotalArea] = useState(0);
+
+
+
+
+  useEffect(()=> {
+   let area = 0;
+   billData.forEach(element => {
+    area += element.area;
+   });
+
+   setTotalArea(area);
+
+  }, [billData])
+  // const { totalAmount, totalArea } = useSelector(state => state.billSlice.billingInfo);
 
 
 
@@ -14,7 +29,8 @@ const CardResult = () => {
   const buttonStyle = {backgroundColor: "#FA9F42", color: "white", width: "135px", height: "38px"};
   
   return (
-    <Card style={{width: "416px", height: "201px", backgroundColor: "#F6F6F6"}}>
+
+<Card style={{width: "416px", height: "201px", backgroundColor: "#F6F6F6"}}>
            
     <div className="container">
    <div className="row gx-5 gy-5">
@@ -24,7 +40,7 @@ const CardResult = () => {
                     
    </div>
    <div className="col">
-   <Typography.Text strong={true}>{totalAmount}</Typography.Text> 
+   <Typography.Text strong={true}>323</Typography.Text> 
    
          
    </div>
@@ -71,7 +87,7 @@ const CardResult = () => {
 
    <div className="row gx-4 mt-1">
    <div className="col">
-   <Button style={buttonStyle}>Print Slip</Button>
+   <Button style={buttonStyle} onClick={() => console.log(dataSource)}>Print Slip</Button>
 
 
    </div>
@@ -88,6 +104,10 @@ const CardResult = () => {
 </div>
                                                      
    </Card>    
+
+  
+ 
+    
   )
 }
 
