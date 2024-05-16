@@ -2,8 +2,11 @@ import React, {  useEffect, useState } from 'react';
 import { Button, Table, Upload, InputNumber, Typography, message } from 'antd';
 import ImageSelector from './ImageSelector';
 import './TableStyle.css';
-import { useDispatch } from 'react-redux';
-import { addBillingInfo } from '../redux/Reducers/billSlice';
+// import { useDispatch } from 'react-redux';
+// import { addBillingInfo } from '../redux/Reducers/billSlice';
+
+import billContext from '../context/BillContext';
+
 
 
 const TableComponent = () => {
@@ -20,7 +23,7 @@ const TableComponent = () => {
     const [actualQuantity, setActualQuantity] = useState(0);
 
 
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const [dimensions, setDimensions] = useState({
       image_name: '',
       height: 0,
@@ -45,7 +48,7 @@ const TableComponent = () => {
         totalArea += item.area;
       })
 
-      dispatch(addBillingInfo({ totalArea, totalAmount }));
+      // dispatch(addBillingInfo({ totalArea, totalAmount }));
       console.log("Successfully Dispatched");
 
     };
@@ -260,14 +263,16 @@ const TableComponent = () => {
           
           
           if (index === dimensions.rowIndex) {
-            
+
+                        
              return {
 
               ...item, 
               height: dimensions.Image_height, 
               width: dimensions.Image_width, 
               area: dimensions.Image_height * dimensions.Image_width, 
-              image_name: dimensions.image_name
+              image_name: dimensions.image_name,
+              
             
             }
                       
