@@ -37,8 +37,16 @@ const CardResult = () => {
     subTotal += element.amount;
    })
 
+   if(discountInput!==0){
+    let subTotalValue = subTotal-discountInput;
+    setGrandTotal(subTotalValue);
+   
+   }
+  
+   
    setTotalArea(area);
    setSubTotal(subTotal);
+
 
   }, [billData])
 
