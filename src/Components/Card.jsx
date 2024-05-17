@@ -5,22 +5,42 @@ import { billContext } from '@/context/BillContext';
 const CardResult = () => {
 
 
-  const {billData} = useContext(billContext);
+  const { billData } = useContext(billContext);
+
   const [totalArea, setTotalArea] = useState(0);
+  const [subTotal, setSubTotal] = useState(0);
 
+  const [grandTotal, setGrandTotal] = useState(0);
+  const [discountInput, setDiscountInput] = useState(0);
 
+  const handleDiscountChange = (value) => {
+    setDiscountInput(value);
+  }
 
+  const handleDiscountBlurChange = () => {
+    const valueGrandTotal = subTotal-discountInput;
+    console.log(valueGrandTotal);
+    setGrandTotal(valueGrandTotal);
+  }
 
   useEffect(()=> {
+
    let area = 0;
+   let subTotal = 0;
+
    billData.forEach(element => {
     area += element.area;
+    
    });
 
+   billData.forEach(element => {
+    subTotal += element.amount;
+   })
+
    setTotalArea(area);
+   setSubTotal(subTotal);
 
   }, [billData])
-  // const { totalAmount, totalArea } = useSelector(state => state.billSlice.billingInfo);
 
 
 
@@ -39,7 +59,7 @@ const CardResult = () => {
                     
    </div>
    <div className="col">
-   <Typography.Text strong={true}>323</Typography.Text> 
+   <Typography.Text strong={true}>{subTotal}</Typography.Text> 
    
          
    </div>
@@ -64,7 +84,7 @@ const CardResult = () => {
                 
    </div>
    <div className="col">
-   <InputNumber />
+   <InputNumber onBlur={handleDiscountBlurChange} onChange={handleDiscountChange} />
    
          
    </div>
@@ -77,7 +97,7 @@ const CardResult = () => {
                 
    </div>
    <div className="col">
-   <Typography.Text style={{color: "#0B6E4F"}} strong={true}>432,00</Typography.Text> 
+   <Typography.Text style={{color: "#0B6E4F"}} strong={true}>{grandTotal}</Typography.Text> 
    
    
          

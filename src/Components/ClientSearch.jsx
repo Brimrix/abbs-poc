@@ -65,7 +65,7 @@ const ClientSearch = () => {
 
         <div className='client-search-container'>
         <UserOutlined className='prefix-icon-wrapper' style={{color: secondary_color}} />
-         <Select showSearch={true} allowClear={true} filterOption={filterOption} options={currentOptions} placeholder={"Client"} style={{width: "310px", margin: "10px"}} />
+         <Select suffixIcon={<UserOutlined />} showSearch={true} allowClear={true} filterOption={filterOption} options={currentOptions} placeholder={"Client"} style={{width: "310px", margin: "10px"}} />
         </div>
 
 

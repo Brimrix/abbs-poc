@@ -3,7 +3,7 @@ import { Button, Table, Upload, InputNumber, Typography, message } from 'antd';
 import ImageSelector from '@/components/ImageSelector';
 import '@styles/TableStyle.css';
 
-import {billContext} from '../context/BillContext';
+import {billContext} from '@/context/BillContext';
 
 
 
@@ -33,6 +33,7 @@ const TableComponent = () => {
         // Input tag change tracker
     let inputTagChangeTracker = 0;
     let quantityTagChangeTracker = 0;
+
 
 
     const setBillingInfo = () => {
@@ -160,6 +161,7 @@ const TableComponent = () => {
           width: 0,
           area: 0,
           actualPrice: 0,
+          actualQuantity: 0,
 
 
           price: <InputNumber min={0} 
@@ -207,7 +209,8 @@ const TableComponent = () => {
              onChange={handleInputQuantityChange}/>,
 
              amount: 0,
-             actualPrice: 0
+             actualPrice: 0,
+             actualQuantity: 0
             
             }]);
 
@@ -246,10 +249,11 @@ const TableComponent = () => {
        
          const modifiedArray = dataSource.map((item, index) => {
           
-          
-          if (index === dimensions.rowIndex) {
+       
 
-                        
+          if (index === dimensions.rowIndex) {
+            
+                                   
              return {
 
               ...item, 
@@ -260,7 +264,8 @@ const TableComponent = () => {
               
             
             }
-                      
+
+         
           }
           
           else
@@ -269,6 +274,10 @@ const TableComponent = () => {
           }
           
         });
+        
+        if(dimensions.height!==0 && dimensions.width!==0){
+          handleAdd();
+        }
         
         setDataSource(modifiedArray);
         
@@ -324,14 +333,17 @@ const TableComponent = () => {
          
         
         const Obj = { ...dataSource[quantityIndex - 1], amount: 0 };
+        const quantity =  <InputNumber min={0} max={1000} variant='filled'
+        onBlur={() => handleQuantityBlurChange(quantityIndex)} defaultValue={actualQuantity} onChange={handleInputQuantityChange}/>
+
         
         if(quantityIndex==0){
 
           const updatedArray = [...dataSource ];
-          let amount = actualQuantity * actualPrice;
           const area = updatedArray[0].area;
+          let amount = actualQuantity * actualPrice;
           amount *= area;
-          updatedArray[0] = {...updatedArray[0], amount};
+          updatedArray[0] = {...updatedArray[0], amount, quantity, actualQuantity};
           
           setDataSource(updatedArray);
 
@@ -345,7 +357,7 @@ const TableComponent = () => {
             if(index==Obj.key-1){
 
                 const amount =  actualQuantity * area * actualPrice;
-                return {...item, amount};
+                return {...item, amount, quantity, actualQuantity};
             }
           
             else
@@ -366,7 +378,7 @@ const TableComponent = () => {
 
        useEffect(() => {
         setBillingInfo();
-       }, [dataSource])
+       }, [dataSource]);
   
     
       
