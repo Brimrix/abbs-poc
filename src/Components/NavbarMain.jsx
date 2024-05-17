@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Layout, Input, Space, Badge, Divider } from 'antd';
 import {QuestionCircleFilled, BellFilled} from '@ant-design/icons';
 const {Header} = Layout;
 const {Search} = Input;
-import admin from '../assets/admin.png';
+import admin from '@/assets/admin.png';
 
 
 const NavbarMain = () => {
@@ -31,8 +31,10 @@ const NavbarMain = () => {
         </Badge>
     
         </Space>
-
-        <img style={{borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", marginTop: "15px"}} src={admin}  alt="img" />
+      
+        <Suspense fallback={<h1>Loading.....</h1>}>          
+        <img src={admin} style={{borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", marginTop: "15px"}}  alt="img" />
+        </Suspense>
           
           <div className='d-flex flex-column'>
           <h5 style={{marginTop:"12px", marginBottom: "0px"}}>John Doe</h5>

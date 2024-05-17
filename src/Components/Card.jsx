@@ -43,6 +43,7 @@ const CardResult = () => {
    
    }
   
+   subTotal = Math.round(subTotal * 100) / 100;
    
    setTotalArea(area);
    setSubTotal(subTotal);

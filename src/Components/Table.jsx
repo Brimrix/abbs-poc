@@ -82,7 +82,7 @@ const TableComponent = () => {
           align: 'center'
         },
         {
-          title: 'Area',
+          title: 'Area (Sq.ft)',
           dataIndex: 'area',
           key: 'area',
           align: 'center',
@@ -110,8 +110,6 @@ const TableComponent = () => {
        
       
     ];
-
-    
 
     let handleBlurChange = (getPriceIndex) => {      
           
@@ -169,7 +167,7 @@ const TableComponent = () => {
           onChange={handleInputPriceChange} variant='filled' max={1000} precision={2}  />,
 
 
-          quantity: <InputNumber min={0} max={1000} variant='filled'
+          quantity: <InputNumber min={0} max={1000} variant='filled' precision={0}
           onBlur={() => handleQuantityBlurChange(counter)} onChange={handleInputQuantityChange}/>,
           amount: 0,
           
@@ -205,7 +203,7 @@ const TableComponent = () => {
 
 
              quantity: <InputNumber min={0} max={1000} variant='filled'
-             onBlur={() => handleQuantityBlurChange(counter)} 
+             onBlur={() => handleQuantityBlurChange(counter)} precision={0}
              onChange={handleInputQuantityChange}/>,
 
              amount: 0,
@@ -252,14 +250,24 @@ const TableComponent = () => {
        
 
           if (index === dimensions.rowIndex) {
-            
-                                   
+
+            let area = (dimensions.Image_height * dimensions.Image_width) / 144;
+            area = Math.round(area * 100) / 100;
+                  
+
+            if(item.actualPrice!==0 || item.actualQuantity!==0){
+
+              item.amount = item.actualPrice * item.actualQuantity * area;
+              item.amount = Math.round(item.amount * 100) / 100;
+             
+
+            }                     
              return {
 
               ...item, 
               height: dimensions.Image_height, 
               width: dimensions.Image_width, 
-              area: dimensions.Image_height * dimensions.Image_width, 
+              area, 
               image_name: dimensions.image_name,
               
             
@@ -278,9 +286,9 @@ const TableComponent = () => {
         if(dimensions.height!==0 && dimensions.width!==0){
           handleAdd();
         }
+    
         
         setDataSource(modifiedArray);
-        
       }, [dimensions]);
 
     
@@ -288,13 +296,18 @@ const TableComponent = () => {
          
         const Obj = { ...dataSource[priceIndex - 1], amount: 0 };
         const price = <InputNumber variant='filled' onBlur={ () => {handleBlurChange(priceIndex)} }onChange={handleInputPriceChange} defaultValue={actualPrice} min={0} max={1000} precision={2}  />
-        let amount = actualPrice * actualQuantity;
+      
+        let amount = actualPrice;
         
         if(priceIndex==0){
         
           const updatedArray = [...dataSource ];
           const area = updatedArray[0].area;
+          const quantity = updatedArray[0].actualQuantity;
           amount *= area;
+          amount *= quantity;
+          amount = Math.round(amount * 100) / 100;
+          
           updatedArray[0] = {...updatedArray[0], amount, price, actualPrice};
 
           setDataSource(updatedArray);
@@ -306,8 +319,13 @@ const TableComponent = () => {
           const modifiedArray = dataSource.map((item, index) => {
 
             let area = item.area;
+            let quantity = item.actualQuantity;
             if(index==Obj.key){
              amount *= area;
+             amount *= quantity;
+             amount = Math.round(amount * 100) / 100;
+
+
              return {...item, amount, price, actualPrice};
                   
             }
@@ -333,7 +351,7 @@ const TableComponent = () => {
          
         
         const Obj = { ...dataSource[quantityIndex - 1], amount: 0 };
-        const quantity =  <InputNumber min={0} max={1000} variant='filled'
+        const quantity =  <InputNumber min={0} max={1000} variant='filled' precision={0}
         onBlur={() => handleQuantityBlurChange(quantityIndex)} defaultValue={actualQuantity} onChange={handleInputQuantityChange}/>
 
         
@@ -341,8 +359,11 @@ const TableComponent = () => {
 
           const updatedArray = [...dataSource ];
           const area = updatedArray[0].area;
+
           let amount = actualQuantity * actualPrice;
           amount *= area;
+          amount = Math.round(amount * 100) / 100;
+
           updatedArray[0] = {...updatedArray[0], amount, quantity, actualQuantity};
           
           setDataSource(updatedArray);
@@ -355,8 +376,10 @@ const TableComponent = () => {
 
             let area = item.area;
             if(index==Obj.key-1){
+                
+                let amount =  actualQuantity * area * actualPrice;
+                amount = Math.round(amount * 100) / 100;
 
-                const amount =  actualQuantity * area * actualPrice;
                 return {...item, amount, quantity, actualQuantity};
             }
           
@@ -389,7 +412,7 @@ const TableComponent = () => {
         <Table 
 
     
-
+      style={{marginBottom: "20px"}}
       scroll={{ y: 220 }}
       pagination={false}
 
@@ -398,12 +421,13 @@ const TableComponent = () => {
 
       dataSource={dataSource} size={'small'} 
       columns={columns} />
+    
 
 
 
       <Typography.Text 
       strong={true}
-      style={{cursor: "pointer", color: "#0B6E4F"}} 
+      style={{cursor: "pointer", color: "#0B6E4F", marginLeft: "120px"}} 
       onClick={handleAdd}>Add More Rows</Typography.Text>
 
       
