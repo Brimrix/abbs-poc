@@ -63,10 +63,7 @@ const ClientSearch = () => {
 
 {/* Above I am using the Bootstrap Classes */}
 
-        <div className='client-search-container'>
-        <UserOutlined className='prefix-icon-wrapper' style={{color: secondary_color}} />
-         <Select suffixIcon={<UserOutlined />} showSearch={true} allowClear={true} filterOption={filterOption} options={currentOptions} placeholder={"Client"} style={{width: "310px", margin: "10px"}} />
-        </div>
+         <Select suffixIcon={<UserOutlined style={{color: secondary_color, fontSize: "20px"}}  />} showSearch={true} allowClear={true} filterOption={filterOption} options={currentOptions} placeholder={"Client"} style={{width: "310px", margin: "10px"}} />
 
 
 

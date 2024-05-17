@@ -43,23 +43,24 @@ const Layout_Grid = () => {
 
     <SiderMain />    
    
-      <Layout>
+      <Layout style={{backgroundColor: "white"}}>
 
       <NavbarMain />
 
         {/* The Second Header directly below the Main Header */}
+      
 
       <ClientSearch />    
         
         {/* Content Is The Place for everything Tables etc */}
 
-        <Content className='px-4 mt-3' style={{marginTop: "0px"}} >
+        <Content className='px-3 mt-2' style={{marginTop: "0px", backgroundColor: "white"}} >
 
         <TableComponent />   
 
         </Content>
 
-         <div className='d-flex align-items-end justify-content-end p-4' style={{float: "right"}}>
+         <div className='d-flex align-items-end justify-content-end p-4' style={{float: "right", backgroundColor: "white"}}>
 
         {/* The Card Component */}
 
