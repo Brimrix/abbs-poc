@@ -43,6 +43,7 @@ const CardResult = () => {
    }
   
    subTotal = Math.round(subTotal * 100) / 100;
+   area = Math.round(area * 100) / 100;
    
    setTotalArea(area);
    setSubTotal(subTotal);
@@ -79,7 +80,7 @@ const CardResult = () => {
    </div>
    <div className="col">
    <Typography.Text strong={true}>{totalArea}</Typography.Text> 
-   
+
          
    </div>
    </div>

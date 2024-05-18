@@ -255,8 +255,11 @@ const TableComponent = () => {
           if (index === dimensions.rowIndex) {
 
            
+            let heightForArea = Math.round((dimensions.Image_height / dimensions.yResolution) * 100) / 100;
+            let widthForArea = Math.round((dimensions.Image_width / dimensions.yResolution) * 100) / 100;
 
-            let area = (dimensions.Image_height * dimensions.Image_width) / 144;
+            let area = (heightForArea * widthForArea) / 144;
+            
             area = Math.round(area * 100) / 100;
                   
 

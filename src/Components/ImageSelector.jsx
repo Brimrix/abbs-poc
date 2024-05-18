@@ -71,9 +71,7 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 
-// Get the props from the table component to set the row dimensions for the table  provided by the user
-// SetDimensions is a function which will update the state of dimensions object so that the row entry is updated after 
-// obtaining the height and width of the image.
+
 
 const ImageSelector = ({setDimensions, rowIndex}) => {
   const [loading, setLoading] = useState(false);
