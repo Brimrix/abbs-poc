@@ -153,7 +153,7 @@ const TableComponent = () => {
      
         {
           key: counter+1,
-          image_name: "Sublimation 2x3",
+          image_name: "",
           upload: <ImageSelector rowIndex={counter} setDimensions={setDimensions} />, 
           height: 0,
           width: 0,
@@ -261,7 +261,11 @@ const TableComponent = () => {
               item.amount = Math.round(item.amount * 100) / 100;
              
 
-            }                     
+            }
+            if(dimensions.Image_height!==0 && dimensions.Image_width!==0){
+              console.log("DPI is", (dimensions.Image_width / dimensions.Image_height));
+            } 
+
              return {
 
               ...item, 

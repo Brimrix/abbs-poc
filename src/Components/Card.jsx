@@ -19,7 +19,6 @@ const CardResult = () => {
 
   const handleDiscountBlurChange = () => {
     const valueGrandTotal = subTotal-discountInput;
-    console.log(valueGrandTotal);
     setGrandTotal(valueGrandTotal);
   }
 
@@ -47,12 +46,11 @@ const CardResult = () => {
    
    setTotalArea(area);
    setSubTotal(subTotal);
+   setGrandTotal(subTotal-discountInput);
 
+  }, [billData]);
 
-  }, [billData])
-
-
-
+  
 
   const buttonStyle = {backgroundColor: "#FA9F42", color: "white", width: "135px", height: "38px"};
   
