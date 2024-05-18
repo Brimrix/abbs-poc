@@ -247,7 +247,7 @@ const TableComponent = () => {
 
       useEffect(() => {
 
-          
+          let previousIndex = 0;
           const modifiedArray = dataSource.map((item, index) => {
           
        
@@ -267,6 +267,9 @@ const TableComponent = () => {
              
 
             };
+
+            previousIndex = index;
+
              return {
 
               ...item, 
@@ -289,7 +292,7 @@ const TableComponent = () => {
         });
         
        
-        if(dimensions.height!==0 && dimensions.width!==0){
+        if(dimensions.height!==0 && dimensions.width!==0 && dataSource[previousIndex].height===0){
           handleAdd();
         }
         

@@ -28,14 +28,13 @@ function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex) 
       const Image_height = this.height;
       const image_name = imageInfo.name;
 
-   
+
         const exifData = await exifr.parse(imageInfo);
         const xResolution = exifData.XResolution;
         const yResolution = exifData.YResolution;
         const resolutionUnit = exifData.ResolutionUnit;
 
-   
-
+      
       setDimensions({Image_width, Image_height, image_name, rowIndex, yResolution, xResolution, resolutionUnit});
     
       
