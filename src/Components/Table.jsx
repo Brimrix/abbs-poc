@@ -27,7 +27,11 @@ const TableComponent = () => {
       image_name: '',
       height: 0,
       width: 0,
-      rowIndex: 0
+      rowIndex: 0,
+
+      xResolution: 0,
+      yResolution: 0,
+      resolutionUnit: '',
     })
     
         // Input tag change tracker
@@ -244,12 +248,13 @@ const TableComponent = () => {
       useEffect(() => {
 
           
-       
-         const modifiedArray = dataSource.map((item, index) => {
+          const modifiedArray = dataSource.map((item, index) => {
           
        
 
           if (index === dimensions.rowIndex) {
+
+           
 
             let area = (dimensions.Image_height * dimensions.Image_width) / 144;
             area = Math.round(area * 100) / 100;
@@ -261,16 +266,12 @@ const TableComponent = () => {
               item.amount = Math.round(item.amount * 100) / 100;
              
 
-            }
-            if(dimensions.Image_height!==0 && dimensions.Image_width!==0){
-              console.log("DPI is", (dimensions.Image_width / dimensions.Image_height));
-            } 
-
+            };
              return {
 
               ...item, 
-              height: dimensions.Image_height, 
-              width: dimensions.Image_width, 
+              height: Math.round((dimensions.Image_height / dimensions.yResolution) * 100) / 100 , 
+              width: Math.round((dimensions.Image_width / dimensions.xResolution) * 100) / 100, 
               area, 
               image_name: dimensions.image_name,
               
@@ -287,10 +288,10 @@ const TableComponent = () => {
           
         });
         
+       
         if(dimensions.height!==0 && dimensions.width!==0){
           handleAdd();
         }
-    
         
         setDataSource(modifiedArray);
       }, [dimensions]);

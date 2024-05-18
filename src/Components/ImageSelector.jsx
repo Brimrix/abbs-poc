@@ -5,7 +5,11 @@ import '@styles/ImageUploaderStyle.css';
 import {
    FileAddOutlined 
 } from '@ant-design/icons';
+import exifr from 'exifr';
+
+
 const {Paragraph} = Typography;
+
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
@@ -18,14 +22,21 @@ function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex) 
     const image = new Image();
     image.src = base64Data;
 
-    image.onload = function() {
+    image.onload = async function() {
 
       const Image_width = this.width;
       const Image_height = this.height;
       const image_name = imageInfo.name;
+
+   
+        const exifData = await exifr.parse(imageInfo);
+        const xResolution = exifData.XResolution;
+        const yResolution = exifData.YResolution;
+        const resolutionUnit = exifData.ResolutionUnit;
+
    
 
-      setDimensions({Image_width, Image_height, image_name, rowIndex});
+      setDimensions({Image_width, Image_height, image_name, rowIndex, yResolution, xResolution, resolutionUnit});
     
       
 
@@ -58,6 +69,7 @@ const ImageSelector = ({setDimensions, rowIndex}) => {
   const handleChange = (info) => {
 
     
+        
     if (info.file.status) {
 
       setLoading(true);
@@ -67,6 +79,11 @@ const ImageSelector = ({setDimensions, rowIndex}) => {
         setImageUrl(url);
         
         getImageInfoFromBase64(imageUrl, setDimensions, info.file.originFileObj, rowIndex);
+
+       
+     
+      
+
       
       });
       return;
@@ -75,6 +92,7 @@ const ImageSelector = ({setDimensions, rowIndex}) => {
     }
 
   };
+
   const uploadButton = (
     <button
       style={{
