@@ -24,17 +24,32 @@ function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex) 
 
     image.onload = async function() {
 
-      const Image_width = this.width;
-      const Image_height = this.height;
-      const image_name = imageInfo.name;
+      let Image_width = this.width;
+      let Image_height = this.height;
+      let image_name = imageInfo.name;
+      let xResolution;
+      let yResolution;
+      let resolutionUnit;
 
-
+      try{
         const exifData = await exifr.parse(imageInfo);
-        const xResolution = exifData.XResolution;
-        const yResolution = exifData.YResolution;
-        const resolutionUnit = exifData.ResolutionUnit;
-
+        xResolution = exifData.XResolution;
+        yResolution = exifData.YResolution;
+        resolutionUnit = exifData.ResolutionUnit;
+      }
+      catch{
+        console.log("There is an error in the xResolution & yResolution Computation");
+      }
       
+      console.log(typeof xResolution, typeof yResolution, typeof resolutionUnit===undefined);      
+      if(xResolution===undefined || yResolution===undefined || resolutionUnit===false){
+        xResolution = 1;
+        yResolution = 1;
+        resolutionUnit = '';
+        Image_height = 0;
+        Image_width = 0;
+
+      }
       setDimensions({Image_width, Image_height, image_name, rowIndex, yResolution, xResolution, resolutionUnit});
     
       
