@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { Flex, message, Upload, Typography } from 'antd';
-import '@styles/ImageUploaderStyle.css';
-import {
-   FileAddOutlined 
-} from '@ant-design/icons';
+import { Flex, message, Upload, Typography, Popover } from 'antd';
+import { imageContext } from '@/context/ImageContext';
 import exifr from 'exifr';
 
+
+import '@styles/ImageUploaderStyle.css';
+import {
+   FileAddOutlined
+} from '@ant-design/icons';
+
+
+const hoverImage = (imageSrc) => (
+
+  <>
+  {imageSrc ?  <img style={{height: "200px", width: "150px"}} src={imageSrc}/> : <span>Upload image!</span>}
+   
+
+  </>
+);
 
 const {Paragraph} = Typography;
 
@@ -18,7 +30,7 @@ const getBase64 = (img, callback) => {
 
 // I have now rowIndex and Name of the image file coming
 
-function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex) {
+function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex, setImageData, prevImageArray) {
     const image = new Image();
     image.src = base64Data;
 
@@ -40,8 +52,8 @@ function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex) 
       catch{
         console.log("There is an error in the xResolution & yResolution Computation");
       }
-      
-      console.log(typeof xResolution, typeof yResolution, typeof resolutionUnit===undefined);      
+
+      console.log(typeof xResolution, typeof yResolution, typeof resolutionUnit===undefined);
       if(xResolution===undefined || yResolution===undefined || resolutionUnit===false){
         xResolution = 1;
         yResolution = 1;
@@ -50,9 +62,14 @@ function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex) 
         Image_width = 0;
 
       }
+
+      // Context API
+
+      setImageData([...prevImageArray, {imageSrc: base64Data, rowIndex}]);
+
       setDimensions({Image_width, Image_height, image_name, rowIndex, yResolution, xResolution, resolutionUnit});
-    
-      
+
+
 
     };
   }
@@ -74,14 +91,27 @@ const beforeUpload = (file) => {
 
 
 const ImageSelector = ({setDimensions, rowIndex}) => {
+
+
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
+  const [imageActualSrc, setImageActualSrc] = useState();
 
+  const {imageData, setImageData} = useContext(imageContext);
+
+
+  useEffect(()=> {
+    imageData.forEach(element => {
+      if(element.rowIndex===rowIndex){
+        setImageActualSrc(element.imageSrc);
+      }
+    });
+  }, [])
 
   const handleChange = (info) => {
 
-    
-        
+
+
     if (info.file.status) {
 
       setLoading(true);
@@ -89,14 +119,14 @@ const ImageSelector = ({setDimensions, rowIndex}) => {
         getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
-        
-        getImageInfoFromBase64(imageUrl, setDimensions, info.file.originFileObj, rowIndex);
 
-       
-     
-      
+        getImageInfoFromBase64(imageUrl, setDimensions, info.file.originFileObj, rowIndex, setImageData, imageData);
 
-      
+
+
+
+
+
       });
       return;
 
@@ -124,8 +154,11 @@ const ImageSelector = ({setDimensions, rowIndex}) => {
     </button>
   );
   return (
+    <>
+
+      <Popover placement="left" content={hoverImage(imageActualSrc)}>
       <Upload
-        
+
         name="avatar"
         listType="picture-card"
         className="avatar-uploader"
@@ -134,18 +167,21 @@ const ImageSelector = ({setDimensions, rowIndex}) => {
         beforeUpload={beforeUpload}
         onChange={handleChange}
       >
-      
+
         <div style={{color: '#0B6E4F'}} className='d-flex align-items-center justify-content-between'>
-         
+
 
       <FileAddOutlined  />
-      <Typography.Text>Select File</Typography.Text> 
+      <Typography.Text>Select File</Typography.Text>
 
 
         </div>
-      
+
       </Upload>
-    
+      </Popover>
+    </>
+
+
   );
 };
 export default ImageSelector;

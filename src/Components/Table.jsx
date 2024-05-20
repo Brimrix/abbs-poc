@@ -1,5 +1,5 @@
 import React, {  useEffect, useState, useContext } from 'react';
-import { Button, Table, Upload, InputNumber, Typography, message } from 'antd';
+import { Button, Table, Upload, InputNumber, Typography, message, Popover } from 'antd';
 import ImageSelector from '@/components/ImageSelector';
 import '@styles/TableStyle.css';
 
@@ -195,9 +195,14 @@ const TableComponent = () => {
           {key: counter, 
 
             image_name: '', 
-            upload: <ImageSelector 
+            upload: 
+           
+            <ImageSelector 
             rowIndex={counter-1} 
-            setDimensions={setDimensions} />, 
+            setDimensions={setDimensions} />
+          
+            
+            , 
             height: 0, width:0, area: 0,
 
 

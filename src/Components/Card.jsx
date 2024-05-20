@@ -114,7 +114,7 @@ const CardResult = () => {
 
    <div className="row gx-4 mt-1">
    <div className="col">
-   <Button style={buttonStyle} onClick={() => console.log(dataSource)}>Print Slip</Button>
+   <Button style={buttonStyle}>Print Slip</Button>
 
 
    </div>

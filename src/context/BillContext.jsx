@@ -13,6 +13,8 @@ export const BillProvider = ({ children }) => {
             {children}
         </billContext.Provider>
     )
+
+
 }
 
 

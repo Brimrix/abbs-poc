@@ -13,8 +13,8 @@ import {
   FileOutlined,
   MessageOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, theme, Input, DatePicker, Typography, Button, InputNumber, Space, Badge, Divider  } from 'antd';
 
+import { Layout, Menu, theme, Input, DatePicker, Typography, Button, InputNumber, Space, Badge, Divider  } from 'antd';
 
 import TableComponent from '@/components/Table';
 import CardResult from '@/components/Card';
