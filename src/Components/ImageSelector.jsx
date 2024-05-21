@@ -30,45 +30,53 @@ const getBase64 = (img, callback) => {
 
 // I have now rowIndex and Name of the image file coming
 
+
+
+
+
 function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex, setImageData, prevImageArray) {
     const image = new Image();
     image.src = base64Data;
+    
 
     image.onload = async function() {
 
       let Image_width = this.width;
       let Image_height = this.height;
       let image_name = imageInfo.name;
-      let xResolution;
-      let yResolution;
+      let xResolution = 0;
+      let yResolution = 0;
       let resolutionUnit;
+      let validTracking = false;     
 
-      try{
-        const exifData = await exifr.parse(imageInfo);
-        xResolution = exifData.XResolution;
-        yResolution = exifData.YResolution;
-        resolutionUnit = exifData.ResolutionUnit;
+
+      async function handleImageData(base64Data, rowIndex, prevImageArray) {
+     
+          try {
+
+                const exifData = await exifr.parse(imageInfo);
+                xResolution = exifData.XResolution;
+                yResolution = exifData.YResolution;
+                resolutionUnit = exifData.ResolutionUnit;
+
+                if(xResolution){
+                  console.log("HELLO WORld", xResolution);
+                  await setImageData([...prevImageArray, { imageSrc: base64Data, rowIndex }]);
+                  await setDimensions({ Image_width, Image_height, image_name, rowIndex, yResolution, xResolution, resolutionUnit });
+                }
+                          
+  
+          } 
+          catch (error) {
+            message.error("Error setting image data or dimensions.");
+          }
+  
+        
+  
+      
       }
-      catch{
-        console.log("There is an error in the xResolution & yResolution Computation");
-      }
 
-      console.log(typeof xResolution, typeof yResolution, typeof resolutionUnit===undefined);
-      if(xResolution===undefined || yResolution===undefined || resolutionUnit===false){
-        xResolution = 1;
-        yResolution = 1;
-        resolutionUnit = '';
-        Image_height = 0;
-        Image_width = 0;
-
-      }
-
-      // Context API
-
-      setImageData([...prevImageArray, {imageSrc: base64Data, rowIndex}]);
-
-      setDimensions({Image_width, Image_height, image_name, rowIndex, yResolution, xResolution, resolutionUnit});
-
+    handleImageData(base64Data, rowIndex, prevImageArray);
 
 
     };
@@ -78,6 +86,7 @@ function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex, 
 
 const beforeUpload = (file) => {
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+ 
   if (!isJpgOrPng) {
     message.error('You can only upload JPG/PNG file!');
   }
@@ -96,6 +105,7 @@ const ImageSelector = ({setDimensions, rowIndex}) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
   const [imageActualSrc, setImageActualSrc] = useState();
+  const [infoFile, setInfoFile] = useState();
 
   const {imageData, setImageData} = useContext(imageContext);
 
@@ -106,7 +116,16 @@ const ImageSelector = ({setDimensions, rowIndex}) => {
         setImageActualSrc(element.imageSrc);
       }
     });
-  }, [])
+  }, []);
+
+
+  useEffect(()=> {
+
+    getImageInfoFromBase64(imageUrl, setDimensions, infoFile, rowIndex, setImageData, imageData);
+
+  }, [imageUrl]);
+
+
 
   const handleChange = (info) => {
 
@@ -120,12 +139,7 @@ const ImageSelector = ({setDimensions, rowIndex}) => {
         setLoading(false);
         setImageUrl(url);
 
-        getImageInfoFromBase64(imageUrl, setDimensions, info.file.originFileObj, rowIndex, setImageData, imageData);
-
-
-
-
-
+        setInfoFile(info.file.originFileObj);
 
       });
       return;
@@ -134,6 +148,8 @@ const ImageSelector = ({setDimensions, rowIndex}) => {
     }
 
   };
+
+
 
   const uploadButton = (
     <button
