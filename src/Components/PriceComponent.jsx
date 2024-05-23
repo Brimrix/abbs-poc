@@ -3,30 +3,44 @@ import { InputNumber } from 'antd';
 import { useContext } from 'react';
 import { billContext } from '@/context/BillContext';
 
-const PriceComponent = ({_id, defaultInputValue}) => {
+const PriceComponent = ({_id, defaultInputValue, reRender}) => {
   const [value, setValue] = useState(0);
   const {state, dispatch} = useContext(billContext);
+  const [stateArea, setStateArea] = useState(0);
+  const [stateQuantity, setStateQuantity] = useState(0);
+  const [eventDispatch, setEventDispatch] = useState(false);
 
   useEffect(() => {
     
-    debugger;
     setValue(defaultInputValue); 
+    setStateArea(state.billData[_id].area);
+    setStateQuantity(state.billData[_id].actualQuantity);
 
-  }, [defaultInputValue, _id]);
+  }, [reRender]);
 
+  useEffect(() => {
+
+    dispatch({
+      type: "PRICE_CHANGE",
+      payload: {
+          _key: _id,
+          actualPrice: value,
+          AMOUNT: Math.round((stateArea * value * stateQuantity) * 100) / 100,
+      }
+  })
+
+  }, [stateArea, stateQuantity, eventDispatch]);
+
+ 
 
   const handlePriceChange = (value) => {
     setValue(value);
   }
   const handleBlurChange = (_id) => {
-    dispatch({
-        type: "PRICE_CHANGE",
-        payload: {
-            _key: _id,
-            actualPrice: value,
-            AMOUNT: Math.round((state.billData[_id].area * value * state.billData[_id].actualQuantity) * 100) / 100,
-        }
-    })
+
+    setStateArea(state.billData[_id].area);
+    setStateQuantity(state.billData[_id].actualQuantity);
+    setEventDispatch((prev) => !prev);
     
   }
 

@@ -1,11 +1,21 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { LoadingOutlined, PlusOutlined, FileAddOutlined } from '@ant-design/icons';
-import { message, Upload, Typography } from 'antd';
+import { message, Upload, Typography, Popover } from 'antd';
 import '@styles/ImageUploaderStyle.css';
 import { billContext } from '@/context/BillContext';
 import exifr from 'exifr';
 
 const { Paragraph } = Typography;
+
+
+
+const imageHoverPopover = (imageSource) => {
+  return (
+    imageSource ? 
+    <img style={{height: "200px", width: "150px"}} src={imageSource} /> : <span>Upload image</span>
+  );
+}
+
 
 const getBase64 = (file, callback) => {
   const reader = new FileReader();
@@ -32,6 +42,7 @@ const ImageSelector = ({_id}) => {
   const [imageUrl, setImageUrl] = useState(null);
   const [success, setSuccess] = useState(false);
   const [infoFile, setInfoFile] = useState();
+  const [isError, setError] = useState(false);
 
   const {state, dispatch} = useContext(billContext);
 
@@ -39,6 +50,9 @@ const ImageSelector = ({_id}) => {
     
   }
 
+  useEffect(() => {
+    setImageUrl('');
+  }, [isError])
 
   useEffect(() => {
     if (imageUrl && infoFile) {
@@ -75,8 +89,9 @@ const ImageSelector = ({_id}) => {
             })
             message.success("Successfully uploaded")
           }    
-          else
-          message.error("Invalid Image")
+          else{           
+            message.error("Invalid Image");
+          }
         
         }
         catch{
@@ -87,7 +102,7 @@ const ImageSelector = ({_id}) => {
         
       };
 
-      imageFile.onerror = function() {
+        imageFile.onerror = function() {
         console.error("Image failed to load.");
       };
     }
@@ -128,6 +143,8 @@ const ImageSelector = ({_id}) => {
   }
 
   return (
+
+    <Popover placement="left" content={imageHoverPopover(imageUrl)}>
     <Upload
       name="avatar"
       listType="picture-card"
@@ -143,6 +160,7 @@ const ImageSelector = ({_id}) => {
         <Typography.Text>Select File</Typography.Text>
       </div>
     </Upload>
+      </Popover>
   );
 };
 
