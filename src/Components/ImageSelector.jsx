@@ -38,7 +38,7 @@ const beforeUpload = (file) => {
 
 };
 
-const ImageSelector = ({_id, reRender}) => {
+const ImageSelector = ({_id, reRender, renderSource}) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -48,10 +48,8 @@ const ImageSelector = ({_id, reRender}) => {
   const {state, dispatch} = useContext(billContext);
 
   useEffect(() => {
-    
-      setIsProcess(false);
-    
-  }, [reRender])
+     setImageUrl(renderSource);
+  }, [renderSource]);
 
   useEffect(() => {
     if (imageUrl && infoFile) {

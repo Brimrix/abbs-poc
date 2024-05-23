@@ -97,37 +97,21 @@ export const BillProvider = ({ children }) => {
               ),
             };
       
-          case "REMOVE_ROW":
-            let filteredData = state.billData.filter(item => item.key !== action.payload._key);
-            
-            return {
-              ...state,
-              billData: filteredData.map((item, index) => 
-                
-                                  
-                index === action.payload._key
-                  ? {
+            case "REMOVE_ROW":
+              const filteredData = state.billData.filter(item => item.key !== action.payload._key);
+              
+              return {
+                  ...state,
+                  billData: filteredData.map((item, index) => ({
                       ...item,
-                      upload: <ImageSelector _id={Number(index)} reRender={true} />,
-                      price: <PriceComponent _id={Number(index)} defaultInputValue={item.actualPrice} reRender={true} />,
-                      quantity: <QuantityComponent _id={Number(index)} defaultInputValue={item.actualQuantity} reRender={true}  />,
-                      actions: <DeleteIcon _id={Number(index)} />,
+                      upload: <ImageSelector _id={index} reRender={true} renderSource={item.image_src} />,
+                      price: <PriceComponent _id={index} defaultInputValue={item.actualPrice} reRender={true} />,
+                      quantity: <QuantityComponent _id={index} defaultInputValue={item.actualQuantity} reRender={true} />,
+                      actions: <DeleteIcon _id={index} />,
                       key: index,
                       order: index + 1,
-                                     
-                    }
-                  : {
-                    ...item,
-                    key: index,
-                    order: index + 1,
-                  }
-              ),
-            };
-           
-            
-            debugger;
-
-           
+                  })),
+              };        
           
         }
       };
