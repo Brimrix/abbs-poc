@@ -1,82 +1,20 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { Flex, message, Upload, Typography, Popover } from 'antd';
-import { imageContext } from '@/context/ImageContext';
+import { LoadingOutlined, PlusOutlined, FileAddOutlined } from '@ant-design/icons';
+import { message, Upload, Typography } from 'antd';
+import '@styles/ImageUploaderStyle.css';
+import { billContext } from '@/context/BillContext';
 import exifr from 'exifr';
 
+const { Paragraph } = Typography;
 
-import '@styles/ImageUploaderStyle.css';
-import {
-   FileAddOutlined
-} from '@ant-design/icons';
-
-
-const hoverImage = (imageSrc) => (
-
-  <>
-  {imageSrc ?  <img style={{height: "200px", width: "150px"}} src={imageSrc}/> : <span>Upload image!</span>}
-   
-
-  </>
-);
-
-const {Paragraph} = Typography;
-
-const getBase64 = (img, callback) => {
+const getBase64 = (file, callback) => {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
+  reader.readAsDataURL(file);
 };
 
-// I have now rowIndex and Name of the image file coming
-
-function getImageInfoFromBase64(base64Data, setDimensions, imageInfo, rowIndex, setImageData, prevImageArray) {
-    const image = new Image();
-    image.src = base64Data;
-
-    image.onload = async function() {
-
-      let Image_width = this.width;
-      let Image_height = this.height;
-      let image_name = imageInfo.name;
-      let xResolution;
-      let yResolution;
-      let resolutionUnit;
-
-      try{
-        const exifData = await exifr.parse(imageInfo);
-        xResolution = exifData.XResolution;
-        yResolution = exifData.YResolution;
-        resolutionUnit = exifData.ResolutionUnit;
-      }
-      catch{
-        console.log("There is an error in the xResolution & yResolution Computation");
-      }
-
-      console.log(typeof xResolution, typeof yResolution, typeof resolutionUnit===undefined);
-      if(xResolution===undefined || yResolution===undefined || resolutionUnit===false){
-        xResolution = 1;
-        yResolution = 1;
-        resolutionUnit = '';
-        Image_height = 0;
-        Image_width = 0;
-
-      }
-
-      // Context API
-
-      setImageData([...prevImageArray, {imageSrc: base64Data, rowIndex}]);
-
-      setDimensions({Image_width, Image_height, image_name, rowIndex, yResolution, xResolution, resolutionUnit});
-
-
-
-    };
-  }
-
-
-
 const beforeUpload = (file) => {
+
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
   if (!isJpgOrPng) {
     message.error('You can only upload JPG/PNG file!');
@@ -86,102 +24,126 @@ const beforeUpload = (file) => {
     message.error('Image must smaller than 2MB!');
   }
   return isJpgOrPng && isLt2M;
+
 };
 
-
-
-const ImageSelector = ({setDimensions, rowIndex}) => {
-
-
+const ImageSelector = ({_id}) => {
   const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState();
-  const [imageActualSrc, setImageActualSrc] = useState();
+  const [imageUrl, setImageUrl] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [infoFile, setInfoFile] = useState();
 
-  const {imageData, setImageData} = useContext(imageContext);
+  const {state, dispatch} = useContext(billContext);
 
-
-  useEffect(()=> {
-    imageData.forEach(element => {
-      if(element.rowIndex===rowIndex){
-        setImageActualSrc(element.imageSrc);
-      }
-    });
-  }, [])
-
-  const handleChange = (info) => {
+  const getDimensions = () => {
+    
+  }
 
 
+  useEffect(() => {
+    if (imageUrl && infoFile) {
+      let imageFile = new Image();
+      imageFile.src = imageUrl;
+      let xResolution = 0;
+      let yResolution = 0; 
+      let resolutionUnit = 0;
 
-    if (info.file.status) {
+      imageFile.onload = async function() {
+   
+        try{
+          const exifData = await exifr.parse(infoFile);
+          xResolution = exifData.XResolution;
+          yResolution = exifData.YResolution;
+          resolutionUnit = exifData.ResolutionUnit;
+          if(resolutionUnit && xResolution && yResolution){
+            const calculatedHeight = Math.round((this.height / yResolution) * 100) / 100;
+            const calculatedWidth = Math.round((this.width / xResolution) * 100) / 100;
+            const calculatedAREA =  Math.round(((calculatedHeight * calculatedWidth) / 144) * 100 ) / 100
+            dispatch({
+            
+              type: "SET_DIMENSION",
+              payload: {
+              name: infoFile.name,
+              IMAGE_SOURCE: imageUrl, 
+              HEIGHT: calculatedHeight,
+              WIDTH: calculatedWidth,
+              area:  calculatedAREA,
+              AMOUNT: Math.round((calculatedAREA * state.billData[_id].actualPrice * state.billData[_id].actualQuantity) * 100) / 100,
 
-      setLoading(true);
+              _key: _id,
+              }
+            })
+            message.success("Successfully uploaded")
+          }    
+          else
+          message.error("Invalid Image")
+        
+        }
+        catch{
+          message.error("There is an error in the image");
+        }
+        
+       
+        
+      };
 
-        getBase64(info.file.originFileObj, (url) => {
-        setLoading(false);
-        setImageUrl(url);
+      imageFile.onerror = function() {
+        console.error("Image failed to load.");
+      };
+    }
+  }, [success]);
 
-        getImageInfoFromBase64(imageUrl, setDimensions, info.file.originFileObj, rowIndex, setImageData, imageData);
-
-
-
-
-
-
-      });
+  const handleChange = info => {
+    if (info.file.status === 'uploading') {
       return;
-
-
     }
 
+
+    if (info.file.status === 'done' || info.file.status === 'removed') {
+        getBase64(info.file.originFileObj, imageUrl => {
+        setImageUrl(imageUrl);
+        setSuccess(prev => !prev);
+        setInfoFile(info.file.originFileObj);
+        setLoading(false);      
+  
+      
+      });
+    } else if (info.file.status === 'error') {
+      setLoading(false);
+      message.error('Upload failed.');
+    }
   };
 
-  const uploadButton = (
-    <button
-      style={{
-        border: 0,
-        background: 'none',
-      }}
-      type="button"
-    >
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
-    </button>
-  );
+  const customRequest = ({ file, onSuccess }) => {
+    setTimeout(() => {
+      onSuccess("ok");
+    }, 0);
+  };
+
+  const UploadButton = () => {
+    <div>
+    {loading ? <LoadingOutlined /> : <PlusOutlined />}
+    <div style={{ marginTop: 8 }}>Upload</div>
+  </div>
+  }
+
   return (
-    <>
-
-      <Popover placement="left" content={hoverImage(imageActualSrc)}>
-      <Upload
-
-        name="avatar"
-        listType="picture-card"
-        className="avatar-uploader"
-        showUploadList={false}
-        action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-        beforeUpload={beforeUpload}
-        onChange={handleChange}
-      >
-
-        <div style={{color: '#0B6E4F'}} className='d-flex align-items-center justify-content-between'>
-
-
-      <FileAddOutlined  />
-      <Typography.Text>Select File</Typography.Text>
-
-
-        </div>
-
-      </Upload>
-      </Popover>
-    </>
-
-
+    <Upload
+      name="avatar"
+      listType="picture-card"
+      className="avatar-uploader"
+      showUploadList={false}
+      beforeUpload={beforeUpload}
+      onChange={handleChange}
+      customRequest={customRequest}
+    >
+     <UploadButton />
+      <div style={{ color: '#0B6E4F' }} className='d-flex align-items-center justify-content-between'>
+        <FileAddOutlined />
+        <Typography.Text>Select File</Typography.Text>
+      </div>
+    </Upload>
   );
 };
+
 export default ImageSelector;

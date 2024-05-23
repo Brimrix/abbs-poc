@@ -5,7 +5,7 @@ import { billContext } from '@/context/BillContext';
 const CardResult = () => {
 
 
-  const { billData } = useContext(billContext);
+  const { state } = useContext(billContext);
 
   const [totalArea, setTotalArea] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
@@ -24,15 +24,16 @@ const CardResult = () => {
 
   useEffect(()=> {
 
+    console.log(state.billData);
    let area = 0;
    let subTotal = 0;
 
-   billData.forEach(element => {
+   state.billData.forEach(element => {
     area += element.area;
     
    });
 
-   billData.forEach(element => {
+   state.billData.forEach(element => {
     subTotal += element.amount;
    })
 
@@ -49,7 +50,7 @@ const CardResult = () => {
    setSubTotal(subTotal);
    setGrandTotal(subTotal-discountInput);
 
-  }, [billData]);
+  }, [state]);
 
   
 
