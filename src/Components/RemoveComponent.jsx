@@ -31,6 +31,7 @@ const DeleteIcon = ({_id}) => {
        <>
         <Modal
         open={open}
+        okText="Delete"
         title="Confirmation"
         onOk={() => handleOkay(_id)}
         onCancel={() => setOpen(false)}
@@ -43,7 +44,7 @@ const DeleteIcon = ({_id}) => {
         )}
       >
     
-        <span>Do you confirm to delete ? </span>
+        <span>Are you sure you want to delete ? </span>
       
       
       </Modal>

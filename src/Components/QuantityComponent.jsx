@@ -3,7 +3,7 @@ import { InputNumber } from 'antd';
 import { useContext } from 'react';
 import { billContext } from '@/context/BillContext';
 
-const PriceComponent = ({_id, defaultInputValue, reRender}) => {
+const QuantityComponent = ({_id, defaultInputValue, reRender}) => {
   const [value, setValue] = useState('');
   const {state, dispatch} = useContext(billContext);
   const [defaultVal, setDefaultVal] = useState(0);
@@ -49,4 +49,4 @@ const PriceComponent = ({_id, defaultInputValue, reRender}) => {
   )
 }
 
-export default PriceComponent;
+export default QuantityComponent;

@@ -9,9 +9,9 @@ const { Paragraph } = Typography;
 
 
 
-const imageHoverPopover = (imageSource) => {
+const imageHoverPopover = (imageSource, isProcess) => {
   return (
-    imageSource ? 
+    imageSource && isProcess ? 
     <img style={{height: "200px", width: "150px"}} src={imageSource} /> : <span>Upload image</span>
   );
 }
@@ -38,22 +38,20 @@ const beforeUpload = (file) => {
 
 };
 
-const ImageSelector = ({_id}) => {
+const ImageSelector = ({_id, reRender}) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [success, setSuccess] = useState(false);
   const [infoFile, setInfoFile] = useState();
-  const [isError, setError] = useState(false);
+  const [isProcess, setIsProcess] = useState(false);
 
   const {state, dispatch} = useContext(billContext);
 
-  const getDimensions = () => {
-    
-  }
-
   useEffect(() => {
-    setImageUrl('');
-  }, [isError])
+    
+      setIsProcess(false);
+    
+  }, [reRender])
 
   useEffect(() => {
     if (imageUrl && infoFile) {
@@ -70,7 +68,9 @@ const ImageSelector = ({_id}) => {
           xResolution = exifData.XResolution;
           yResolution = exifData.YResolution;
           resolutionUnit = exifData.ResolutionUnit;
+          
           if(resolutionUnit && xResolution && yResolution){
+
             const calculatedHeight = Math.round((this.height / yResolution) * 100) / 100;
             const calculatedWidth = Math.round((this.width / xResolution) * 100) / 100;
             const calculatedAREA =  Math.round(((calculatedHeight * calculatedWidth) / 144) * 100 ) / 100
@@ -88,14 +88,17 @@ const ImageSelector = ({_id}) => {
               _key: _id,
               }
             })
-            message.success("Successfully uploaded")
+            setIsProcess(true);
+            message.success("Successfully uploaded");
           }    
           else{           
+            setIsProcess(false);
             message.error("Invalid Image");
           }
         
         }
         catch{
+          setIsProcess(false);
           message.error("There is an error in the image");
         }
         
@@ -108,6 +111,8 @@ const ImageSelector = ({_id}) => {
       };
     }
   }, [success]);
+
+  
 
   const handleChange = info => {
     if (info.file.status === 'uploading') {
@@ -145,7 +150,7 @@ const ImageSelector = ({_id}) => {
 
   return (
 
-    <Popover placement="left" content={imageHoverPopover(imageUrl)}>
+    <Popover placement="left" content={imageHoverPopover(imageUrl, isProcess)}>
     <Upload
       name="avatar"
       listType="picture-card"
