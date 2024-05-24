@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import {MinusCircleOutlined} from "@ant-design/icons";
-import { Tooltip, Modal, message } from 'antd';
-import '@styles/Tooltip.css';
+import { Modal, message, Popover } from 'antd';
 import { billContext } from '@/context/BillContext';
 
 const DeleteIcon = ({_id}) => {
@@ -48,7 +47,13 @@ const DeleteIcon = ({_id}) => {
       
       
       </Modal>
-    <Tooltip  title="Delete Row" arrow={false}> <MinusCircleOutlined onClick={handleClick} style={{fontSize: "15px", color: "#C41E3A"}}/> </Tooltip>
+      <Popover 
+      placement='top' 
+      content={"Remove Row"}
+    >
+     <MinusCircleOutlined onClick={handleClick} style={{fontSize: "15px", color: "#C41E3A"}} />
+
+    </Popover>
     </>
 
        

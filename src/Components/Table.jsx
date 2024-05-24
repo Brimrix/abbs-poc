@@ -26,10 +26,6 @@ const TableComponent = () => {
 
     }, [state.billData]);
 
-    useEffect(() => {
-      console.log(state);
-    }, [state]);
-
 
     const handleAddRows = () => {
         dispatch({

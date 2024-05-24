@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Layout, Input, DatePicker, Divider, Select  } from 'antd';
+import { Layout, Input, DatePicker, Divider, Select, Popover  } from 'antd';
 const {Header} = Layout;
 import {
 
     UserOutlined, CalendarOutlined, MessageOutlined, CloudDownloadOutlined, MailOutlined, PrinterOutlined
 
 } from '@ant-design/icons';
-
 import {billContext} from '@/context/BillContext';
+
 
 
 const secondary_color = "#FA9F42";
@@ -98,8 +98,12 @@ const ClientSearch = () => {
 
 
 
-
+     <Popover placement="top" content={<span>Due Date</span>}>
        <DatePicker onChange={handleDateChange} suffixIcon={<CalendarOutlined style={{color: secondary_color, fontSize: "20px"}} />} />
+
+     </Popover>
+
+      
 
       </div>
     
