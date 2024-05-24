@@ -12,6 +12,11 @@ const TableComponent = () => {
     const {state, dispatch} = useContext(billContext);
     const [rowsTable, setRowsTable] = useState([]);
     const [actualRows, setActualRows] = useState([]);
+    const [tableLoading, setTableLoading] = useState(false);
+
+    useEffect(() => {
+      setTableLoading(false);
+    }, [actualRows])
 
     useEffect(() => {
       
@@ -22,6 +27,7 @@ const TableComponent = () => {
 
     useEffect(() => {
       
+      setTableLoading(true);
       setRowsTable(state.billData);
 
     }, [state.billData]);
@@ -129,7 +135,7 @@ const TableComponent = () => {
       style={{marginBottom: "20px"}}
       scroll={{ y: 220 }}
       pagination={false}
-
+      loading={tableLoading}
       dataSource={actualRows} size={'small'} 
       columns={columns} />
     
