@@ -49,8 +49,10 @@ const DeleteIcon = ({_id}) => {
       </Modal>
       <Popover 
       placement='top' 
-      content={"Remove Row"}
-    >
+      content={"Remove Row"} 
+    
+      >
+      
      <MinusCircleOutlined onClick={handleClick} style={{fontSize: "15px", color: "#C41E3A"}} />
 
     </Popover>

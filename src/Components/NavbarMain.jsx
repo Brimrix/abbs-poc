@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Layout, Input, Space, Badge, Divider, Avatar  } from 'antd';
 import {QuestionCircleFilled, BellFilled, UserOutlined} from '@ant-design/icons';
+import '@styles/SearchBox.css';
 
 const {Header} = Layout;
 const {Search} = Input;
