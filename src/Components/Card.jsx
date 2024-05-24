@@ -14,13 +14,16 @@ const CardResult = () => {
   const [discountInput, setDiscountInput] = useState(0);
 
   const handleDiscountChange = (value) => {
+
     setDiscountInput(value);
   }
 
-  const handleDiscountBlurChange = () => {
-    const valueGrandTotal = subTotal-discountInput;
-    setGrandTotal(valueGrandTotal);
-  }
+  useEffect(() => {
+
+    let grandTotal = Math.round((subTotal-discountInput) * 100) / 100;
+    setGrandTotal(grandTotal);
+
+  }, [discountInput]);
 
   useEffect(()=> {
 
@@ -44,10 +47,11 @@ const CardResult = () => {
   
    subTotal = Math.round(subTotal * 100) / 100;
    area = Math.round(area * 100) / 100;
+   let grandTotal = Math.round((subTotal-discountInput) * 100) / 100;
    
    setTotalArea(area);
    setSubTotal(subTotal);
-   setGrandTotal(subTotal-discountInput);
+   setGrandTotal(grandTotal);
 
   }, [state]);
 
@@ -92,7 +96,7 @@ const CardResult = () => {
                 
    </div>
    <div className="col">
-   <InputNumber onBlur={handleDiscountBlurChange} onChange={handleDiscountChange} />
+   <InputNumber onChange={handleDiscountChange} />
    
          
    </div>
