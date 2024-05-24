@@ -10,8 +10,20 @@ const PriceComponent = ({_id, defaultInputValue, reRender}) => {
 
   useEffect(() => {
 
+    let flag = true;
+    if(flag)
+    {    
     setValue(defaultInputValue); 
-
+       dispatch({
+      type: "PRICE_CHANGE",
+      payload: {
+      _key: _id,
+      actualPrice: defaultInputValue,
+      AMOUNT: Math.round((state.billData[_id].area * defaultInputValue * state.billData[_id].actualQuantity) * 100) / 100,
+    }
+      })
+  }
+    return () => flag = false;
     }, [reRender, defaultInputValue]);
 
 

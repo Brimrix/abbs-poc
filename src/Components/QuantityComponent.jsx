@@ -8,9 +8,25 @@ const QuantityComponent = ({_id, defaultInputValue, reRender}) => {
   const {state, dispatch} = useContext(billContext); 
 
   useEffect(() => {
-       
-      setValue(defaultInputValue); 
-    
+      debugger;
+      let flag = true;
+      if(flag)
+        {
+          setValue(defaultInputValue); 
+          dispatch({
+            type: "QUANTITY_CHANGE",
+            payload: {
+                _key: _id,
+                actualQuantity: defaultInputValue,
+                AMOUNT: Math.round((state.billData[_id].area * state.billData[_id].actualPrice * defaultInputValue) * 100) / 100,
+      
+            }
+        });
+        }
+      
+
+      return () => flag = false;
+
   }, [reRender, defaultInputValue]);
 
 
@@ -31,7 +47,7 @@ const QuantityComponent = ({_id, defaultInputValue, reRender}) => {
 
   }
   return (
-    <InputNumber value={value} onChange={handleQuantityChange} onBlur={() => handleBlurChange(_id)} min={0} variant='filled' max={1000} precision={2}  />
+    <InputNumber value={value} onChange={handleQuantityChange} onBlur={() => handleBlurChange(_id)} min={0} variant='filled' max={1000} precision={0} />
   )
 }
 

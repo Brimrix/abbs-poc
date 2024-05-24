@@ -48,8 +48,18 @@ const ImageSelector = ({_id, reRender, renderSource}) => {
   const {state, dispatch} = useContext(billContext);
 
   useEffect(() => {
-     setImageUrl(renderSource);
-  }, [renderSource]);
+
+     let flag = true;
+     if(flag){
+
+       setImageUrl(renderSource);
+       setIsProcess(true);
+    
+      }
+
+     return () => flag = false;
+
+  }, [renderSource, reRender]);
 
   useEffect(() => {
     if (imageUrl && infoFile) {
@@ -96,6 +106,7 @@ const ImageSelector = ({_id, reRender, renderSource}) => {
         
         }
         catch{
+          
           setIsProcess(false);
           message.error("There is an error in the image");
         }
