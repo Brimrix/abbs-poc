@@ -33,6 +33,11 @@ export const BillProvider = ({ children }) => {
             image_src: '',
           },
         ],
+
+        clientDetails: {
+          clientName: "",
+          billDate: "",
+        },
       };
       
       const reducerMethod = (state, action) => {
@@ -111,10 +116,25 @@ export const BillProvider = ({ children }) => {
                       key: index,
                       order: index + 1,
                   })),
-              };        
+              };  
+              
+              case "SET_CLIENT_DETAILS":
+                return {
+
+                  ...state,
+                  clientDetails: {
+                    clientName: action.payload.name,
+                    billDate: action.payload.date,
+                  }
+                 
+                };
           
         }
       };
+
+      
+
+            
       
       // UseReducer setup
       const [state, dispatch] = useReducer(reducerMethod, initialState);

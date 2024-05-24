@@ -9,10 +9,10 @@ const { Paragraph } = Typography;
 
 
 
-const imageHoverPopover = (imageSource, isProcess) => {
+const imageHoverPopover = (actualImageURL, isProcess) => {
   return (
-    imageSource && isProcess ? 
-    <img style={{height: "200px", width: "150px"}} src={imageSource} /> : <span>Upload image</span>
+    actualImageURL && isProcess ? 
+    <img style={{height: "200px", width: "150px"}} src={actualImageURL} /> : <span>Upload image</span>
   );
 }
 
@@ -41,6 +41,7 @@ const beforeUpload = (file) => {
 const ImageSelector = ({_id, reRender, renderSource}) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
+  const [actualImageURL, setActualImageURL] = useState('');
   const [success, setSuccess] = useState(false);
   const [infoFile, setInfoFile] = useState();
   const [isProcess, setIsProcess] = useState(false);
@@ -52,7 +53,7 @@ const ImageSelector = ({_id, reRender, renderSource}) => {
      let flag = true;
      if(flag){
 
-       setImageUrl(renderSource);
+       setActualImageURL(renderSource);
        setIsProcess(true);
     
       }
@@ -81,7 +82,8 @@ const ImageSelector = ({_id, reRender, renderSource}) => {
 
             const calculatedHeight = Math.round((this.height / yResolution) * 100) / 100;
             const calculatedWidth = Math.round((this.width / xResolution) * 100) / 100;
-            const calculatedAREA =  Math.round(((calculatedHeight * calculatedWidth) / 144) * 100 ) / 100
+            const calculatedAREA =  Math.round(((calculatedHeight * calculatedWidth) / 144) * 100 ) / 100;
+            setActualImageURL(imageUrl);
             dispatch({
             
               type: "SET_DIMENSION",
@@ -100,14 +102,11 @@ const ImageSelector = ({_id, reRender, renderSource}) => {
             message.success("Successfully uploaded");
           }    
           else{           
-            setIsProcess(false);
             message.error("Invalid Image");
           }
         
         }
         catch{
-          
-          setIsProcess(false);
           message.error("There is an error in the image");
         }
         
@@ -159,7 +158,7 @@ const ImageSelector = ({_id, reRender, renderSource}) => {
 
   return (
 
-    <Popover placement="left" content={imageHoverPopover(imageUrl, isProcess)}>
+    <Popover placement="left" content={imageHoverPopover(actualImageURL, isProcess)}>
     <Upload
       name="avatar"
       listType="picture-card"

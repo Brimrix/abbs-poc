@@ -24,6 +24,10 @@ const TableComponent = () => {
       
       setRowsTable(state.billData);
 
+    }, [state.billData]);
+
+    useEffect(() => {
+      console.log(state);
     }, [state]);
 
 

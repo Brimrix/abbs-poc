@@ -24,7 +24,6 @@ const CardResult = () => {
 
   useEffect(()=> {
 
-    console.log(state.billData);
    let area = 0;
    let subTotal = 0;
 
