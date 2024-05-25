@@ -1,21 +1,17 @@
-import React from "react";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import LayoutMain from '@/components/LayoutMain';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-const App = () => {
-  // New App Configurations
- 
+
+function App() {
   return (
-    <div >
+    <div>
       <Router>
         <Routes>
-
-          <Route path="/"  Component= {LayoutMain} />
-         
-
+          <Route path="/" Component={LayoutMain} />
         </Routes>
       </Router>
     </div>
   );
-};
+}
 
 export default App;
