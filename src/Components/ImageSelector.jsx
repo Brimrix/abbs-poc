@@ -11,8 +11,9 @@ const { Paragraph } = Typography;
 
 const imageHoverPopover = (actualImageURL, isProcess) => (
   actualImageURL && isProcess
-    ? <img style={{ height: '200px', width: '150px' }} src={actualImageURL} /> : <span>Upload image</span>
+    ? <img style={{ height: '200px', width: '160px' }} src={actualImageURL} /> : <span>Upload image</span>
 );
+
 
 const getBase64 = (file, callback) => {
   const reader = new FileReader();
@@ -73,6 +74,9 @@ function ImageSelector({ _id, reRender, renderSource }) {
             const calculatedWidth = Math.round((this.width / xResolution) * 100) / 100;
             const calculatedAREA = Math.round(((calculatedHeight * calculatedWidth) / 144) * 100) / 100;
             setActualImageURL(imageUrl);
+            dispatch({
+              type: "ADD_ROW",
+            })
             dispatch({
 
               type: 'SET_DIMENSION',

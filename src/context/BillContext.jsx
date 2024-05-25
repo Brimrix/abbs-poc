@@ -33,26 +33,29 @@ export function BillProvider({ children }) {
       clientName: '',
       billDate: '',
     },
+    shouldReRender: false,
   };
 
   const reducerMethod = (state, action) => {
+    let newState = { ...state }; // Create a new state variable
+  
     switch (action.type) {
       case 'PRICE_CHANGE':
-        return {
-          ...state,
-          billData: state.billData.map((item) => (item.key === action.payload._key
+        newState.billData = state.billData.map((item) =>
+          item.key === action.payload._key
             ? { ...item, actualPrice: action.payload.actualPrice, amount: action.payload.AMOUNT }
-            : item)),
-        };
-
+            : item
+        );
+        break;
+  
       case 'QUANTITY_CHANGE':
-        return {
-          ...state,
-          billData: state.billData.map((item) => (item.key === action.payload._key
+        newState.billData = state.billData.map((item) =>
+          item.key === action.payload._key
             ? { ...item, actualQuantity: action.payload.actualQuantity, amount: action.payload.AMOUNT }
-            : item)),
-        };
-
+            : item
+        );
+        break;
+  
       case 'ADD_ROW':
         const newItem = {
           key: state.billData.length,
@@ -70,55 +73,55 @@ export function BillProvider({ children }) {
           actions: <DeleteIcon _id={state.billData.length} />,
           image_src: '',
         };
-        return {
-          ...state,
-          billData: [...state.billData, newItem],
-        };
-
+        newState.billData = [...state.billData, newItem];
+        break;
+  
       case 'SET_DIMENSION':
-        return {
-          ...state,
-          billData: state.billData.map((item) => (item.key === action.payload._key
+        newState.billData = state.billData.map((item) =>
+          item.key === action.payload._key
             ? {
-              ...item,
-              height: action.payload.HEIGHT,
-              image_name: action.payload.name,
-              width: action.payload.WIDTH,
-              area: action.payload.area,
-              image_src: action.payload.IMAGE_SOURCE,
-              amount: action.payload.AMOUNT,
-            }
-            : item)),
-        };
-
+                ...item,
+                height: action.payload.HEIGHT,
+                image_name: action.payload.name,
+                width: action.payload.WIDTH,
+                area: action.payload.area,
+                image_src: action.payload.IMAGE_SOURCE,
+                amount: action.payload.AMOUNT,
+              }
+            : item
+        );
+        break;
+  
       case 'REMOVE_ROW':
         const filteredData = state.billData.filter((item) => item.key !== action.payload._key);
-
-        return {
-          ...state,
-          billData: filteredData.map((item, index) => ({
-            ...item,
-            upload: <ImageSelector _id={Number(index)} reRender renderSource={filteredData[index].image_src} />,
-            price: <PriceComponent _id={Number(index)} defaultInputValue={filteredData[index].actualPrice} reRender />,
-            quantity: <QuantityComponent _id={Number(index)} defaultInputValue={filteredData[index].actualQuantity} reRender />,
-            actions: <DeleteIcon _id={Number(index)} />,
-            key: index,
-            order: index + 1,
-          })),
-        };
-
+        const newShouldReRender = !state.shouldReRender;
+        newState.shouldReRender = newShouldReRender;
+        newState.billData = filteredData.map((item, index) => ({
+          ...item,
+          upload: <ImageSelector _id={Number(index)} reRender={newShouldReRender} renderSource={filteredData[index].image_src} />,
+          price: <PriceComponent _id={Number(index)} defaultInputValue={filteredData[index].actualPrice} reRender={newShouldReRender} />,
+          quantity: <QuantityComponent _id={Number(index)} defaultInputValue={filteredData[index].actualQuantity} reRender={newShouldReRender} />,
+          actions: <DeleteIcon _id={Number(index)} />,
+          key: index,
+          order: index + 1,
+        }));
+        break;
+  
       case 'SET_CLIENT_DETAILS':
-        return {
-
-          ...state,
-          clientDetails: {
-            clientName: action.payload.name,
-            billDate: action.payload.date,
-          },
-
+        newState.clientDetails = {
+          clientName: action.payload.name,
+          billDate: action.payload.date,
         };
+        break;
+  
+      default:
+        break;
     }
+  
+    
+    return newState; 
   };
+  
 
   // UseReducer setup
   const [state, dispatch] = useReducer(reducerMethod, initialState);

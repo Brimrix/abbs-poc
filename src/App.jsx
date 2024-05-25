@@ -1,13 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import LayoutMain from '@/components/LayoutMain';
-
+import CreateBill from './components/pages/CreateBill';
 function App() {
   return (
     <div>
       <Router>
         <Routes>
-          <Route path="/" Component={LayoutMain} />
+          <Route path="/" Component={CreateBill} />
         </Routes>
       </Router>
     </div>

@@ -7,22 +7,22 @@ import { billContext } from '@/context/BillContext';
 function PriceComponent({ _id, defaultInputValue, reRender }) {
   const [value, setValue] = useState(0);
   const { state, dispatch } = useContext(billContext);
-
+ 
   useEffect(() => {
     let flag = true;
     if (flag) {
       setValue(defaultInputValue);
-      dispatch({
+       dispatch({
         type: 'PRICE_CHANGE',
-        payload: {
-          _key: _id,
-          actualPrice: defaultInputValue,
-          AMOUNT: Math.round((state.billData[_id].area * defaultInputValue * state.billData[_id].actualQuantity) * 100) / 100,
+      payload: {
+      _key: _id,
+      actualPrice: defaultInputValue,
+      AMOUNT: Math.round((state.billData[_id].area * defaultInputValue * state.billData[_id].actualQuantity) * 100) / 100,
         },
       });
-    }
+  }
     return () => flag = false;
-  }, [reRender, defaultInputValue]);
+    }, [reRender, defaultInputValue]);
 
   const handlePriceChange = (value) => {
     setValue(value);

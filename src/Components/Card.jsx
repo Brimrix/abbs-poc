@@ -23,16 +23,16 @@ function CardResult() {
   }, [discountInput]);
 
   useEffect(() => {
-    let area = 0;
-    let subTotal = 0;
+   
 
-    state.billData.forEach((element) => {
-      area += element.area;
-    });
-
-    state.billData.forEach((element) => {
-      subTotal += element.amount;
-    });
+    let area = state.billData.reduce((accumulator, element) => {
+      return accumulator + element.area;
+    }, 0);
+    
+    let subTotal = state.billData.reduce((accumulator, element) => {
+      return accumulator + element.amount;
+    }, 0);
+    
 
     if (discountInput !== 0) {
       const subTotalValue = subTotal - discountInput;
