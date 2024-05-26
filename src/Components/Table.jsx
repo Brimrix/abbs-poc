@@ -1,82 +1,127 @@
-import React, { useState } from 'react';
-import { Button, Table, Upload, InputNumber } from 'antd';
-import Image_Upload from './Image_Uploader';
+import React, { useEffect, useState, useContext } from 'react';
+import {
+  Table as AntDTable, Typography,
+} from 'antd';
+import '@styles/TableStyle.css';
+
+import { billContext } from '@/context/BillContext';
+
+function Table() {
+  const { state: { billData }, dispatch } = useContext(billContext);
+  const [rowsTable, setRowsTable] = useState([]);
+  const [actualRows, setActualRows] = useState([]);
+  const [tableLoading, setTableLoading] = useState(false);
+
+  useEffect(() => {
+    setTableLoading(false);
+  }, [actualRows]);
+
+  useEffect(() => {
+    setActualRows(rowsTable);
+  }, [rowsTable]);
+
+  useEffect(() => {
+    setTableLoading(true);
+    setRowsTable(billData);
+  }, [billData]);
+
+  const handleAddRows = () => {
+    dispatch({
+      type: 'ADD_ROW',
+    });
+  };
 
   const columns = [
     {
-      title: 'Sr#',
-      dataIndex: 'key',
-      key: 'key',
-      
+      title: '',
+      dataIndex: 'actions',
+      key: 'actions',
+      width: '5%',
+      align: 'center',
     },
     {
-      title: 'Image Name',
+
+      title: 'Sr#',
+      dataIndex: 'order',
+      key: 'order',
+      width: '5%',
+      align: 'center',
+    },
+    {
+      title: <span className="column-underlined">Description and Upload Image</span>,
       dataIndex: 'image_name',
       key: 'image_name',
+      ellipsis: true,
+      width: '25%',
+      align: 'start',
+
     },
     {
-      title: 'Upload Image',
+      title: '',
       dataIndex: 'upload',
       key: 'address',
+      align: 'center',
+      width: '10%',
     },
-    
     {
-        title: 'height',
-        dataIndex: 'height',
-        key: 'height',
-      },
+      title: 'Height',
+      dataIndex: 'height',
+      key: 'height',
+      align: 'center',
+    },
+    {
+      title: 'Width',
+      dataIndex: 'width',
+      key: 'width',
+      align: 'center',
+    },
+    {
+      title: 'Area (Sq.ft)',
+      dataIndex: 'area',
+      key: 'area',
+      align: 'center',
 
-      {
-        title: 'width',
-        dataIndex: 'widht',
-        key: 'width',
-      },
-
-      {
-        title: 'price',
-        dataIndex: 'price',
-        key: 'price',
-      },
-      {
-        title: 'Quantity',
-        dataIndex: 'quantity',
-        key: 'quantity',
-      },
-      {
-        title: 'Amount',
-        dataIndex: 'amount',
-        key: 'amount',
-      },
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+      align: 'center',
+    },
+    {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      align: 'center',
+    },
+    {
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
+      align: 'center',
+    },
   ];
-  
 
-const TableComponent = () => {
-    const [counter, setCounter] = useState(1);
-    const [dataSource, setDataSource] = useState( [
-        {
-          key: counter,
-          image_name: "Sublimation 2x3",
-          upload: <Image_Upload />, 
-          height: 0,
-          widht: 0,
-          price: <InputNumber min={0} max={1000} precision={2}  />,
-          quantity: <InputNumber />,
-          amount: 0,
-
-        } ])
-   
-      const handleAdd = () => {
-        setCounter(counter+1);
-        setDataSource(prev => [...prev, {key: counter+1, image_name: '', upload: <Image_Upload />, height: '-', widht: '-', price: <InputNumber min={0} max={1000} precision={2} />, quantity: <InputNumber />, amount: 0}]);
-      }
-      
-      return (
-        <>
-        <Table bordered={false} dataSource={dataSource} size={'small'} pagination={true} columns={columns} />
-        <Button onClick={handleAdd}>Add New Record</Button>
-        </>
-
-  )
+  return (
+    <>
+      <AntDTable
+        style={{ marginBottom: '20px' }}
+        scroll={{ y: 220 }}
+        pagination={false}
+        loading={tableLoading}
+        dataSource={actualRows}
+        columns={columns}
+        size="small"
+      />
+      <Typography.Text
+        onClick={handleAddRows}
+        style={{ cursor: 'pointer', color: '#0B6E4F', marginLeft: '120px' }}
+        strong
+      >
+        Add More Rows
+      </Typography.Text>
+    </>
+  );
 }
 
-export default TableComponent;
+export default Table;

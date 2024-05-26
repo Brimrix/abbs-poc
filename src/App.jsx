@@ -1,21 +1,16 @@
-import React from "react";
-import Layout_Grid from './Components/Layout_Grid'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-const App = () => {
- 
+import CreateBill from './components/pages/CreateBill';
+function App() {
   return (
-    <div >
+    <div>
       <Router>
         <Routes>
-
-          <Route path="/"  Component= {Layout_Grid} />
-         
-
+          <Route path="/" Component={CreateBill} />
         </Routes>
       </Router>
     </div>
   );
-};
+}
 
 export default App;
