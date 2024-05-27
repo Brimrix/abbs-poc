@@ -13,7 +13,7 @@ export function BillProvider({ children }) {
     billData: [
       {
         key: 0,
-        image_name: '',
+        image_name: '\u200b',
         upload: <ImageSelector _id={0} reRender={false} />,
         height: 0,
         width: 0,
@@ -59,7 +59,7 @@ export function BillProvider({ children }) {
       case 'ADD_ROW':
         const newItem = {
           key: state.billData.length,
-          image_name: '',
+          image_name: '\u200b',
           height: 0,
           width: 0,
           area: 0,
@@ -113,14 +113,41 @@ export function BillProvider({ children }) {
           billDate: action.payload.date,
         };
         break;
-  
-      default:
-        break;
-    }
-  
-    
-    return newState; 
-  };
+        
+  case 'UPDATE_ROW':
+    debugger;
+    newState.billData = state.billData.map((item) => {
+      if (item.key === action.payload.key) {
+        if (action.payload.cellSource.dataIndex === "height") {
+          return {
+            ...item, 
+            height: action.payload.row.height ? Number(action.payload.row.height) : 0,
+            area: Math.round((item.width * Number(action.payload.row.height) / 144) * 100) / 100
+          };
+        } else if (action.payload.cellSource.dataIndex === "width") {
+          return {
+            ...item, 
+            width: action.payload.row.width ? Number(action.payload.row.width) : 0,
+            area: Math.round((item.height * Number(action.payload.row.width) / 144) * 100) / 100
+          };
+        } else if (action.payload.cellSource.dataIndex === "image_name") {
+          return {
+            ...item, 
+            image_name: action.payload.row.image_name ? action.payload.row.image_name : '\u200b'
+          };
+        } 
+      }
+      // Ensure the item is returned if it doesn't match the key
+      return item;
+    });
+    break;
+
+  default:
+    break;
+}
+
+return newState;
+};
   
 
   // UseReducer setup
