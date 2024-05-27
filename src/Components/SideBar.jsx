@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Layout, Menu, theme } from 'antd';
+import { Layout, Menu, theme, Typography } from 'antd';
 import {
   BarsOutlined, UserOutlined, UploadOutlined, SettingOutlined, BarChartOutlined,
 } from '@ant-design/icons';
 import '@styles/Menu.css';
 
+const {Title} = Typography;
 const { Sider } = Layout;
 
 // Data used by component.
@@ -65,6 +66,9 @@ function SideBar() {
           float: 'right', color: 'white', fontSize: '28px', padding: '25px',
         }}
       />
+      {!collapse ? <Title style={{color: "white", margin: "15px"}}>ABBS</Title> : null}
+
+      
 
       <Menu theme="dark" mode="inline" style={{ backgroundColor: primary_color }} defaultSelectedKeys={['2']} items={items} />
 

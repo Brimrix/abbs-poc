@@ -20,7 +20,7 @@ const { Paragraph } = Typography;
 const primary_color = '#0B6E4F';
 const secondary_color = '#FA9F42';
 
-function LayoutMain({children}) {
+function LayoutMain({firstChildren, secondChildren, thirdChildren}) {
   const iconStyle = {
     float: 'right', color: 'white', fontSize: '30px', cursor: 'pointer',
   };
@@ -32,16 +32,16 @@ function LayoutMain({children}) {
         <NavbarMain />
 
         {/* The Second Header directly below the Main Header */}
-        <ClientSearch />
+       {firstChildren}
 
         {/* Content Is The Place for everything Tables etc */}
         <Content className="px-3 mt-2" style={{ marginTop: '0px', backgroundColor: 'white' }}>
-         {children}
+         {secondChildren}
         </Content>
 
         <div className="d-flex align-items-end justify-content-end p-4" style={{ float: 'right', backgroundColor: 'white' }}>
           {/* The Card Component */}
-          <CardResult />
+          {thirdChildren}
         </div>
       </Layout>
     </Layout>
