@@ -10,6 +10,9 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
 
   const toggleEdit = () => {
     setEditing(!editing);
+    form.setFieldsValue({
+      [dataIndex]: record[dataIndex],
+    });
   };
 
   useEffect(() => {
@@ -20,14 +23,9 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
 
   const save = async () => {
     try {
+      const values = await form.validateFields();
       toggleEdit();
-      if (dataIndex === "height") {
-        handleSave({ ...record, height: inputRef.current.value }, { dataIndex });
-      } else if (dataIndex === "width") {
-        handleSave({ ...record, width: inputRef.current.value }, { dataIndex });
-      } else if (dataIndex === "image_name") {
-        handleSave({ ...record, image_name: inputRef.current.input.value }, { dataIndex });
-      }
+      handleSave({ ...record, ...values }, { dataIndex });
     } catch (errInfo) {
       console.log('Save failed:', errInfo);
     }
@@ -39,7 +37,7 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
 
   if (isEditable) {
     childNode = editing ? (
-      <Form form={form}>
+      <Form form={form} initialValues={{ [dataIndex]: record[dataIndex] }}>
         <Form.Item
           style={{ margin: 0 }}
           name={dataIndex}
@@ -59,7 +57,6 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
               max={1000}
               precision={2}
               onBlur={save}
-              defaultValue={dataIndex === "height" ? record.height || 0 : record.width || 0}
             />
           ) : dataIndex === "image_name" ? (
             <Input
@@ -68,7 +65,6 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
               onPressEnter={save}
               onBlur={save}
               style={{color: "#0B6E4F"}}
-              defaultValue={record.image_name || ''}
             />
           ) : null}
         </Form.Item>
