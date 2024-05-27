@@ -67,6 +67,7 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
               variant="filled"
               onPressEnter={save}
               onBlur={save}
+              style={{color: "#0B6E4F"}}
               defaultValue={record.image_name || ''}
             />
           ) : null}
