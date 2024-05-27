@@ -12,6 +12,7 @@ function Table() {
 
   useEffect(() => {
     setTableLoading(false);
+    console.log(actualRows);
   }, [actualRows]);
 
   useEffect(() => {

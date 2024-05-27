@@ -113,7 +113,7 @@ export function BillProvider({ children }) {
           billDate: action.payload.date,
         };
         break;
-        
+
   case 'UPDATE_ROW':
     debugger;
     newState.billData = state.billData.map((item) => {
@@ -137,7 +137,6 @@ export function BillProvider({ children }) {
           };
         } 
       }
-      // Ensure the item is returned if it doesn't match the key
       return item;
     });
     break;
