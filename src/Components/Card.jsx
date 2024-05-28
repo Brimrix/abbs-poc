@@ -26,11 +26,20 @@ function CardResult() {
    
 
     let area = state.billData.reduce((accumulator, element) => {
-      return accumulator + element.area;
+
+      if (element && typeof element.area !== 'undefined') {
+        return accumulator + element.area;
+      } else {
+        return accumulator + 0;
+      }
     }, 0);
     
     let subTotal = state.billData.reduce((accumulator, element) => {
-      return accumulator + element.amount;
+      if (element && typeof element.amount !== 'undefined') {
+        return accumulator + element.amount;
+      } else {
+        return accumulator + 0;
+      }
     }, 0);
     
 

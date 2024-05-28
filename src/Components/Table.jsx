@@ -1,10 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
-import {
-  Table as AntDTable, Typography,
-} from 'antd';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
+import { Table as AntDTable, Typography, Form } from 'antd';
 import '@styles/TableStyle.css';
-
 import { billContext } from '@/context/BillContext';
+import Editable from '@/components/Editable.jsx';
 
 function Table() {
   const { state: { billData }, dispatch } = useContext(billContext);
@@ -14,6 +12,7 @@ function Table() {
 
   useEffect(() => {
     setTableLoading(false);
+    console.log(actualRows);
   }, [actualRows]);
 
   useEffect(() => {
@@ -31,6 +30,13 @@ function Table() {
     });
   };
 
+  const handleSave = useCallback((row, cellSource) => {
+    dispatch({
+      type: 'UPDATE_ROW',
+      payload: {row, key: row.key, cellSource},
+    });
+  }, [dispatch]);
+
   const columns = [
     {
       title: '',
@@ -40,7 +46,6 @@ function Table() {
       align: 'center',
     },
     {
-
       title: 'Sr#',
       dataIndex: 'order',
       key: 'order',
@@ -54,12 +59,12 @@ function Table() {
       ellipsis: true,
       width: '25%',
       align: 'start',
-
+      editable: true,
     },
     {
       title: '',
       dataIndex: 'upload',
-      key: 'address',
+      key: 'upload',
       align: 'center',
       width: '10%',
     },
@@ -68,19 +73,21 @@ function Table() {
       dataIndex: 'height',
       key: 'height',
       align: 'center',
+      editable: true,
+      
     },
     {
       title: 'Width',
       dataIndex: 'width',
       key: 'width',
       align: 'center',
+      editable: true,
     },
     {
       title: 'Area (Sq.ft)',
       dataIndex: 'area',
       key: 'area',
       align: 'center',
-
     },
     {
       title: 'Price',
@@ -102,16 +109,40 @@ function Table() {
     },
   ];
 
+  const components = {
+    body: {
+      cell: Editable,
+    },
+  };
+
+  const columnsConfig = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        editable: col.editable,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        handleSave,
+      }),
+    };
+  });
+
   return (
     <>
       <AntDTable
+        components={components}
         style={{ marginBottom: '20px' }}
         scroll={{ y: 220 }}
         pagination={false}
         loading={tableLoading}
         dataSource={actualRows}
-        columns={columns}
+        columns={columnsConfig}
         size="small"
+        rowClassName={() => 'editable-row'}
       />
       <Typography.Text
         onClick={handleAddRows}

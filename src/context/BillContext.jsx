@@ -13,7 +13,7 @@ export function BillProvider({ children }) {
     billData: [
       {
         key: 0,
-        image_name: '',
+        image_name: '\u200b',
         upload: <ImageSelector _id={0} reRender={false} />,
         height: 0,
         width: 0,
@@ -22,7 +22,7 @@ export function BillProvider({ children }) {
         actualQuantity: 0,
         actions: <DeleteIcon _id={0} />,
         price: <PriceComponent _id={0} defaultInputValue={0} reRender={false} />,
-        quantity: <QuantityComponent _id={0} defaultInputValue={0} reRender={false} />,
+        quantity: <QuantityComponent _id={0} defaultInputValue={1} reRender={false} />,
         amount: 0,
         order: 1,
         image_src: '',
@@ -59,7 +59,7 @@ export function BillProvider({ children }) {
       case 'ADD_ROW':
         const newItem = {
           key: state.billData.length,
-          image_name: '',
+          image_name: '\u200b',
           height: 0,
           width: 0,
           area: 0,
@@ -67,7 +67,7 @@ export function BillProvider({ children }) {
           actualQuantity: 0,
           upload: <ImageSelector _id={state.billData.length} reRender={false} />,
           price: <PriceComponent _id={state.billData.length} defaultInputValue={0} reRender={false} />,
-          quantity: <QuantityComponent _id={state.billData.length} defaultInputValue={0} reRender={false} />,
+          quantity: <QuantityComponent _id={state.billData.length} defaultInputValue={1} reRender={false} />,
           amount: 0,
           order: state.billData.length + 1,
           actions: <DeleteIcon _id={state.billData.length} />,
@@ -113,14 +113,40 @@ export function BillProvider({ children }) {
           billDate: action.payload.date,
         };
         break;
-  
-      default:
-        break;
-    }
-  
-    
-    return newState; 
-  };
+
+  case 'UPDATE_ROW':
+    debugger;
+    newState.billData = state.billData.map((item) => {
+      if (item.key === action.payload.key) {
+        if (action.payload.cellSource.dataIndex === "height") {
+          return {
+            ...item, 
+            height: action.payload.row.height ? Number(action.payload.row.height) : 0,
+            area: Math.round((item.width * Number(action.payload.row.height) / 144) * 100) / 100
+          };
+        } else if (action.payload.cellSource.dataIndex === "width") {
+          return {
+            ...item, 
+            width: action.payload.row.width ? Number(action.payload.row.width) : 0,
+            area: Math.round((item.height * Number(action.payload.row.width) / 144) * 100) / 100
+          };
+        } else if (action.payload.cellSource.dataIndex === "image_name") {
+          return {
+            ...item, 
+            image_name: action.payload.row.image_name ? action.payload.row.image_name : '\u200b'
+          };
+        } 
+      }
+      return item;
+    });
+    break;
+
+  default:
+    break;
+}
+
+return newState;
+};
   
 
   // UseReducer setup
