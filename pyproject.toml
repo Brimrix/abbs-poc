@@ -1,0 +1,18 @@
+[project]
+name = "abbs_poc"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Brimrix", email = "ping@brimrix.com"},
+]
+dependencies = [
+    "django>=5.0.6",
+    "djangorestframework>=3.15.1",
+]
+requires-python = "==3.12.*"
+readme = "README.md"
+license = {text = "CLP"}
+
+
+[tool.pdm]
+distribution = false
