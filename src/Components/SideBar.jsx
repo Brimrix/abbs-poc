@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { Layout, Menu, theme, Typography } from 'antd';
 import {
   BarsOutlined, UserOutlined, UploadOutlined, SettingOutlined, BarChartOutlined,
 } from '@ant-design/icons';
 import '@styles/Menu.css';
-
+import Dashboard from '@/components/pages/Dashboard';
+import { Link } from 'react-router-dom';
 const {Title} = Typography;
 const { Sider } = Layout;
+import { billContext } from '@/context/BillContext';
+
 
 // Data used by component.
 
@@ -14,35 +17,41 @@ const primary_color = '#0B6E4F';
 const secondary_color = '#FA9F42';
 // Sider Icons and Menu items
 
-const items = [
-  {
-    key: 1,
-    icon: <UserOutlined />,
-    label: 'Dashboard',
-  },
-  {
-    key: 2,
-    icon: <BarChartOutlined />,
-    label: 'Create New Bill',
-  },
-  {
-    key: 3,
-    icon: <UploadOutlined />,
-    label: 'Upload Images',
-  },
-  {
-    key: 4,
-    icon: <SettingOutlined />,
-    label: 'Settings',
-  },
-];
 
 function SideBar() {
   const [collapse, setCollapse] = useState(false);
+  const { state, dispatch } = useContext(billContext);
+
+
 
   const handleClick = () => {
     setCollapse(!collapse);
   };
+
+
+  const items = [
+    {
+      key: 1,
+      icon: <UserOutlined />,
+      label: <Link to={"/dashboard"} onClick={() => dispatch({type: 'DISPATCH_SELECT_KEY', payload: {key: '1'}})} >Dashboard</Link>,
+      
+    },
+    {
+      key: 2,
+      icon: <BarChartOutlined />,
+      label: <Link to={"/"} onClick={() => dispatch({type: 'DISPATCH_SELECT_KEY', payload: {key: '2'}})} >Create New Bill</Link>,
+    },
+    {
+      key: 3,
+      icon: <UploadOutlined />,
+      label: 'Upload Images',
+    },
+    {
+      key: 4,
+      icon: <SettingOutlined />,
+      label: 'Settings',
+    },
+  ];
 
   return (
     <Sider
@@ -70,8 +79,7 @@ function SideBar() {
 
       
 
-      <Menu theme="dark" mode="inline" style={{ backgroundColor: primary_color }} defaultSelectedKeys={['2']} items={items} />
-
+      <Menu theme="dark" mode="inline" style={{ backgroundColor: primary_color }} defaultSelectedKeys={[state.selectKey.selectedKey]} items={items} />
     </Sider>
   );
 }

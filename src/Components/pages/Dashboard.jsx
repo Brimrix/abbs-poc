@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import LayoutMain from "@/components/LayoutMain";
-import Table from "@/components/Table";
-import ClientSearch from '@/components/ClientSearch';
-import Card from '@/components/Card';
 import { Spin } from 'antd';
 
-function CreateBill() {
+function Dashboard() {
   const [spinning, setSpinning] = useState(false);
   const [mount, setMount] = useState(true);
+  
   useEffect(() => {
     setMount(false);
   }, [spinning]);
@@ -20,13 +18,9 @@ function CreateBill() {
 
   return (
     <Spin spinning={mount} tip="Loading...">
-      <LayoutMain
-        FirstChild={<ClientSearch />}
-        SecondChild={<Table />}
-        ThirdChild={<Card />}
-      />
-    </Spin>
+    <LayoutMain SecondChild={<h1>Dashboard</h1>}  />
+     </ Spin>
   );
 }
 
-export default CreateBill;
+export default Dashboard;

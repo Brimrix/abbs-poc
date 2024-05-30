@@ -20,7 +20,9 @@ function Table() {
   }, [rowsTable]);
 
   useEffect(() => {
+    if(billData.length>1)
     setTableLoading(true);
+  
     setRowsTable(billData);
   }, [billData]);
 

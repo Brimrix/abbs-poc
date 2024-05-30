@@ -6,7 +6,7 @@ import {
 } from 'antd';
 
 import Table from '@/components/Table';
-import CardResult from '@/components/Card';
+import Card from '@/components/Card';
 import SideBar from '@/components/SideBar';
 import NavbarMain from '@/components/NavbarMain';
 import ClientSearch from '@/components/ClientSearch';
@@ -20,28 +20,30 @@ const { Paragraph } = Typography;
 const primary_color = '#0B6E4F';
 const secondary_color = '#FA9F42';
 
-function LayoutMain({firstChildren, secondChildren, thirdChildren}) {
+function LayoutMain({FirstChild, SecondChild, ThirdChild}) {
   const iconStyle = {
     float: 'right', color: 'white', fontSize: '30px', cursor: 'pointer',
   };
 
   return (
     <Layout>
+      <div className='z-index-2'>
       <SideBar />
-      <Layout style={{ backgroundColor: 'white' }}>
+        
+      </div>
+      <Layout className='bg-white z-index-1'>
         <NavbarMain />
 
         {/* The Second Header directly below the Main Header */}
-       {firstChildren}
-
+       {FirstChild}
         {/* Content Is The Place for everything Tables etc */}
-        <Content className="px-3 mt-2" style={{ marginTop: '0px', backgroundColor: 'white' }}>
-         {secondChildren}
+        <Content className="px-3 mt-2">
+         {SecondChild}
         </Content>
 
-        <div className="d-flex align-items-end justify-content-end p-4" style={{ float: 'right', backgroundColor: 'white' }}>
+        <div className="d-flex align-items-end justify-content-end p-4 float-right" >
           {/* The Card Component */}
-          {thirdChildren}
+          {ThirdChild}
         </div>
       </Layout>
     </Layout>

@@ -5,6 +5,7 @@ import ImageSelector from '@/components/ImageSelector';
 import PriceComponent from '@/components/PriceComponent';
 import QuantityComponent from '@/components/QuantityComponent';
 import DeleteIcon from '@/components/RemoveComponent';
+import { message } from 'antd';
 
 export const billContext = createContext();
 
@@ -33,7 +34,13 @@ export function BillProvider({ children }) {
       clientName: '',
       billDate: '',
     },
+    
+    selectKey: {
+      selectedKey: '2',
+    },
+
     shouldReRender: false,
+
   };
 
   const reducerMethod = (state, action) => {
@@ -119,6 +126,7 @@ export function BillProvider({ children }) {
     newState.billData = state.billData.map((item) => {
       if (item.key === action.payload.key) {
         if (action.payload.cellSource.dataIndex === "height") {
+    
           return {
             ...item, 
             height: action.payload.row.height ? Number(action.payload.row.height) : 0,
@@ -139,6 +147,13 @@ export function BillProvider({ children }) {
       }
       return item;
     });
+    break;
+
+    case 'DISPATCH_SELECT_KEY': 
+    debugger;
+    newState.selectKey = {
+      selectedKey: action.payload.key,
+    }
     break;
 
   default:
