@@ -7,6 +7,7 @@ import {
   SettingOutlined,
   BarChartOutlined,
   LeftCircleOutlined,
+
 } from "@ant-design/icons";
 
 import "@styles/Menu.css";
@@ -61,11 +62,26 @@ function SideBar() {
     },
     {
       key: 3,
-      icon: <UploadOutlined />,
-      label: "Upload Images",
+      icon: <UserOutlined />,
+      label: (
+        <Link
+          to={"/customers"}
+          onClick={() =>
+            dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: "3" } })
+          }
+        >
+          Customers
+        </Link>
+      ),
     },
     {
       key: 4,
+      icon: <UploadOutlined />,
+      label: "Upload Images",
+    },
+
+    {
+      key: 5,
       icon: <SettingOutlined />,
       label: "Settings",
     },
