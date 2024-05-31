@@ -15,6 +15,7 @@ function Table() {
     console.log(actualRows);
   }, [actualRows]);
 
+
   useEffect(() => {
     setActualRows(rowsTable);
   }, [rowsTable]);

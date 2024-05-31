@@ -9,49 +9,33 @@ import {
   PrinterOutlined,
 } from "@ant-design/icons";
 import { billContext } from "@/context/BillContext";
+import customerData from "@/data/customer.json";
 
 const { Header } = Layout;
 
 const secondary_color = "#FA9F42";
-const listOptions = [
-  { label: "Talbot", value: "Talbot - 2295 Kim Trail" },
-  { label: "Lyndell", value: "Lyndell - 68 Forest Run Circle" },
-  { label: "Zacharias", value: "Zacharias - 84 Russell Hill" },
-  { label: "Mead", value: "Mead - 77 Lotheville Way" },
-  { label: "Cindie", value: "Cindie - 4398 Hauk Place" },
-  { label: "Maynord", value: "Maynord - 4915 Everett Avenue" },
-  { label: "Randa", value: "Randa - 79 Caliangt Place" },
-  { label: "Elset", value: "Elset - 120 Del Mar Trail" },
-  { label: "Nissie", value: "Nissie - 63 Bultman Avenue" },
-  { label: "Bradly", value: "Bradly - 78500 Carioca Road" },
-  { label: "Freddy", value: "Freddy - 76614 Hagan Center" },
-  { label: "Ruperto", value: "Ruperto - 33 Springview Lane" },
-  { label: "Zacharias", value: "Zacharias - 9732 Melody Crossing" },
-  { label: "Marten", value: "Marten - 88510 Village Green Drive" },
-  { label: "Claudette", value: "Claudette - 496 Petterle Point" },
-  { label: "Stevana", value: "Stevana - 3 Manley Point" },
-  { label: "Adi", value: "Adi - 7268 Nevada Junction" },
-  { label: "Carolynn", value: "Carolynn - 55 Brentwood Way" },
-  { label: "Phip", value: "Phip - 049 Dapin Alley" },
-  { label: "Susie", value: "Susie - 86913 Toban Parkway" },
-  { label: "Obediah", value: "Obediah - 6055 Sachs Plaza" },
-  { label: "Rosie", value: "Rosie - 05889 Mccormick Way" },
-  { label: "Finlay", value: "Finlay - 7 Iowa Place" },
-  { label: "Viki", value: "Viki - 84 Utah Pass" },
-  { label: "Moss", value: "Moss - 645 Blue Bill Park Street" },
-  { label: "Marthe", value: "Marthe - 68 Fisk Circle" },
-  { label: "Morry", value: "Morry - 6 Mccormick Road" },
-  { label: "Gardener", value: "Gardener - 1865 Service Way" },
-  { label: "Isidoro", value: "Isidoro - 534 Lawn Park" },
-  { label: "Kermit", value: "Kermit - 724 Mifflin Plaza" },
-];
 
 function ClientSearch() {
   const { state, dispatch } = useContext(billContext);
 
-  const [currentOptions, setCurrentOptions] = useState(listOptions);
+  const [currentOptions, setCurrentOptions] = useState([]);
   const [dateSelect, setDateSelect] = useState("");
   const [clientSelect, setClientSelect] = useState("");
+
+  useEffect(() => {
+    let options = [];
+    let actualLabel = "";
+    let actualValue = "";
+
+    customerData.forEach((customer) => {
+      actualLabel = customer.name;
+      actualValue = customer.company_name;
+
+      options.push({ label: actualLabel, value: actualValue });
+    });
+    debugger;
+    setCurrentOptions(options);
+  }, []);
 
   useEffect(() => {
     dispatch({
@@ -100,6 +84,7 @@ function ClientSearch() {
             }
             showSearch
             allowClear
+           
             filterOption={filterOption}
             options={currentOptions}
             placeholder="Client"
