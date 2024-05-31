@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Modal, Form, Input, Space, message } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined, UserDeleteOutlined } from "@ant-design/icons";
 import "@styles/customer_table.css";
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 import customerData from "@/data/customer.json";
 
 
@@ -11,6 +13,8 @@ const TableComponent = () => {
   const [editingRecord, setEditingRecord] = useState(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteKey, setDeleteKey] = useState();
+  const [value, setValue] = useState()
+
   const [form] = Form.useForm();
 
 
@@ -165,16 +169,31 @@ const TableComponent = () => {
           <Form.Item
             name="email"
             label="Email"
-            rules={[{ required: true, message: "Please input the email!" , pattern: new RegExp("/\S+@\S+\.\S+/")}]}
+            rules={[{ required: true, message: "Please input the email!"}]}
           >
             <Input type="email" />
           </Form.Item>
+          
           <Form.Item
             name="contact"
             label="Contact. No"
             rules={[{ required: true, message: "Please input the contact!" }]}
           >
-            <Input type="tel" />
+            <PhoneInput
+            country={'pk'}
+            isValid={(value, country) => {
+              if (value.match(/12345/)) {
+                return 'Invalid value: '+value+', '+country.name;
+              } else if (value.match(/1234/)) {
+                return false;
+              } else {
+                return true;
+              }
+            }}
+            value={value}
+             onChange={setValue}
+            />
+
           </Form.Item>
         </Form>
       </Modal>
