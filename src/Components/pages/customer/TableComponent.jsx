@@ -187,7 +187,7 @@ const TableComponent = () => {
             label="Name"
             rules={[{ required: true, message: "Please input the name!" }]}
           >
-            <Input />
+            <Input className="bg-white" />
           </Form.Item>
 
           <Form.Item
@@ -196,7 +196,7 @@ const TableComponent = () => {
             label="Company"
             rules={[{ required: true, message: "Please input the Company!" }]}
           >
-            <Input type="text" />
+            <Input className="bg-white" type="text" />
           </Form.Item>
 
           <Form.Item
@@ -212,7 +212,7 @@ const TableComponent = () => {
               },
             ]}
           >
-            <Input ref={formRef} type="email" />
+            <Input className="bg-white" ref={formRef} type="email" />
           </Form.Item>
 
           <Form.Item
