@@ -25,7 +25,7 @@ const secondary_color = "#FA9F42";
 
 function SideBar() {
   const { state, dispatch } = useContext(billContext);
-  
+
   const [collapse, setCollapse] = useState(state.utilities.collapsed);
   
  
@@ -46,6 +46,7 @@ function SideBar() {
       icon: <UserOutlined />,
       label: (
         <Link
+          className="text-decoration-none"
           to={"/dashboard"}
           onClick={() =>
             dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: "1" } })
@@ -60,6 +61,7 @@ function SideBar() {
       icon: <BarChartOutlined />,
       label: (
         <Link
+          className="text-decoration-none"
           to={"/"}
           onClick={() =>
             dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: "2" } })
@@ -74,6 +76,7 @@ function SideBar() {
       icon: <UserOutlined />,
       label: (
         <Link
+          className="text-decoration-none"
           to={"/customers"}
           onClick={() =>
             dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: "3" } })
