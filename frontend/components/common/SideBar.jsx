@@ -30,10 +30,6 @@ function SideBar() {
     dispatch({ type: 'DISPATCH_COLLAPSE', payload: { collapse } });
   }, [collapse]);
 
-  useEffect(() => {
-    dispatch({ type: 'DISPATCH_COLLAPSE', payload: { collapse } });
-  }, [collapse]);
-
   const handleClick = () => {
     setCollapse(!collapse);
   };
