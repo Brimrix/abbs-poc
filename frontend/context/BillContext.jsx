@@ -142,6 +142,15 @@ export function BillProvider({ children }) {
         });
         break;
 
+      case 'DISPATCH_SELECT_KEY':
+        debugger;
+        newState.utilities.selectedKey = action.payload.key;
+        break;
+
+      case 'DISPATCH_COLLAPSE':
+        newState.utilities.collapsed = action.payload.collapse;
+        break;
+
       default:
         break;
     }

@@ -24,9 +24,16 @@ const secondary_color = "#FA9F42";
 // Sider Icons and Menu items
 
 function SideBar() {
-  const { state, dispatch } = useContext(billContext);
-
+  const { state, dispatch } = useContext(billContext)
   const [collapse, setCollapse] = useState(state.utilities.collapsed);
+
+
+  useEffect(() => {
+
+    dispatch({ type: 'DISPATCH_COLLAPSE', payload: { collapse } });
+
+  }, [collapse]);
+
 
 
 
