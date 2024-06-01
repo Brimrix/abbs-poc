@@ -24,8 +24,17 @@ const secondary_color = "#FA9F42";
 // Sider Icons and Menu items
 
 function SideBar() {
-  const [collapse, setCollapse] = useState(false);
   const { state, dispatch } = useContext(billContext);
+  
+  const [collapse, setCollapse] = useState(state.utilities.collapsed);
+  
+ 
+
+  useEffect(() => {
+    
+    dispatch({ type: 'DISPATCH_COLLAPSE', payload: { collapse } });
+
+  }, [collapse]);
 
   const handleClick = () => {
     setCollapse(!collapse);
@@ -132,7 +141,7 @@ function SideBar() {
         theme="dark"
         mode="inline"
         style={{ backgroundColor: primary_color }}
-        defaultSelectedKeys={[state.selectKey.selectedKey]}
+        defaultSelectedKeys={[state.utilities.selectedKey]}
         items={items}
       />
     </Sider>

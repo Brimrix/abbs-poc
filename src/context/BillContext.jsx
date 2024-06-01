@@ -35,8 +35,9 @@ export function BillProvider({ children }) {
       billDate: '',
     },
     
-    selectKey: {
+    utilities: {
       selectedKey: '2',
+      collapsed: false,
     },
 
     shouldReRender: false,
@@ -151,9 +152,12 @@ export function BillProvider({ children }) {
 
     case 'DISPATCH_SELECT_KEY': 
     debugger;
-    newState.selectKey = {
-      selectedKey: action.payload.key,
-    }
+    newState.utilities.selectedKey = action.payload.key;
+    break;
+
+    case 'DISPATCH_COLLAPSE': 
+    debugger;
+    newState.utilities.collapsed = action.payload.collapse;
     break;
 
   default:
