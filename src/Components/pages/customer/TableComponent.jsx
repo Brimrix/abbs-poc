@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Table, Button, Modal, Form, Input, Space, message } from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined, UserDeleteOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  UserDeleteOutlined,
+} from "@ant-design/icons";
 import "@styles/customer_table.css";
-import PhoneInput from 'react-phone-input-2'
-import 'react-phone-input-2/lib/style.css'
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import customerData from "@/data/customer.json";
-
 
 const TableComponent = () => {
   const [data, setData] = useState(customerData);
@@ -13,19 +17,17 @@ const TableComponent = () => {
   const [editingRecord, setEditingRecord] = useState(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteKey, setDeleteKey] = useState();
-  const [value, setValue] = useState()
+  const [value, setValue] = useState();
+
+  const formRef = useRef();
 
   const [form] = Form.useForm();
-
 
   const handleAdd = () => {
     setEditingRecord(null);
     form.resetFields();
     setIsModalVisible(true);
-
   };
-
- 
 
   const handleEdit = (record) => {
     setEditingRecord(record);
@@ -60,18 +62,25 @@ const TableComponent = () => {
           );
 
           message.success("Successfully edited !");
-
         } else {
-          setData([...data, { ...values, key: `${data.length + 1}`, order: `${data.length + 1}` }]);
+          setData([
+            ...data,
+            {
+              ...values,
+              key: `${data.length + 1}`,
+              order: `${data.length + 1}`,
+            },
+          ]);
           message.success("Added successfully !");
-
         }
         setIsModalVisible(false);
         form.resetFields();
-
       })
       .catch((info) => {
-        console.log("Validate Failed:", info);
+        const arrayForm = info.errorFields[0].name;
+        if(arrayForm[0]==="email")
+        formRef.current.focus();
+        console.log("Validate Failed:", info.errorFields[0].name);
       });
   };
 
@@ -81,64 +90,64 @@ const TableComponent = () => {
 
   const handleDeleteCancel = () => {
     setIsDeleteOpen(false);
-  }
+  };
   const columns = [
     {
       title: "Sr#",
       dataIndex: "order",
       key: "order",
-      align: 'center',
-      width: '5%'
+      align: "center",
+      width: "5%",
     },
-   
+
     {
       title: <span>Customer Name</span>,
       dataIndex: "name",
       key: "name",
-      align: 'center'
-
+      align: "center",
     },
     {
       title: "Company",
       dataIndex: "company_name",
       key: "company",
-      align: 'center'
-
+      align: "center",
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
-      align: 'center'
-
+      align: "center",
     },
     {
       title: "Contact No",
       dataIndex: "contact",
       key: "contact",
-      align: 'center'
-
+      align: "center",
     },
     {
       title: "Action",
       key: "action",
-      align: 'center',
+      align: "center",
 
       render: (text, record) => (
         <Space size="middle">
-          <Button type="primary" className="primary-btn" icon={<EditOutlined />} onClick={() => handleEdit(record)}>
+          <Button
+            type="primary"
+            className="primary-btn"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+          >
             Edit
           </Button>
           <Button
             type="primary"
             danger={true}
-            className='danger-btn'
+            className="danger-btn"
             icon={<UserDeleteOutlined />}
             onClick={() => {
               setDeleteKey(record.key);
               setIsDeleteOpen(true);
-            }
-            }
+            }}
           >
             Delete
           </Button>
@@ -149,7 +158,12 @@ const TableComponent = () => {
 
   return (
     <div>
-      <Button className='float-end mx-4 my-3 primary-btn' type="primary" onClick={handleAdd} icon={<PlusOutlined />}>
+      <Button
+        className="float-end mx-4 my-3 primary-btn"
+        type="primary"
+        onClick={handleAdd}
+        icon={<PlusOutlined />}
+      >
         Add
       </Button>
       <Table
@@ -165,7 +179,7 @@ const TableComponent = () => {
         open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
-        okButtonProps={{ className: 'primary-btn' }}
+        okButtonProps={{ className: "primary-btn" }}
       >
         <Form form={form} layout="vertical" name="form_in_modal">
           <Form.Item
@@ -177,57 +191,57 @@ const TableComponent = () => {
           </Form.Item>
 
           <Form.Item
+          
             name="company_name"
             label="Company"
             rules={[{ required: true, message: "Please input the Company!" }]}
           >
-            <Input type="email" />
+            <Input type="text" />
           </Form.Item>
-          
+
           <Form.Item
             name="email"
             label="Email"
-            rules={[{ required: true, message: "Please input the email!"}]}
-          >
-            <Input type="email" />
-          </Form.Item>
           
+            rules={[
+              { required: true, message: "Please input the email!" },
+              {
+                pattern:
+                  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+                message: "Please enter a valid email address!",
+              },
+            ]}
+          >
+            <Input ref={formRef} type="email" />
+          </Form.Item>
+
           <Form.Item
             name="contact"
             label="Contact. No"
-            rules={[{ required: true, message: "Please input the contact!" }]}
-          >
-            <PhoneInput
-            country={'pk'}
-            isValid={(value, country) => {
-              if (value.match(/12345/)) {
-                return 'Invalid value: '+value+', '+country.name;
-              } else if (value.match(/1234/)) {
-                return false;
-              } else {
-                return true;
-              }
-            }}
-            value={value}
-             onChange={setValue}
-            />
+            rules={[
+              { required: true, message: "Please input the contact!" },
+              {
+                pattern: 
+                /^(\+?\d{1,4}[.-\s]?)?\(?\d{3}\)?[.-\s]?\d{3}[.-\s]?\d{4}$/,
+                message: 
+                "Please enter a phone number"
 
+              },
+            ]}
+          >
+            <PhoneInput country={"pk"} value={value} onChange={setValue} />
           </Form.Item>
         </Form>
       </Modal>
 
-      <Modal 
-      okButtonProps={{ className: 'danger-btn' }}
-      open={isDeleteOpen}
-      okText="Delete"
-      title="Are you sure you want to Delete ?"
-      onOk={() => handleDelete(deleteKey)}
-      onCancel={handleDeleteCancel}
-      
-      >
-
-
-      </Modal>
+      <Modal
+        okButtonProps={{ className: "danger-btn" }}
+        open={isDeleteOpen}
+        okText="Delete"
+        title="Are you sure you want to Delete ?"
+        onOk={() => handleDelete(deleteKey)}
+        onCancel={handleDeleteCancel}
+      ></Modal>
     </div>
   );
 };
