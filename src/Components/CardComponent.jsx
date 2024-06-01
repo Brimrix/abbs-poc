@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import { billContext } from '@/context/BillContext';
 
-function CardResult() {
+function CardComponent() {
   const { state } = useContext(billContext);
 
   const [totalArea, setTotalArea] = useState(0);
@@ -130,4 +130,4 @@ function CardResult() {
   );
 }
 
-export default CardResult;
+export default CardComponent;

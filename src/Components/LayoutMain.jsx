@@ -6,7 +6,7 @@ import {
 } from 'antd';
 
 import Table from '@/components/Table';
-import Card from '@/components/Card';
+import CardComponent from '@/components/CardComponent';
 import SideBar from '@/components/SideBar';
 import NavbarMain from '@/components/NavbarMain';
 import ClientSearch from '@/components/ClientSearch';

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import LayoutMain from "@/components/LayoutMain";
 import Table from "@/components/Table";
 import ClientSearch from "@/components/ClientSearch";
-import Card from "@/components/Card";
+import CardComponent from "@/components/CardComponent";
 import { Spin } from "antd";
 
 function CreateBill() {
@@ -21,7 +21,7 @@ function CreateBill() {
       <LayoutMain
         FirstChild={<ClientSearch />}
         SecondChild={<Table />}
-        ThirdChild={<Card />}
+        ThirdChild={<CardComponent />}
       />
     </Spin>
   );

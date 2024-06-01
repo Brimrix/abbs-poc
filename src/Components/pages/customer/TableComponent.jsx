@@ -22,6 +22,7 @@ const TableComponent = () => {
     setEditingRecord(null);
     form.resetFields();
     setIsModalVisible(true);
+
   };
 
  
@@ -33,8 +34,15 @@ const TableComponent = () => {
   };
 
   const handleDelete = (key) => {
-    setData(data.filter((item) => item.key !== key));
-    message.success("Successfully deleted customer record");
+    let filteredArray = data.filter((item) => item.key !== key);
+
+    filteredArray.forEach((item, index) => {
+      item.order = index + 1;
+      item.key = index;
+    });
+
+    setData(filteredArray);
+    message.success("Successfully deleted !");
     setIsDeleteOpen(false);
   };
 
@@ -50,11 +58,17 @@ const TableComponent = () => {
                 : item
             )
           );
+
+          message.success("Successfully edited !");
+
         } else {
-          setData([...data, { ...values, key: `${data.length + 1}` }]);
+          setData([...data, { ...values, key: `${data.length + 1}`, order: `${data.length + 1}` }]);
+          message.success("Added successfully !");
+
         }
         setIsModalVisible(false);
         form.resetFields();
+
       })
       .catch((info) => {
         console.log("Validate Failed:", info);
@@ -112,10 +126,13 @@ const TableComponent = () => {
 
       render: (text, record) => (
         <Space size="middle">
-          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)}>
+          <Button type="primary" className="primary-btn" icon={<EditOutlined />} onClick={() => handleEdit(record)}>
             Edit
           </Button>
           <Button
+            type="primary"
+            danger={true}
+            className='danger-btn'
             icon={<UserDeleteOutlined />}
             onClick={() => {
               setDeleteKey(record.key);
@@ -132,7 +149,7 @@ const TableComponent = () => {
 
   return (
     <div>
-      <Button type="primary" onClick={handleAdd} icon={<PlusOutlined />}>
+      <Button className='float-end mx-4 my-3 primary-btn' type="primary" onClick={handleAdd} icon={<PlusOutlined />}>
         Add
       </Button>
       <Table
@@ -148,6 +165,7 @@ const TableComponent = () => {
         open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
+        okButtonProps={{ className: 'primary-btn' }}
       >
         <Form form={form} layout="vertical" name="form_in_modal">
           <Form.Item
@@ -199,8 +217,10 @@ const TableComponent = () => {
       </Modal>
 
       <Modal 
+      okButtonProps={{ className: 'danger-btn' }}
       open={isDeleteOpen}
-      title="Are you sure you want to delete ?"
+      okText="Delete"
+      title="Are you sure you want to Delete ?"
       onOk={() => handleDelete(deleteKey)}
       onCancel={handleDeleteCancel}
       
