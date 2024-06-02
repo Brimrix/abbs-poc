@@ -1,6 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
-class Invoice(models.Model):
-    price = models.FloatField()
-    createdAt = models.DateTimeField(auto_now_add=True)
+
+class User(AbstractUser):
+    email = models.EmailField(unique=True)
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []

@@ -11,6 +11,7 @@ dependencies = [
     "django-vite>=3.0.4",
     "django-cors-headers>=4.3.1",
     "pre-commit>=3.7.1",
+    "drf-spectacular>=0.27.2",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"

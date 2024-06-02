@@ -1,8 +1,8 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from core.models import Invoice
 
 
-class InvoiceSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Invoice
-        fields = ['price','createdAt']
+        model = get_user_model()
+        fields = ["email", "first_name", "last_name"]

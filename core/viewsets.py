@@ -1,7 +1,8 @@
-from core.serializers import InvoiceSerializer
-from rest_framework.viewsets import ModelViewSet
-from core.models import Invoice
+from rest_framework import viewsets
+from core.serializers import UserSerializer
+from django.contrib.auth import get_user_model
 
-class InvoiceViewSet(ModelViewSet):
-    queryset = Invoice.objects.all()
-    serializer_class = InvoiceSerializer
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = get_user_model().objects.all()
+    serializer_class = UserSerializer

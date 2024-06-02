@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-98tio&fs$r6@hsuh(#+u0&d8%v01y!vv#pl$ac3uxhq!_)xc@@
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = "core.User"
 
 # Application definition
 
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # 3rd party
     "rest_framework",
     "django_vite",
+    "drf_spectacular",
     # Project Apps
     "core",
 ]
@@ -130,3 +131,10 @@ DJANGO_VITE = {"default": {"dev_mode": DEBUG}}
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {"DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema"}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "ABBS",
+    "VERSION": "1.0.0",
+}
