@@ -137,4 +137,8 @@ REST_FRAMEWORK = {"DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema"}
 SPECTACULAR_SETTINGS = {
     "TITLE": "ABBS",
     "VERSION": "1.0.0",
+    "CONTACT": {"name": "Team Brimrix", "email": "ping@brimrix.com"},
+    "SERVE_PUBLIC": False,
+    # include schema endpoint into schema
+    "SERVE_INCLUDE_SCHEMA": False,
 }
