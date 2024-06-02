@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import {
   Typography, Card, Button, InputNumber,
 } from 'antd';
@@ -23,16 +23,9 @@ function CardResult() {
   }, [discountInput]);
 
   useEffect(() => {
-   
+    let area = state.billData.reduce((accumulator, element) => accumulator + element.area, 0);
 
-    let area = state.billData.reduce((accumulator, element) => {
-      return accumulator + element.area;
-    }, 0);
-    
-    let subTotal = state.billData.reduce((accumulator, element) => {
-      return accumulator + element.amount;
-    }, 0);
-    
+    let subTotal = state.billData.reduce((accumulator, element) => accumulator + element.amount, 0);
 
     if (discountInput !== 0) {
       const subTotalValue = subTotal - discountInput;

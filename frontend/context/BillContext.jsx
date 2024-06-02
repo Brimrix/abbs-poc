@@ -1,5 +1,5 @@
 import {
-  createContext, useReducer
+  createContext, useReducer,
 } from 'react';
 import ImageSelector from '@/components/ImageSelector';
 import PriceComponent from '@/components/PriceComponent';
@@ -37,25 +37,21 @@ export function BillProvider({ children }) {
   };
 
   const reducerMethod = (state, action) => {
-    let newState = { ...state }; // Create a new state variable
-  
+    const newState = { ...state }; // Create a new state variable
+
     switch (action.type) {
       case 'PRICE_CHANGE':
-        newState.billData = state.billData.map((item) =>
-          item.key === action.payload._key
-            ? { ...item, actualPrice: action.payload.actualPrice, amount: action.payload.AMOUNT }
-            : item
-        );
+        newState.billData = state.billData.map((item) => (item.key === action.payload._key
+          ? { ...item, actualPrice: action.payload.actualPrice, amount: action.payload.AMOUNT }
+          : item));
         break;
-  
+
       case 'QUANTITY_CHANGE':
-        newState.billData = state.billData.map((item) =>
-          item.key === action.payload._key
-            ? { ...item, actualQuantity: action.payload.actualQuantity, amount: action.payload.AMOUNT }
-            : item
-        );
+        newState.billData = state.billData.map((item) => (item.key === action.payload._key
+          ? { ...item, actualQuantity: action.payload.actualQuantity, amount: action.payload.AMOUNT }
+          : item));
         break;
-  
+
       case 'ADD_ROW':
         const newItem = {
           key: state.billData.length,
@@ -75,23 +71,21 @@ export function BillProvider({ children }) {
         };
         newState.billData = [...state.billData, newItem];
         break;
-  
+
       case 'SET_DIMENSION':
-        newState.billData = state.billData.map((item) =>
-          item.key === action.payload._key
-            ? {
-                ...item,
-                height: action.payload.HEIGHT,
-                image_name: action.payload.name,
-                width: action.payload.WIDTH,
-                area: action.payload.area,
-                image_src: action.payload.IMAGE_SOURCE,
-                amount: action.payload.AMOUNT,
-              }
-            : item
-        );
+        newState.billData = state.billData.map((item) => (item.key === action.payload._key
+          ? {
+            ...item,
+            height: action.payload.HEIGHT,
+            image_name: action.payload.name,
+            width: action.payload.WIDTH,
+            area: action.payload.area,
+            image_src: action.payload.IMAGE_SOURCE,
+            amount: action.payload.AMOUNT,
+          }
+          : item));
         break;
-  
+
       case 'REMOVE_ROW':
         const filteredData = state.billData.filter((item) => item.key !== action.payload._key);
         const newShouldReRender = !state.shouldReRender;
@@ -106,22 +100,20 @@ export function BillProvider({ children }) {
           order: index + 1,
         }));
         break;
-  
+
       case 'SET_CLIENT_DETAILS':
         newState.clientDetails = {
           clientName: action.payload.name,
           billDate: action.payload.date,
         };
         break;
-  
+
       default:
         break;
     }
-  
-    
-    return newState; 
+
+    return newState;
   };
-  
 
   // UseReducer setup
   const [state, dispatch] = useReducer(reducerMethod, initialState);

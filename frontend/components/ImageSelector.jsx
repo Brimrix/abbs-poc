@@ -14,7 +14,6 @@ const imageHoverPopover = (actualImageURL, isProcess) => (
     ? <img style={{ height: '200px', width: '160px' }} src={actualImageURL} /> : <span>Upload image</span>
 );
 
-
 const getBase64 = (file, callback) => {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
@@ -75,8 +74,8 @@ function ImageSelector({ _id, reRender, renderSource }) {
             const calculatedAREA = Math.round(((calculatedHeight * calculatedWidth) / 144) * 100) / 100;
             setActualImageURL(imageUrl);
             dispatch({
-              type: "ADD_ROW",
-            })
+              type: 'ADD_ROW',
+            });
             dispatch({
 
               type: 'SET_DIMENSION',

@@ -10,9 +10,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        home: path.resolve(__dirname, 'frontend/main.jsx')
+        home: path.resolve(__dirname, 'frontend/main.jsx'),
       },
-    }
+    },
   },
   resolve: {
     alias: {

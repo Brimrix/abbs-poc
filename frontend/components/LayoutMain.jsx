@@ -20,7 +20,7 @@ const { Paragraph } = Typography;
 const primary_color = '#0B6E4F';
 const secondary_color = '#FA9F42';
 
-function LayoutMain({children}) {
+function LayoutMain({ children }) {
   const iconStyle = {
     float: 'right', color: 'white', fontSize: '30px', cursor: 'pointer',
   };
@@ -36,7 +36,7 @@ function LayoutMain({children}) {
 
         {/* Content Is The Place for everything Tables etc */}
         <Content className="px-3 mt-2" style={{ marginTop: '0px', backgroundColor: 'white' }}>
-         {children}
+          {children}
         </Content>
 
         <div className="d-flex align-items-end justify-content-end p-4" style={{ float: 'right', backgroundColor: 'white' }}>
