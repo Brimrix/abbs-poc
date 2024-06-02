@@ -40,7 +40,7 @@ function QuantityComponent({ _id, defaultInputValue, reRender }) {
     });
   };
   return (
-    <InputNumber value={value} onChange={handleQuantityChange} onBlur={() => handleBlurChange(_id)} min={0} variant="filled" max={1000} precision={0} />
+    <InputNumber value={value} onChange={handleQuantityChange} onBlur={() => handleBlurChange(_id)} min={1} variant="filled" max={1000} precision={0} />
   );
 }
 

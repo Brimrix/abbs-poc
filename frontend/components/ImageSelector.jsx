@@ -73,6 +73,7 @@ function ImageSelector({ _id, reRender, renderSource }) {
             const calculatedWidth = Math.round((this.width / xResolution) * 100) / 100;
             const calculatedAREA = Math.round(((calculatedHeight * calculatedWidth) / 144) * 100) / 100;
             setActualImageURL(imageUrl);
+          if(state.billData[_id].image_src===''){
             dispatch({
               type: 'ADD_ROW',
             });

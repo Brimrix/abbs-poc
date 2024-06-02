@@ -1,7 +1,7 @@
 .ant-table {
     font-size: 14px !important;
   }
-  
+
   .ant-table-tbody > tr > td {
     height: 5px !important;
     padding: 4px !important;
@@ -12,9 +12,9 @@
     height: 16px !important;
 
   }
-  .ant-table-thead > tr > th:nth-child(2),
-  .ant-table-thead > tr > th:nth-child(3) {
-   
+  .ant-table-thead > tr > th:nth-child(3),
+  .ant-table-thead > tr > th:nth-child(4) {
+
     border-bottom: 3px solid #FA9F42 !important;
   }
 
@@ -25,10 +25,14 @@
     height: 5px !important;
     padding: 4px !important;
     color:  #0B6E4F !important;
-   
+
 
   }
 
 
-
- 
+  tr > td:nth-child(2) {
+    color:  #0B6E4F !important;
+  }
+  tr > td:nth-child(3) {
+    color:  #0B6E4F !important;
+  }

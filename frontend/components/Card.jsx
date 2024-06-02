@@ -23,9 +23,23 @@ function CardResult() {
   }, [discountInput]);
 
   useEffect(() => {
-    let area = state.billData.reduce((accumulator, element) => accumulator + element.area, 0);
+    let area = state.billData.reduce((accumulator, element) => {
 
-    let subTotal = state.billData.reduce((accumulator, element) => accumulator + element.amount, 0);
+      if (element && typeof element.area !== 'undefined') {
+        return accumulator + element.area;
+      } else {
+        return accumulator + 0;
+      }
+    }, 0);
+
+    let subTotal = state.billData.reduce((accumulator, element) => {
+      if (element && typeof element.amount !== 'undefined') {
+        return accumulator + element.amount;
+      } else {
+        return accumulator + 0;
+      }
+    }, 0);
+
 
     if (discountInput !== 0) {
       const subTotalValue = subTotal - discountInput;
