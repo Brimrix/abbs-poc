@@ -29,3 +29,4 @@ __pycache__
 .env
 .pdm-python
 .ruff_cache
+db.sqlite3
