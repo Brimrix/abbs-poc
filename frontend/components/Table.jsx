@@ -74,7 +74,7 @@ function Table() {
       key: 'height',
       align: 'center',
       editable: true,
-      
+
     },
     {
       title: 'Width',

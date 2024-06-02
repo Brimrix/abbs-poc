@@ -14,7 +14,6 @@ const imageHoverPopover = (actualImageURL, isProcess) => (
     ? <img style={{ height: '200px', width: '160px' }} src={actualImageURL} /> : <span>Upload image</span>
 );
 
-
 const getBase64 = (file, callback) => {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
@@ -74,39 +73,38 @@ function ImageSelector({ _id, reRender, renderSource }) {
             const calculatedWidth = Math.round((this.width / xResolution) * 100) / 100;
             const calculatedAREA = Math.round(((calculatedHeight * calculatedWidth) / 144) * 100) / 100;
             setActualImageURL(imageUrl);
-          if(state.billData[_id].image_src===''){
-            dispatch({
-              type: "ADD_ROW",
-            })
-          }
-           
-            dispatch({
+            if (state.billData[_id].image_src === '') {
+              dispatch({
+                type: 'ADD_ROW',
+              });
+              dispatch({
 
-              type: 'SET_DIMENSION',
-              payload: {
-                name: infoFile.name,
-                IMAGE_SOURCE: imageUrl,
-                HEIGHT: calculatedHeight,
-                WIDTH: calculatedWidth,
-                area: calculatedAREA,
-                AMOUNT: Math.round((calculatedAREA * state.billData[_id].actualPrice * state.billData[_id].actualQuantity) * 100) / 100,
+                type: 'SET_DIMENSION',
+                payload: {
+                  name: infoFile.name,
+                  IMAGE_SOURCE: imageUrl,
+                  HEIGHT: calculatedHeight,
+                  WIDTH: calculatedWidth,
+                  area: calculatedAREA,
+                  AMOUNT: Math.round((calculatedAREA * state.billData[_id].actualPrice * state.billData[_id].actualQuantity) * 100) / 100,
 
-                _key: _id,
-              },
-            });
-            setIsProcess(true);
-            message.success('Successfully uploaded');
-          } else {
-            message.error('Invalid Image');
+                  _key: _id,
+                },
+              });
+              setIsProcess(true);
+              message.success('Successfully uploaded');
+            } else {
+              message.error('Invalid Image');
+            }
           }
         } catch {
           message.error('There is an error in the image');
         }
-      };
 
-      imageFile.onerror = function () {
-        console.error('Image failed to load.');
-      };
+        imageFile.onerror = function () {
+          console.error('Image failed to load.');
+        };
+      }
     }
   }, [success]);
 

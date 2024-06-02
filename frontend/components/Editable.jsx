@@ -1,11 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input, Form, InputNumber } from 'antd';
-import { billContext } from '@/context/BillContext';
 
 const Editable = ({ title, editable, children, dataIndex, record, handleSave, ...restProps }) => {
   const [editing, setEditing] = useState(false);
   const inputRef = React.useRef(null);
-  const { dispatch } = useContext(billContext);
   const [form] = Form.useForm(); // Get the form instance
 
   const toggleEdit = () => {

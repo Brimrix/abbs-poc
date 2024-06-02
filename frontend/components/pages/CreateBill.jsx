@@ -1,6 +1,6 @@
 import React from 'react';
-import LayoutMain from "@/components/LayoutMain";
-import Table from "@/components/Table";
+import LayoutMain from '@/components/LayoutMain';
+import Table from '@/components/Table';
 
 function CreateBill() {
   return (
