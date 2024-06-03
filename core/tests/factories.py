@@ -3,8 +3,7 @@ from django.contrib.auth import get_user_model
 
 
 class UserFactory(factory.django.DjangoModelFactory):
-    email = factory.Faker("email")
-    username = factory.LazyAttribute(lambda x: x.email)
+    username = factory.Faker("email")
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
     is_active = True
