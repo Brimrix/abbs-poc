@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python
+__pycache__
+.venv
+.env
+.pdm-python
+.ruff_cache
+db.sqlite3
