@@ -8,5 +8,5 @@ import { BillProvider } from '@/context/BillContext.jsx';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BillProvider>
     <App />
-  </BillProvider>,
+  </BillProvider>
 );

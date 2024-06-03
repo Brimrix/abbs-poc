@@ -12,15 +12,17 @@ function Table() {
 
   useEffect(() => {
     setTableLoading(false);
-    console.log(actualRows);
   }, [actualRows]);
+
 
   useEffect(() => {
     setActualRows(rowsTable);
   }, [rowsTable]);
 
   useEffect(() => {
+    if(billData.length>1)
     setTableLoading(true);
+
     setRowsTable(billData);
   }, [billData]);
 
@@ -74,7 +76,6 @@ function Table() {
       key: 'height',
       align: 'center',
       editable: true,
-
     },
     {
       title: 'Width',
