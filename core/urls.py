@@ -4,7 +4,7 @@ from core.viewsets import UserViewSet
 
 urlpatterns = [
     path(
-        "users",
+        "users/",
         UserViewSet.as_view(
             {
                 "get": "list",
@@ -13,7 +13,7 @@ urlpatterns = [
         ),
     ),
     path(
-        "users/<int:pk>",
+        "users/<int:pk>/",
         UserViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"}),
     ),
     re_path(r"^(?:.*)/?$", HomeView.as_view()),

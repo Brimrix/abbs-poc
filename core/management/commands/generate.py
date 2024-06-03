@@ -5,5 +5,7 @@ from core.tests import factories
 
 class Command(BaseCommand):
     def handle(self, *args: Any, **options: Any) -> str | None:
-        factories.UserFactory(username="superuser@abbs.com", is_superuser=True)
+        factories.UserFactory(
+            username="superuser@abbs.com", is_superuser=True, is_staff=True
+        )
         self.stdout.write("Database Populated", self.style.SUCCESS)
