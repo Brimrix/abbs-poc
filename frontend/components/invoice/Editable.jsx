@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React,{ useState, useEffect } from 'react';
 import { Input, Form, InputNumber } from 'antd';
 
 const Editable = ({ title, editable, children, dataIndex, record, handleSave, ...restProps }) => {

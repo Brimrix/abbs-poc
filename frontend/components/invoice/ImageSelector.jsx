@@ -7,8 +7,6 @@ import '@styles/ImageUploaderStyle.css';
 import exifr from 'exifr';
 import { billContext } from '@/context/BillContext';
 
-const { Paragraph } = Typography;
-
 const imageHoverPopover = (actualImageURL, isProcess) => (
   actualImageURL && isProcess
     ? <img style={{ height: '200px', width: '160px' }} src={actualImageURL} /> : <span>Upload image</span>

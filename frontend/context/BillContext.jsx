@@ -1,10 +1,10 @@
 import {
   createContext, useReducer,
 } from 'react';
-import ImageSelector from '@/components/ImageSelector';
-import PriceComponent from '@/components/PriceComponent';
-import QuantityComponent from '@/components/QuantityComponent';
-import DeleteIcon from '@/components/RemoveComponent';
+import ImageSelector from '@/components/invoice/ImageSelector';
+import PriceComponent from '@/components/invoice/PriceComponent';
+import QuantityComponent from '@/components/invoice/QuantityComponent';
+import DeleteIcon from '@/components/invoice/RemoveComponent';
 
 export const billContext = createContext();
 
