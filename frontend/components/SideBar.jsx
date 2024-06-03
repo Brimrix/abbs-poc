@@ -7,23 +7,17 @@ import {
   SettingOutlined,
   BarChartOutlined,
   LeftCircleOutlined,
-
 } from "@ant-design/icons";
 
 import "@styles/Menu.css";
-import Dashboard from "@/components/pages/Dashboard";
 import { Link } from "react-router-dom";
 const { Title } = Typography;
 const { Sider } = Layout;
 import { billContext } from "@/context/BillContext";
 
-// Data used by component.
-
-const primary_color = "#0B6E4F";
-const secondary_color = "#FA9F42";
-// Sider Icons and Menu items
-
 function SideBar() {
+  const primary_color = "#0B6E4F";
+  const secondary_color = "#FA9F42";
   const { state, dispatch } = useContext(billContext)
   const [collapse, setCollapse] = useState(state.utilities.collapsed);
 
@@ -123,7 +117,8 @@ function SideBar() {
             padding: "25px",
           }}
         />
-      ) : (
+      ) : (<div className="d-flex justify-content-between">
+        <Title style={{ color: "white", margin: "15px" }}>ABBS</Title>
         <LeftCircleOutlined
           onClick={handleClick}
           style={{
@@ -133,11 +128,9 @@ function SideBar() {
             padding: "25px",
           }}
         />
+      </div>
       )}
 
-      {!collapse ? (
-        <Title style={{ color: "white", margin: "15px" }}>ABBS</Title>
-      ) : null}
 
       <Menu
         theme="dark"

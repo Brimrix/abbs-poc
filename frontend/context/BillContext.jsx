@@ -5,7 +5,6 @@ import ImageSelector from '@/components/ImageSelector';
 import PriceComponent from '@/components/PriceComponent';
 import QuantityComponent from '@/components/QuantityComponent';
 import DeleteIcon from '@/components/RemoveComponent';
-import { message } from 'antd';
 
 export const billContext = createContext();
 
@@ -43,15 +42,17 @@ export function BillProvider({ children }) {
     shouldReRender: false,
 
   };
-
+  const handlePriceChange = ()=>{
+    newState.billData = state.billData.map((item) => (item.key === action.payload._key
+      ? { ...item, actualPrice: action.payload.actualPrice, amount: action.payload.AMOUNT }
+      : item));
+  }
   const reducerMethod = (state, action) => {
     const newState = { ...state }; // Create a new state variable
 
     switch (action.type) {
       case 'PRICE_CHANGE':
-        newState.billData = state.billData.map((item) => (item.key === action.payload._key
-          ? { ...item, actualPrice: action.payload.actualPrice, amount: action.payload.AMOUNT }
-          : item));
+        handlePriceChange()
         break;
 
       case 'QUANTITY_CHANGE':
@@ -143,7 +144,6 @@ export function BillProvider({ children }) {
         break;
 
       case 'DISPATCH_SELECT_KEY':
-        debugger;
         newState.utilities.selectedKey = action.payload.key;
         break;
 
