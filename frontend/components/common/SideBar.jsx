@@ -16,11 +16,8 @@ const { Title } = Typography;
 const { Sider } = Layout;
 import { billContext } from "@/context/BillContext";
 
-// Data used by component.
-
 const primary_color = "#0B6E4F";
 const secondary_color = "#FA9F42";
-// Sider Icons and Menu items
 
 function SideBar() {
   const { state, dispatch } = useContext(billContext)
@@ -95,44 +92,39 @@ function SideBar() {
 
   return (
     <Sider
-      collapsed={collapse}
       collapsible
+      collapsed={collapse}
       width="320px"
       trigger={null}
       style={{
         overflow: "auto",
         height: "100vh",
-        left: 0,
-        top: 0,
-        bottom: 0,
         backgroundColor: primary_color,
       }}
     >
-      {collapse ? (
-        <BarsOutlined
-          onClick={handleClick}
-          style={{
-            float: "right",
-            color: "white",
-            fontSize: "28px",
-            padding: "25px",
-          }}
-        />
-      ) : (
-        <LeftCircleOutlined
-          onClick={handleClick}
-          style={{
-            float: "right",
-            color: "white",
-            fontSize: "28px",
-            padding: "25px",
-          }}
-        />
-      )}
 
-      {!collapse ? (
-        <Title style={{ color: "white", margin: "15px" }}>ABBS</Title>
-      ) : null}
+      <div className="d-flex justify-content-between px-4 my-3">
+        {collapse ?
+          <BarsOutlined
+            onClick={handleClick}
+            style={{
+              color: "white",
+              fontSize: "28px",
+              padding: "10px 0px"
+            }}
+          /> : <>
+            <Title className="text-nowrap text-white mb-0">ABBS</Title>
+            <LeftCircleOutlined
+              onClick={handleClick}
+              style={{
+                float: 'right',
+                color: "white",
+                fontSize: "28px"
+              }}
+            />
+
+          </>}
+      </div>
 
       <Menu
         theme="dark"
