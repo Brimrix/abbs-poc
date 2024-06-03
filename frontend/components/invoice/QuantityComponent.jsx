@@ -7,7 +7,6 @@ function QuantityComponent({ _id, defaultInputValue, reRender }) {
   const { state, dispatch } = useContext(billContext);
 
   useEffect(() => {
-    debugger;
     let flag = true;
     if (flag) {
       setValue(defaultInputValue);
