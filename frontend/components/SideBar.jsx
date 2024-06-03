@@ -27,20 +27,12 @@ function SideBar() {
   const { state, dispatch } = useContext(billContext)
   const [collapse, setCollapse] = useState(state.utilities.collapsed);
 
-
   useEffect(() => {
-
     dispatch({ type: 'DISPATCH_COLLAPSE', payload: { collapse } });
-
   }, [collapse]);
 
-
-
-
   useEffect(() => {
-
     dispatch({ type: 'DISPATCH_COLLAPSE', payload: { collapse } });
-
   }, [collapse]);
 
   const handleClick = () => {
