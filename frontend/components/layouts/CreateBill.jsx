@@ -4,9 +4,6 @@ import { BillProvider } from '@/context/BillContext.jsx';
 
 function CreateBill() {
   return (
-    <BillProvider>
-      <LayoutMain children={<Table />} />
-    </BillProvider>
   );
 }
 export default CreateBill;

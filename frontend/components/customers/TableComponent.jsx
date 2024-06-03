@@ -3,7 +3,6 @@ import { Table, Button, Modal, Form, Input, Space, message } from "antd";
 import {
   PlusOutlined,
   EditOutlined,
-  DeleteOutlined,
   UserDeleteOutlined,
 } from "@ant-design/icons";
 import "@styles/customer_table.css";
@@ -78,8 +77,8 @@ const TableComponent = () => {
       })
       .catch((info) => {
         const arrayForm = info.errorFields[0].name;
-        if(arrayForm[0]==="email")
-        formRef.current.focus();
+        if (arrayForm[0] === "email")
+          formRef.current.focus();
       });
   };
 
@@ -221,9 +220,9 @@ const TableComponent = () => {
               { required: true, message: "Please input the contact!" },
               {
                 pattern:
-                /^(\+?\d{1,4}[.-\s]?)?\(?\d{3}\)?[.-\s]?\d{3}[.-\s]?\d{4}$/,
+                  /^(\+?\d{1,4}[.-\s]?)?\(?\d{3}\)?[.-\s]?\d{3}[.-\s]?\d{4}$/,
                 message:
-                "Please enter a phone number"
+                  "Please enter a phone number"
 
               },
             ]}

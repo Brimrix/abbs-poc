@@ -1,19 +1,19 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from '@/pages/Home'
 import Customers from '@/pages/Customers'
-import CreateBill from '@/components/layouts/CreateBill';
+import Dashboard from "@/pages/Dashboard"
+import Invoices from '@/pages/Invoices'
 
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <Home />
+        element: <Dashboard />
     }, {
         path: "customers",
         element: <Customers />
     }, {
-        path:'invoices',
-        element: <CreateBill />
+        path: 'invoices',
+        element: <Invoices />
     }
 ])
 

@@ -10,7 +10,7 @@ const App = (children) => {
   return <>
     <React.StrictMode>
       <RouterProvider router={router}>
-          {children}
+        {children}
       </RouterProvider>
     </React.StrictMode>
   </>

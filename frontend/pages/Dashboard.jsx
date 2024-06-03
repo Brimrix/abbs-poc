@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import LayoutMain from "@/components/LayoutMain";
-import TableComponent from '@/components/pages/customer/TableComponent';
+import LayoutMain from "@/components/layouts/Base";
 import { Spin } from 'antd';
 
-function Customer() {
+function Dashboard() {
   const [spinning, setSpinning] = useState(false);
   const [mount, setMount] = useState(true);
 
@@ -20,9 +19,9 @@ function Customer() {
 
   return (
     <Spin spinning={mount} tip="Loading...">
-    <LayoutMain SecondChild={<TableComponent />}  />
-     </ Spin>
+      <LayoutMain SecondChild={<h1>Dashboard</h1>} />
+    </ Spin>
   );
 }
 
-export default Customer;
+export default Dashboard;

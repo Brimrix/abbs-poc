@@ -11,7 +11,6 @@ import {
 } from "@ant-design/icons";
 
 import "@styles/Menu.css";
-import Dashboard from "@/components/pages/Dashboard";
 import { Link } from "react-router-dom";
 const { Title } = Typography;
 const { Sider } = Layout;
@@ -46,7 +45,7 @@ function SideBar() {
       label: (
         <Link
           className="text-decoration-none"
-          to={"/dashboard"}
+          to={"/"}
           onClick={() =>
             dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: "1" } })
           }
@@ -61,7 +60,7 @@ function SideBar() {
       label: (
         <Link
           className="text-decoration-none"
-          to={"/"}
+          to={"/invoices"}
           onClick={() =>
             dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: "2" } })
           }
