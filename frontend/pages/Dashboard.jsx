@@ -19,7 +19,9 @@ function Dashboard() {
 
   return (
     <Spin spinning={mount} tip="Loading...">
-      <LayoutMain SecondChild={<h1>Dashboard</h1>} />
+      <LayoutMain>
+        <h2 className='p-2 h-2'>Dashboard</h2>
+      </LayoutMain>
     </ Spin>
   );
 }

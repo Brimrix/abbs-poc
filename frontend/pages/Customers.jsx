@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LayoutMain from "@/components/layouts/Base";
-import TableComponent from '@/components/customers/TableComponent';
+import Table from '@/components/customers/Table';
 import { Spin } from 'antd';
 
 function Customer() {
@@ -16,7 +16,9 @@ function Customer() {
 
   return (
     <Spin spinning={mount} tip="Loading...">
-      <LayoutMain SecondChild={<TableComponent />} />
+      <LayoutMain>
+        <Table />
+      </LayoutMain>
     </ Spin>
   );
 }

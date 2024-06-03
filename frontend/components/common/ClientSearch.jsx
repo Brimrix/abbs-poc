@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Layout, Input, DatePicker, Divider, Select, Popover } from "antd";
 import {
   Layout, DatePicker, Divider, Select, Popover,
 } from 'antd';
@@ -7,6 +6,7 @@ import {
   UserOutlined, CalendarOutlined, MessageOutlined, CloudDownloadOutlined, MailOutlined, PrinterOutlined,
 } from '@ant-design/icons';
 import { billContext } from '@/context/BillContext';
+import customerData from "@/data/customer.json";
 
 const { Header } = Layout;
 

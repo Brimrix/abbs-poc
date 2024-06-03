@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Table, Button, Modal, Form, Input, Space, message } from "antd";
+import React, { useRef, useState } from "react";
+import { Table as AntDTable, Button, Modal, Form, Input, Space, message } from "antd";
 import {
   PlusOutlined,
   EditOutlined,
@@ -10,7 +10,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import customerData from "@/data/customer.json";
 
-const TableComponent = () => {
+const Table = () => {
   const [data, setData] = useState(customerData);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
@@ -164,7 +164,7 @@ const TableComponent = () => {
       >
         Add
       </Button>
-      <Table
+      <AntDTable
         className="booking_information_table"
         scroll={{ y: 220 }}
         pagination={false}
@@ -244,4 +244,4 @@ const TableComponent = () => {
   );
 };
 
-export default TableComponent;
+export default Table;

@@ -1,10 +1,10 @@
 import {
   createContext, useReducer,
 } from 'react';
-import ImageSelector from '@/components/invoice/ImageSelector';
-import PriceComponent from '@/components/invoice/PriceComponent';
-import QuantityComponent from '@/components/invoice/QuantityComponent';
-import DeleteIcon from '@/components/invoice/RemoveComponent';
+import ImageSelector from '@/components/invoices/ImageSelector';
+import PriceComponent from '@/components/invoices/PriceComponent';
+import QuantityComponent from '@/components/invoices/QuantityComponent';
+import DeleteIcon from '@/components/invoices/RemoveComponent';
 
 export const billContext = createContext();
 
@@ -156,7 +156,6 @@ export function BillProvider({ children }) {
 
     return newState;
   };
-
 
   // UseReducer setup
   const [state, dispatch] = useReducer(reducerMethod, initialState);

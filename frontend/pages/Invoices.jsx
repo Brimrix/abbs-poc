@@ -1,7 +1,9 @@
-import LayoutMain from '@/components/layouts/Base';
-import Table from '@/components/invoice/Table';
-import { Spin } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import LayoutMain from "@/components/layouts/Base";
+import Table from "@/components/invoices/Table";
+import ClientSearch from "@/components/common/ClientSearch";
+import CardComponent from "@/components/invoices/CardComponent";
+import { Spin } from "antd";
 
 
 const Invoices = () => {
@@ -15,9 +17,17 @@ const Invoices = () => {
         setMount(false);
     }, [spinning]);
 
-    return <Spin spinning={mount} tip="Loading...">
-        <LayoutMain SecondChild={<Table />} />
-    </Spin>
+    return (
+        <Spin spinning={mount} tip="Loading...">
+            <LayoutMain>
+                <div className="p-4 d-flex flex-column">
+                    <ClientSearch />
+                    <Table />
+                    <CardComponent className='align-self-end' />
+                </div>
+            </LayoutMain>
+        </Spin>
+    )
 }
 
 export default Invoices

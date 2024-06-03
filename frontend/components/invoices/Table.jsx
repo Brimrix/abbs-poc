@@ -2,7 +2,7 @@ import { useEffect, useState, useContext, useCallback } from 'react';
 import { Table as AntDTable, Typography } from 'antd';
 import '@styles/TableStyle.css';
 import { billContext } from '@/context/BillContext';
-import Editable from '@/components/invoice/Editable.jsx';
+import Editable from '@/components/invoices/Editable.jsx';
 
 function Table() {
   const { state: { billData }, dispatch } = useContext(billContext);
@@ -13,7 +13,6 @@ function Table() {
   useEffect(() => {
     setTableLoading(false);
   }, [actualRows]);
-
 
   useEffect(() => {
     setActualRows(rowsTable);
@@ -137,7 +136,6 @@ function Table() {
       <AntDTable
         components={components}
         style={{ marginBottom: '20px' }}
-        scroll={{ y: 220 }}
         pagination={false}
         loading={tableLoading}
         dataSource={actualRows}
