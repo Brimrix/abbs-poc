@@ -5,29 +5,34 @@ import ClientSearch from "@/components/common/ClientSearch";
 import CardComponent from "@/components/invoices/CardComponent";
 import { Spin } from "antd";
 
-
 const Invoices = () => {
-    const [spinning, setSpinning] = useState(false);
-    const [mount, setMount] = useState(true);
-    useEffect(() => {
-        setSpinning(true);
-    }, []);
+  const [spinning, setSpinning] = useState(false);
+  const [mount, setMount] = useState(true);
+  useEffect(() => {
+    setSpinning(true);
+  }, []);
 
-    useEffect(() => {
-        setMount(false);
-    }, [spinning]);
+  useEffect(() => {
+    setMount(false);
+  }, [spinning]);
 
-    return (
-        <Spin spinning={mount} tip="Loading...">
-            <LayoutMain>
-                <div className="p-4 d-flex flex-column">
-                    <ClientSearch />
-                    <Table />
-                    <CardComponent className='align-self-end' />
-                </div>
-            </LayoutMain>
-        </Spin>
-    )
-}
+  return (
+    <Spin spinning={mount} tip="Loading...">
+      <LayoutMain>
+        <ClientSearch />
+        <div className="mt-2 px-4" style={{ height: "240px" }}>
+          <Table />
+        </div>
 
-export default Invoices
+        <div className="d-flex px-4" style={{ marginTop: "80px" }}>
+          <div className="p-2 w-100"></div>
+          <div className="p-2 flex-shrink-1">
+            <CardComponent />
+          </div>
+        </div>
+      </LayoutMain>
+    </Spin>
+  );
+};
+
+export default Invoices;

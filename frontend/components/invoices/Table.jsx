@@ -9,12 +9,19 @@ function Table() {
   const [rowsTable, setRowsTable] = useState([]);
   const [actualRows, setActualRows] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
+  const [scrollable, setScrollable] = useState({});
 
   useEffect(() => {
     setTableLoading(false);
   }, [actualRows]);
 
   useEffect(() => {
+    if(rowsTable.length>5){
+      setScrollable({y: "240px"});
+    }
+    else
+    setScrollable({});
+
     setActualRows(rowsTable);
   }, [rowsTable]);
 
@@ -140,6 +147,9 @@ function Table() {
         loading={tableLoading}
         dataSource={actualRows}
         columns={columnsConfig}
+        scroll={scrollable}
+
+
         size="small"
         rowClassName={() => 'editable-row'}
       />
