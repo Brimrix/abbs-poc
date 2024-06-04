@@ -1,13 +1,11 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useReducer } from "react";
 import { Layout, Menu, Typography } from "antd";
 import {
   BarsOutlined,
   UserOutlined,
-  UploadOutlined,
-  SettingOutlined,
   BarChartOutlined,
   LeftCircleOutlined,
-
+  FundViewOutlined
 } from "@ant-design/icons";
 
 import "@styles/Menu.css";
@@ -15,13 +13,15 @@ import { Link } from "react-router-dom";
 const { Title } = Typography;
 const { Sider } = Layout;
 import { billContext } from "@/context/BillContext";
-
-const primary_color = "#0B6E4F";
-const secondary_color = "#FA9F42";
+import { useSideBar } from "@/context/SidebarProvider";
 
 function SideBar() {
+  const primary_color = "#0B6E4F";
+  const secondary_color = "#FA9F42";
+
   const { state, dispatch } = useContext(billContext)
   const [collapse, setCollapse] = useState(state.utilities.collapsed);
+  const { state: activeLink, dispatch: sidebarDispatch } = useSideBar()
 
   useEffect(() => {
     dispatch({ type: 'DISPATCH_COLLAPSE', payload: { collapse } });
@@ -31,64 +31,38 @@ function SideBar() {
     setCollapse(!collapse);
   };
 
-  const items = [
+  const links = [
     {
-      key: 1,
-      icon: <UserOutlined />,
-      label: (
-        <Link
-          className="text-decoration-none"
-          to={"/"}
-          onClick={() =>
-            dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: "1" } })
-          }
-        >
-          Dashboard
-        </Link>
-      ),
-    },
-    {
-      key: 2,
+      key: 'home',
+      icon: <FundViewOutlined />,
+      text: 'Dashboard',
+      page: '/'
+    }, {
+      key: 'invoices',
       icon: <BarChartOutlined />,
-      label: (
-        <Link
-          className="text-decoration-none"
-          to={"/invoices"}
-          onClick={() =>
-            dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: "2" } })
-          }
-        >
-          Create New Bill
-        </Link>
-      ),
-    },
-    {
-      key: 3,
+      text: 'Invoices',
+      page: '/invoices'
+    }, {
+      key: 'customers',
       icon: <UserOutlined />,
-      label: (
-        <Link
-          className="text-decoration-none"
-          to={"/customers"}
-          onClick={() =>
-            dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: "3" } })
-          }
-        >
-          Customers
-        </Link>
-      ),
-    },
-    {
-      key: 4,
-      icon: <UploadOutlined />,
-      label: "Upload Images",
-    },
+      text: 'Customers',
+      page: '/customers'
+    }
+  ]
 
-    {
-      key: 5,
-      icon: <SettingOutlined />,
-      label: "Settings",
-    },
-  ];
+  const menuItems = links.map(link => ({
+    ...link,
+    label: <Link
+      className="text-decoration-none"
+      to={link.page}
+      onClick={() => {
+        dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: link.key } })
+      }
+      }
+    >
+      {link.text}
+    </Link>
+  }))
 
   return (
     <Sider
@@ -102,7 +76,6 @@ function SideBar() {
         backgroundColor: primary_color,
       }}
     >
-
       <div className="d-flex justify-content-between px-4 my-3">
         {collapse ?
           <BarsOutlined
@@ -125,13 +98,12 @@ function SideBar() {
 
           </>}
       </div>
-
       <Menu
         theme="dark"
         mode="inline"
         style={{ backgroundColor: primary_color }}
-        defaultSelectedKeys={[state.utilities.selectedKey]}
-        items={items}
+        defaultSelectedKeys={[activeLink]}
+        items={menuItems}
       />
     </Sider>
   );

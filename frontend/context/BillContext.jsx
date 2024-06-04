@@ -142,7 +142,6 @@ export function BillProvider({ children }) {
         break;
 
       case 'DISPATCH_SELECT_KEY':
-        debugger;
         newState.utilities.selectedKey = action.payload.key;
         break;
 
@@ -159,7 +158,6 @@ export function BillProvider({ children }) {
 
   // UseReducer setup
   const [state, dispatch] = useReducer(reducerMethod, initialState);
-
   return (
     <billContext.Provider value={{ state, dispatch }}>
       {children}

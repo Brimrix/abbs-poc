@@ -10,13 +10,11 @@ import NavbarMain from '@/components/common/NavbarMain';
 import { BillProvider } from '@/context/BillContext.jsx';
 
 function LayoutMain({ children }) {
-  const {  Content } = Layout
+  const { Content } = Layout
   return (
     <BillProvider>
       <Layout>
-        <div className='z-index-2'>
-          <SideBar />
-        </div>
+        <SideBar />
         <Content className='d-flex flex-column bg-white z-index-1 overflow-hidden'>
           <NavbarMain />
           <div className='flex-grow-1 px-4 pb-4 d-flex flex-column'>
