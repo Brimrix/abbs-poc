@@ -3,7 +3,7 @@ import LayoutMain from "@/components/layouts/Base";
 import Table from "@/components/invoices/Table";
 import ClientSearch from "@/components/common/ClientSearch";
 import CardComponent from "@/components/invoices/CardComponent";
-import { Spin } from "antd";
+import { Spin, Divider } from "antd";
 
 const Invoices = () => {
   const [spinning, setSpinning] = useState(false);
@@ -20,15 +20,12 @@ const Invoices = () => {
     <Spin spinning={mount} tip="Loading...">
       <LayoutMain>
         <ClientSearch />
-        <div className="mt-2 px-4" style={{ height: "240px" }}>
+        <Divider className="m-0 border-2" />
+        <div className="flex-grow-1">
           <Table />
         </div>
-
-        <div className="d-flex px-4" style={{ marginTop: "80px" }}>
-          <div className="p-2 w-100"></div>
-          <div className="p-2 flex-shrink-1">
-            <CardComponent />
-          </div>
+        <div className="align-self-end">
+          <CardComponent />
         </div>
       </LayoutMain>
     </Spin>

@@ -9,25 +9,18 @@ function Table() {
   const [rowsTable, setRowsTable] = useState([]);
   const [actualRows, setActualRows] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
-  const [scrollable, setScrollable] = useState({});
 
   useEffect(() => {
     setTableLoading(false);
   }, [actualRows]);
 
   useEffect(() => {
-    if(rowsTable.length>5){
-      setScrollable({y: "240px"});
-    }
-    else
-    setScrollable({});
-
     setActualRows(rowsTable);
   }, [rowsTable]);
 
   useEffect(() => {
-    if(billData.length>1)
-    setTableLoading(true);
+    if (billData.length > 1)
+      setTableLoading(true);
 
     setRowsTable(billData);
   }, [billData]);
@@ -41,7 +34,7 @@ function Table() {
   const handleSave = useCallback((row, cellSource) => {
     dispatch({
       type: 'UPDATE_ROW',
-      payload: {row, key: row.key, cellSource},
+      payload: { row, key: row.key, cellSource },
     });
   }, [dispatch]);
 
@@ -147,9 +140,6 @@ function Table() {
         loading={tableLoading}
         dataSource={actualRows}
         columns={columnsConfig}
-        scroll={scrollable}
-
-
         size="small"
         rowClassName={() => 'editable-row'}
       />

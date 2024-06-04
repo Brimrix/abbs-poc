@@ -61,8 +61,7 @@ function CardComponent() {
 
   return (
 
-    <Card style={{ width: '416px', height: '201px', backgroundColor: '#F6F6F6' }}>
-
+    <Card  className='shadow border w-auto' style={{ backgroundColor: '#F6F6F6' }}>
       <div className="container">
         <div className="row gx-5 gy-5">
           <div className="col">

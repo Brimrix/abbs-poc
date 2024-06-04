@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import {
-  Layout, DatePicker, Divider, Select, Popover,
+  Layout, DatePicker, Select, Popover,
 } from 'antd';
 import {
   UserOutlined, CalendarOutlined, MessageOutlined, CloudDownloadOutlined, MailOutlined, PrinterOutlined,
@@ -66,7 +66,6 @@ function ClientSearch() {
   };
 
   return (
-    <>
       <Header className="bg-white d-flex align-items-center justify-content-between">
         <div className=" d-flex justify-content-start align-items-center">
           {/* Above I am using the Bootstrap Classes */}
@@ -106,18 +105,6 @@ function ClientSearch() {
           <PrinterOutlined style={Secondary_Nav_Icon_style} />
         </div>
       </Header>
-
-      <div style={{ marginLeft: "30px", marginRight: "30px" }}>
-        <Divider
-          style={{
-            backgroundColor: "#DCDCDC",
-            marginTop: 0,
-            opacity: "45%",
-            marginBottom: 0,
-          }}
-        />
-      </div>
-    </>
   );
 }
 
