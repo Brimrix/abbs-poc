@@ -1,12 +1,12 @@
 import React, {
-  useEffect, useState, useRef, useContext,
+  useEffect, useState
 } from 'react';
 import { InputNumber } from 'antd';
-import { billContext } from '@/context/BillContext';
+import { useBillContext } from '@/context/BillContext';
 
 function PriceComponent({ _id, defaultInputValue, reRender }) {
   const [value, setValue] = useState(0);
-  const { state, dispatch } = useContext(billContext);
+  const { state, dispatch } = useBillContext()
 
   useEffect(() => {
     let flag = true;

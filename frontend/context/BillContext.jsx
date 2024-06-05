@@ -1,12 +1,12 @@
 import {
-  createContext, useReducer,
+  createContext, useContext, useReducer,
 } from 'react';
 import ImageSelector from '@/components/invoices/ImageSelector';
 import PriceComponent from '@/components/invoices/PriceComponent';
 import QuantityComponent from '@/components/invoices/QuantityComponent';
 import DeleteIcon from '@/components/invoices/RemoveComponent';
 
-export const billContext = createContext();
+const billContext = createContext();
 
 export function BillProvider({ children }) {
   const initialState = {
@@ -164,3 +164,5 @@ export function BillProvider({ children }) {
     </billContext.Provider>
   );
 }
+
+export const useBillContext = () => useContext(billContext)

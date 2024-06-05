@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useReducer } from "react";
+import React, { useState } from "react";
 import { Layout, Menu, Typography } from "antd";
 import {
   BarsOutlined,
@@ -7,62 +7,39 @@ import {
   LeftCircleOutlined,
   FundViewOutlined
 } from "@ant-design/icons";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import "@styles/Menu.css";
-import { Link } from "react-router-dom";
 const { Title } = Typography;
 const { Sider } = Layout;
-import { billContext } from "@/context/BillContext";
-import { useSideBar } from "@/context/SidebarProvider";
 
 function SideBar() {
+  // TODO: Define in a css theme instead.
   const primary_color = "#0B6E4F";
   const secondary_color = "#FA9F42";
 
-  const { state, dispatch } = useContext(billContext)
-  const [collapse, setCollapse] = useState(state.utilities.collapsed);
-  const { state: activeLink, dispatch: sidebarDispatch } = useSideBar()
-
-  useEffect(() => {
-    dispatch({ type: 'DISPATCH_COLLAPSE', payload: { collapse } });
-  }, [collapse]);
+  const route = useLocation()
+  const navigate = useNavigate()
+  const [collapse, setCollapse] = useState(false)
 
   const handleClick = () => {
-    setCollapse(!collapse);
-  };
-
-  const links = [
+    setCollapse(!collapse)
+  }
+  const menuItems = [
     {
-      key: 'home',
+      key: '/',
       icon: <FundViewOutlined />,
-      text: 'Dashboard',
-      page: '/'
+      label: 'Dashboard',
     }, {
-      key: 'invoices',
+      key: '/invoices',
       icon: <BarChartOutlined />,
-      text: 'Invoices',
-      page: '/invoices'
+      label: 'Invoices',
     }, {
-      key: 'customers',
+      key: '/customers',
       icon: <UserOutlined />,
-      text: 'Customers',
-      page: '/customers'
+      label: 'Customers',
     }
   ]
-
-  const menuItems = links.map(link => ({
-    ...link,
-    label: <Link
-      className="text-decoration-none"
-      to={link.page}
-      onClick={() => {
-        dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: link.key } })
-      }
-      }
-    >
-      {link.text}
-    </Link>
-  }))
 
   return (
     <Sider
@@ -102,8 +79,11 @@ function SideBar() {
         theme="dark"
         mode="inline"
         style={{ backgroundColor: primary_color }}
-        defaultSelectedKeys={[activeLink]}
+        selectedKeys={[route.pathname]}
         items={menuItems}
+        onClick={(props) => {
+          navigate(props.key)
+        }}
       />
     </Sider>
   );

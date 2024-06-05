@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   LoadingOutlined,
   PlusOutlined,
@@ -7,7 +7,7 @@ import {
 import { message, Upload, Typography, Popover } from "antd";
 import "@styles/ImageUploaderStyle.css";
 import exifr from "exifr";
-import { billContext } from "@/context/BillContext";
+import { useBillContext } from "@/context/BillContext";
 
 const imageHoverPopover = (actualImageURL, isProcess) =>
   actualImageURL && isProcess ? (
@@ -43,7 +43,7 @@ function ImageSelector({ _id, reRender, renderSource }) {
   const [infoFile, setInfoFile] = useState();
   const [isProcess, setIsProcess] = useState(false);
 
-  const { state, dispatch } = useContext(billContext);
+  const { state, dispatch } = useBillContext()
 
   useEffect(() => {
     let flag = true;
