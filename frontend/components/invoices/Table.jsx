@@ -19,8 +19,8 @@ function Table() {
   }, [rowsTable]);
 
   useEffect(() => {
-    if(billData.length>1)
-    setTableLoading(true);
+    if (billData.length > 1)
+      setTableLoading(true);
 
     setRowsTable(billData);
   }, [billData]);
@@ -34,7 +34,7 @@ function Table() {
   const handleSave = useCallback((row, cellSource) => {
     dispatch({
       type: 'UPDATE_ROW',
-      payload: {row, key: row.key, cellSource},
+      payload: { row, key: row.key, cellSource },
     });
   }, [dispatch]);
 
