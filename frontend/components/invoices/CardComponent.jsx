@@ -1,11 +1,11 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Typography, Card, Button, InputNumber,
 } from 'antd';
-import { billContext } from '@/context/BillContext';
+import { useBillContext } from '@/context/BillContext';
 
 function CardComponent() {
-  const { state } = useContext(billContext);
+  const { state } = useBillContext()
 
   const [totalArea, setTotalArea] = useState(0);
   const [subTotal, setSubTotal] = useState(0);

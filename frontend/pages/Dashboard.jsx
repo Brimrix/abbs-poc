@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import LayoutMain from "@/components/layouts/Base";
 import { Spin } from 'antd';
 
 function Dashboard() {
@@ -15,13 +14,9 @@ function Dashboard() {
     setSpinning(true);
   }, []);
 
-
-
   return (
     <Spin spinning={mount} tip="Loading...">
-      <LayoutMain>
         <h2 className='p-2 h-2'>Dashboard</h2>
-      </LayoutMain>
     </ Spin>
   );
 }

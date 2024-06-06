@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { InputNumber } from 'antd';
-import { billContext } from '@/context/BillContext';
+import { useBillContext } from '@/context/BillContext';
 
 function QuantityComponent({ _id, defaultInputValue, reRender }) {
   const [value, setValue] = useState('');
-  const { state, dispatch } = useContext(billContext);
-
+  const { state, dispatch } = useBillContext()
   useEffect(() => {
     let flag = true;
     if (flag) {

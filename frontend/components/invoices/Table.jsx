@@ -1,11 +1,13 @@
-import { useEffect, useState, useContext, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Table as AntDTable, Typography } from 'antd';
 import '@styles/TableStyle.css';
-import { billContext } from '@/context/BillContext';
+import { useBillContext } from '@/context/BillContext';
 import Editable from '@/components/invoices/Editable.jsx';
 
 function Table() {
-  const { state: { billData }, dispatch } = useContext(billContext);
+
+  const { state: { billData }, dispatch } = useBillContext()
+
   const [rowsTable, setRowsTable] = useState([]);
   const [actualRows, setActualRows] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);

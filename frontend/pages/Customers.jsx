@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import LayoutMain from "@/components/layouts/Base";
 import Table from '@/components/customers/Table';
 import { Spin } from 'antd';
 
@@ -16,9 +15,7 @@ function Customer() {
 
   return (
     <Spin spinning={mount} tip="Loading...">
-      <LayoutMain>
         <Table />
-      </LayoutMain>
     </ Spin>
   );
 }

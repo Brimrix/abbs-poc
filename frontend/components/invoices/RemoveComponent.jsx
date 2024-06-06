@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { MinusCircleOutlined } from '@ant-design/icons';
 import { Modal, message, Popover } from 'antd';
-import { billContext } from '@/context/BillContext';
+import { useBillContext } from '@/context/BillContext';
 
 function DeleteIcon({ _id }) {
   const [open, setOpen] = useState(false);
-  const { state, dispatch } = useContext(billContext);
+  const { state, dispatch } = useBillContext()
 
   const handleClick = () => {
     setOpen(true);

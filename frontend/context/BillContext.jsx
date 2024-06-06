@@ -1,12 +1,12 @@
 import {
-  createContext, useReducer,
+  createContext, useContext, useReducer,
 } from 'react';
 import ImageSelector from '@/components/invoices/ImageSelector';
 import PriceComponent from '@/components/invoices/PriceComponent';
 import QuantityComponent from '@/components/invoices/QuantityComponent';
 import DeleteIcon from '@/components/invoices/RemoveComponent';
 
-export const billContext = createContext();
+const billContext = createContext();
 
 export function BillProvider({ children }) {
   const initialState = {
@@ -142,7 +142,6 @@ export function BillProvider({ children }) {
         break;
 
       case 'DISPATCH_SELECT_KEY':
-        debugger;
         newState.utilities.selectedKey = action.payload.key;
         break;
 
@@ -159,10 +158,11 @@ export function BillProvider({ children }) {
 
   // UseReducer setup
   const [state, dispatch] = useReducer(reducerMethod, initialState);
-
   return (
     <billContext.Provider value={{ state, dispatch }}>
       {children}
     </billContext.Provider>
   );
 }
+
+export const useBillContext = () => useContext(billContext)

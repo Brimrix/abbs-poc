@@ -1,11 +1,11 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Typography, Card, Button, InputNumber,
 } from 'antd';
-import { billContext } from '@/context/BillContext';
+import { useBillContext } from '@/context/BillContext';
 
 function CardComponent() {
-  const { state } = useContext(billContext);
+  const { state } = useBillContext()
 
   const [totalArea, setTotalArea] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
@@ -60,7 +60,6 @@ function CardComponent() {
   };
 
   return (
-
     <Card style={{ width: '416px', height: '201px', backgroundColor: '#F6F6F6' }}>
 
       <div className="container">
@@ -124,7 +123,6 @@ function CardComponent() {
       </div>
 
     </Card>
-
   );
 }
 

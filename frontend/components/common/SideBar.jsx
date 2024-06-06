@@ -1,94 +1,45 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState } from "react";
 import { Layout, Menu, Typography } from "antd";
 import {
   BarsOutlined,
   UserOutlined,
-  UploadOutlined,
-  SettingOutlined,
   BarChartOutlined,
   LeftCircleOutlined,
-
+  FundViewOutlined
 } from "@ant-design/icons";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import "@styles/Menu.css";
-import { Link } from "react-router-dom";
 const { Title } = Typography;
 const { Sider } = Layout;
-import { billContext } from "@/context/BillContext";
-
-const primary_color = "#0B6E4F";
-const secondary_color = "#FA9F42";
 
 function SideBar() {
-  const { state, dispatch } = useContext(billContext)
-  const [collapse, setCollapse] = useState(state.utilities.collapsed);
+  // TODO: Define in a css theme instead.
+  const primary_color = "#0B6E4F";
+  const secondary_color = "#FA9F42";
 
-  useEffect(() => {
-    dispatch({ type: 'DISPATCH_COLLAPSE', payload: { collapse } });
-  }, [collapse]);
+  const route = useLocation()
+  const navigate = useNavigate()
+  const [collapse, setCollapse] = useState(false)
 
   const handleClick = () => {
-    setCollapse(!collapse);
-  };
-
-  const items = [
+    setCollapse(!collapse)
+  }
+  const menuItems = [
     {
-      key: 1,
-      icon: <UserOutlined />,
-      label: (
-        <Link
-          className="text-decoration-none"
-          to={"/"}
-          onClick={() =>
-            dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: "1" } })
-          }
-        >
-          Dashboard
-        </Link>
-      ),
-    },
-    {
-      key: 2,
+      key: '/',
+      icon: <FundViewOutlined />,
+      label: 'Dashboard',
+    }, {
+      key: '/invoices',
       icon: <BarChartOutlined />,
-      label: (
-        <Link
-          className="text-decoration-none"
-          to={"/invoices"}
-          onClick={() =>
-            dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: "2" } })
-          }
-        >
-          Create New Bill
-        </Link>
-      ),
-    },
-    {
-      key: 3,
+      label: 'Invoices',
+    }, {
+      key: '/customers',
       icon: <UserOutlined />,
-      label: (
-        <Link
-          className="text-decoration-none"
-          to={"/customers"}
-          onClick={() =>
-            dispatch({ type: "DISPATCH_SELECT_KEY", payload: { key: "3" } })
-          }
-        >
-          Customers
-        </Link>
-      ),
-    },
-    {
-      key: 4,
-      icon: <UploadOutlined />,
-      label: "Upload Images",
-    },
-
-    {
-      key: 5,
-      icon: <SettingOutlined />,
-      label: "Settings",
-    },
-  ];
+      label: 'Customers',
+    }
+  ]
 
   return (
     <Sider
@@ -102,7 +53,6 @@ function SideBar() {
         backgroundColor: primary_color,
       }}
     >
-
       <div className="d-flex justify-content-between px-4 my-3">
         {collapse ?
           <BarsOutlined
@@ -125,13 +75,15 @@ function SideBar() {
 
           </>}
       </div>
-
       <Menu
         theme="dark"
         mode="inline"
         style={{ backgroundColor: primary_color }}
-        defaultSelectedKeys={[state.utilities.selectedKey]}
-        items={items}
+        selectedKeys={[route.pathname]}
+        items={menuItems}
+        onClick={(props) => {
+          navigate(props.key)
+        }}
       />
     </Sider>
   );
