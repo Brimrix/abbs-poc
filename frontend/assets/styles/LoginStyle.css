@@ -1,0 +1,22 @@
+
+.button-primary {
+    background-color: #FA9F42;
+    color: white ;
+    width: 150px;
+
+}
+
+.button-primary:hover{
+    border-color: #FA9F42 ;
+    background-color: white;
+    color: #FA9F42;
+}
+
+.section-bg{
+    background-color: #0B6E4F;
+}
+
+.error-message {
+    width: 350px;
+
+}

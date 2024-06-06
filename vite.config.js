@@ -18,6 +18,8 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, 'frontend'),
       '@styles': path.resolve(__dirname, 'frontend/assets/styles'),
+      '@hooks': path.resolve(__dirname, 'frontend/hooks'),
+
     },
   },
 });

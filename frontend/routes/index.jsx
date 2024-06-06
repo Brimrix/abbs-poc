@@ -4,21 +4,30 @@ import Dashboard from "@/pages/Dashboard"
 import Invoices from '@/pages/Invoices'
 import Login from '@/pages/Login'
 import LayoutMain from '@/components/layouts/Base';
+import { useAuth } from "@hooks/AuthHook";
+import { Navigate } from "react-router-dom";
+
+
+function ProtectedRoute({ element }) {
+    const [isLogin] = useAuth();
+
+    return isLogin ? element : <Navigate to="/login" />;
+}
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <LayoutMain />,
+        element: <ProtectedRoute element={<LayoutMain />} />,
         children: [{
             index: true,
             path: '',
-            element: <Dashboard />
+            element: <ProtectedRoute element={<Dashboard />} />
         }, {
             path: "customers",
-            element: <Customers />
+            element: <ProtectedRoute element={<Customers />} />
         }, {
             path: 'invoices',
-            element: <Invoices />
+            element: <ProtectedRoute element={<Invoices />} />
         }]
     }, {
         path: 'login',
