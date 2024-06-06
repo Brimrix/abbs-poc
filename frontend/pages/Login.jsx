@@ -3,7 +3,6 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import "@styles/LoginStyle.css";
 
-
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,8 +13,7 @@ const Login = () => {
   useEffect(() => {
     setCookie("login", success, { path: "/" });
 
-    if(success)
-    navigate('/');
+    if (success) navigate("/");
   }, [success]);
 
   const getCookieValue = (name) =>
@@ -46,7 +44,7 @@ const Login = () => {
                 <h3 class="mb-5">Login ABBS</h3>
 
                 <div class="form-outline mb-4">
-                <label class="form-label" for="typeEmailX-2">
+                  <label class="form-label" for="typeEmailX-2">
                     Email
                   </label>
 
@@ -59,11 +57,10 @@ const Login = () => {
                     id="typeEmailX-2"
                     class="form-control form-control-lg"
                   />
-
                 </div>
 
                 <div class="form-outline">
-                <label class="form-label" for="typeEmailX-2">
+                  <label class="form-label" for="typeEmailX-2">
                     Password
                   </label>
                   <input
@@ -71,29 +68,32 @@ const Login = () => {
                     onInput={(event) => setPassword(event.target.value)}
                     name="password"
                     type="password"
-
                     id="password"
                     placeholder="Password"
                     class="form-control form-control-lg"
                   />
-
                 </div>
-
-
               </div>
 
               <div className="container-fluid d-flex flex-column align-items-center">
-              <button onClick={handleFormSubmit} class="btn button-primary" type="submit">
+                <button
+                  onClick={handleFormSubmit}
+                  class="btn button-primary"
+                  type="submit"
+                >
                   Login
                 </button>
                 {success && (
-                  <div className="alert alert-success mt-4 error-message text-center">Logged in</div>
+                  <div className="alert alert-success mt-4 error-message text-center">
+                    Logged in
+                  </div>
                 )}
                 {!success && (
-                  <div className="alert alert-danger mt-4 error-message text-center">Failure</div>
+                  <div className="alert alert-danger mt-4 error-message text-center">
+                    Failure
+                  </div>
                 )}
               </div>
-
             </div>
           </div>
         </div>
@@ -101,30 +101,6 @@ const Login = () => {
     </section>
   );
 
-  // <div className="m-5 p-2 card w-25">
-  //     <h2>Header of login</h2>
-  //     <form className="d-flex flex-column gap-4" onSubmit={handleFormSubmit}>
-  //         <input
-  //             value={username}
-  //             onInput={(event) => setUsername(event.target.value)}
-  //             type="text"
-  //             name="username"
-  //             placeholder="Email"
-  //             className="form-control form-control-lg" />
-
-  //         <input
-  //             value={password}
-  //             onInput={(event) => setPassword(event.target.value)}
-  //             type="password"
-  //             name="password"
-  //             id="password"
-  //             className="form-control form-control-lg"
-  //             placeholder="Password" />
-  //         <button type="submit" className="btn btn-primary p-2">Login</button>
-  //     </form>
-  //     {success && <div className="alert alert-success">Logged in</div>}
-  //     {!success && <div className="alert alert-danger">Failure</div>}
-  // </div>
 };
 
 export default Login;
