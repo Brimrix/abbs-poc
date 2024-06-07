@@ -1,14 +1,49 @@
 import React, { Suspense } from 'react';
 import {
-  Layout, Input, Space, Badge, Divider, Avatar,
+  Layout, Input, Space, Badge, Divider, Avatar,Dropdown, Button, Typography
 } from 'antd';
-import { QuestionCircleFilled, BellFilled, UserOutlined } from '@ant-design/icons';
+import { QuestionCircleFilled, BellFilled, UserOutlined, CloseOutlined, LogoutOutlined } from '@ant-design/icons';
 import '@/assets/styles/SearchBox.css';
+import { useNavigate } from 'react-router-dom';
 
 const { Header } = Layout;
 const { Search } = Input;
 
 function NavbarMain() {
+
+  const navigate = useNavigate();
+
+  const items = [
+    {
+      key: '1',
+      label: (
+        <div className="position-relative p-3" style={{ width: 250, height: 200 }}>
+        <div className="d-flex align-items-center mb-3">
+          <UserOutlined className="me-2" style={{ fontSize: "20px" }} />
+          <Typography.Text>UserName</Typography.Text>
+        </div>
+        <Button
+          type="text"
+          icon={<CloseOutlined />}
+          onClick={() => setOpen(false)}
+          className="position-absolute"
+          style={{ top: "16px", right: "16px" }}
+        />
+        <div className="d-flex justify-content-between align-items-center">
+          <Button
+            onClick={() => navigate("/login")}
+            type="primary"
+            icon={<LogoutOutlined />}
+          >
+            Logout
+          </Button>
+        </div>
+      </div>
+      ),
+
+    },
+  ];
+
   return (
     <>
       <Header style={{
@@ -46,7 +81,16 @@ function NavbarMain() {
           </Suspense>
 
           <div className="d-flex flex-column">
-            <h5 style={{ marginTop: '12px', marginBottom: '0px' }}>John Doe</h5>
+          <Dropdown
+
+        menu={{
+          items,
+        }}
+        placement="bottomLeft"
+      >
+            <h5 style={{ marginTop: '12px', marginBottom: '0px', cursor: "pointer" }}>John Doe</h5>
+
+      </Dropdown>
             <h6 style={{ color: '#898989' }}>Admin</h6>
 
           </div>

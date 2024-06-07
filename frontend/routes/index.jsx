@@ -9,9 +9,10 @@ import { useAuth } from "@/hooks/AuthHook";
 import { Navigate } from "react-router-dom";
 
 function ProtectedRoute({ element }) {
-  const [isLogin] = useAuth();
 
-  return isLogin ? element : <Navigate to="/login" />;
+  const [loginToken, error] = useAuth();
+
+  return error ? <Navigate to="/login" /> : element;
 }
 
 const router = createBrowserRouter([
@@ -31,8 +32,7 @@ const router = createBrowserRouter([
       {
         path: "invoices",
         element: <Invoices />,
-      }
-
+      },
     ],
   },
   {

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import "@/assets/styles/LoginStyle.css";
+import {message} from 'antd';
 
 const loginURL = import.meta.env.VITE_LOGIN_URL;
 
@@ -10,12 +11,20 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [success, setSuccess] = useState(false);
   const [cookies, setCookie] = useCookies(["token"]);
+  const [token, setToken] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
-    setCookie("login", success, { path: "/" });
+    setCookie("login", token, { path: "/" });
 
-    if (success) navigate("/");
+    if (success) {
+      message.success("Successfully logged in");
+      navigate("/")
+    }
+
+    console.log(token);
+
+
   }, [success]);
 
   const getCookieValue = (name) =>
@@ -35,8 +44,14 @@ const Login = () => {
       }),
     });
 
-    console.log(response);
-    setSuccess(response.ok);
+    if(!response.ok)
+      message.error("Please check your email or password");
+
+    const data = await response.json();
+    if(response.ok){
+      setToken(data.token);
+      setSuccess(response.ok);
+    }
   };
   return (
     <section className="vh-100 section-bg">
@@ -79,32 +94,20 @@ const Login = () => {
                 </div>
               </div>
 
-              <div className="container-fluid d-flex flex-column align-items-center">
                 <button
                   onClick={handleFormSubmit}
-                  className="btn button-primary"
+                  className="btn button-primary login-btn"
                   type="submit"
                 >
                   Login
                 </button>
-                {success && (
-                  <div className="alert alert-success mt-4 error-message text-center">
-                    Logged in
-                  </div>
-                )}
-                {!success && (
-                  <div className="alert alert-danger mt-4 error-message text-center">
-                    Failure
-                  </div>
-                )}
-              </div>
+
             </div>
           </div>
         </div>
       </div>
     </section>
   );
-
 };
 
 export default Login;
