@@ -10,13 +10,13 @@ import { CookiesProvider } from "react-cookie";
 
 const App = (children) => {
   return <>
-     <CookiesProvider>
      <React.StrictMode>
+     <CookiesProvider>
       <RouterProvider router={router}>
         {children}
       </RouterProvider>
-    </React.StrictMode>
      </CookiesProvider>
+    </React.StrictMode>
 
   </>
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Table as AntDTable, Typography } from 'antd';
-import '@styles/TableStyle.css';
+import '@/assets/styles/TableStyle.css';
 import { useBillContext } from '@/context/BillContext';
 import Editable from '@/components/invoices/Editable.jsx';
 

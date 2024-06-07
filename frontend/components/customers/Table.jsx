@@ -5,7 +5,7 @@ import {
   EditOutlined,
   UserDeleteOutlined,
 } from "@ant-design/icons";
-import "@styles/customer_table.css";
+import "@/assets/styles/customer_table.css";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import customerData from "@/data/customer.json";

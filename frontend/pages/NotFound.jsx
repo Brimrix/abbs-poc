@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "@styles/NotFound.css";
+import "@/assets/styles/NotFound.css";
 import { Button } from "antd";
 import { HomeFilled } from "@ant-design/icons";
 

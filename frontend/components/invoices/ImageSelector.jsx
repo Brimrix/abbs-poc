@@ -5,7 +5,7 @@ import {
   FileAddOutlined,
 } from "@ant-design/icons";
 import { message, Upload, Typography, Popover } from "antd";
-import "@styles/ImageUploaderStyle.css";
+import "@/assets/styles/ImageUploaderStyle.css";
 import exifr from "exifr";
 import { useBillContext } from "@/context/BillContext";
 

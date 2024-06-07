@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import "@styles/Menu.css";
+import "@/assets/styles/Menu.css";
 const { Title } = Typography;
 const { Sider } = Layout;
 

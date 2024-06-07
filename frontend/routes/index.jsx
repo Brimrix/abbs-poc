@@ -5,7 +5,7 @@ import Invoices from "@/pages/Invoices";
 import Login from "@/pages/Login";
 import LayoutMain from "@/components/layouts/Base";
 import NotFound from "@/pages/NotFound";
-import { useAuth } from "@hooks/AuthHook";
+import { useAuth } from "@/hooks/AuthHook";
 import { Navigate } from "react-router-dom";
 
 function ProtectedRoute({ element }) {
@@ -22,15 +22,15 @@ const router = createBrowserRouter([
       {
         index: true,
         path: "",
-        element: <ProtectedRoute element={<Dashboard />} />,
+        element: <Dashboard />,
       },
       {
         path: "customers",
-        element: <ProtectedRoute element={<Customers />} />,
+        element: <Customers />,
       },
       {
         path: "invoices",
-        element: <ProtectedRoute element={<Invoices />} />,
+        element: <Invoices />,
       }
 
     ],

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import "@styles/LoginStyle.css";
+import "@/assets/styles/LoginStyle.css";
+
+const loginURL = import.meta.env.VITE_LOGIN_URL;
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -21,7 +23,7 @@ const Login = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const response = await fetch("http://localhost:8000/login/", {
+    const response = await fetch(loginURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,19 +34,21 @@ const Login = () => {
         password,
       }),
     });
+
+    console.log(response);
     setSuccess(response.ok);
   };
   return (
-    <section class="vh-100 section-bg">
-      <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-            <div class="card shadow-2-strong card-background">
-              <div class="card-body p-5 text-start">
-                <h3 class="mb-5">Login ABBS</h3>
+    <section className="vh-100 section-bg">
+      <div className="container py-5 h-100">
+        <div className="row d-flex justify-content-center align-items-center h-100">
+          <div className="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div className="card shadow-2-strong card-background">
+              <div className="card-body p-5 text-start">
+                <h3 className="mb-5">Login ABBS</h3>
 
-                <div class="form-outline mb-4">
-                  <label class="form-label" for="typeEmailX-2">
+                <div className="form-outline mb-4">
+                  <label className="form-label" htmlFor="typeEmailX-2">
                     Email
                   </label>
 
@@ -55,12 +59,12 @@ const Login = () => {
                     name="username"
                     placeholder="Email"
                     id="typeEmailX-2"
-                    class="form-control form-control-lg"
+                    className="form-control form-control-lg"
                   />
                 </div>
 
-                <div class="form-outline">
-                  <label class="form-label" for="typeEmailX-2">
+                <div className="form-outline">
+                  <label className="form-label" htmlFor="typeEmailX-2">
                     Password
                   </label>
                   <input
@@ -70,7 +74,7 @@ const Login = () => {
                     type="password"
                     id="password"
                     placeholder="Password"
-                    class="form-control form-control-lg"
+                    className="form-control form-control-lg"
                   />
                 </div>
               </div>
@@ -78,7 +82,7 @@ const Login = () => {
               <div className="container-fluid d-flex flex-column align-items-center">
                 <button
                   onClick={handleFormSubmit}
-                  class="btn button-primary"
+                  className="btn button-primary"
                   type="submit"
                 >
                   Login
