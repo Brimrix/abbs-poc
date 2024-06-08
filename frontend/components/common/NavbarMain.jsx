@@ -29,9 +29,7 @@ function NavbarMain() {
     {
       key: "1",
       label: (
-        <div
-          className="position-relative p-3 w-[250px] h-[200px]"
-        >
+        <div className="position-relative p-3 w-[250px] h-[200px]">
           <div className="d-flex align-items-center mb-3">
             <UserOutlined className="me-2" style={{ fontSize: "20px" }} />
             <Typography.Text>UserName</Typography.Text>
@@ -40,10 +38,9 @@ function NavbarMain() {
             type="text"
             icon={<CloseOutlined />}
             onClick={() => setOpen(false)}
-            className="position-absolute"
-            style={{ top: "16px", right: "16px" }}
+            className="position-absolute top-4 right-4"
           />
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="flex justify-between items-center">
             <Button
               onClick={() => navigate("/login")}
               type="primary"
@@ -60,52 +57,33 @@ function NavbarMain() {
   return (
     <>
       <Header
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          backgroundColor: "white",
-        }}
+      className="bg-white flex items-center justify-between"
       >
         <Search
           placeholder="Search"
           allowClear
-          style={{ width: 300, margin: "10px", marginLeft: "320px" }}
+          className="w-[300px] m-[10px] ml-[320px]"
         />
 
         <div
-          style={{
-            color: "black",
-            display: "flex",
-            gap: "10px",
-            marginTop: "10px",
-          }}
+        className="flex gap-[10px] mt-[10px]"
+
         >
           <Space>
             <QuestionCircleFilled
-              style={{ fontSize: "20px", color: "#898989" }}
+              className="text-xl text-gray-500"
             />
             <Badge dot>
               <BellFilled
-                style={{
-                  fontSize: "20px",
-                  cursor: "pointer",
-                  color: "#898989",
-                }}
+              className="text-xl text-gray-500"
               />
             </Badge>
           </Space>
 
           <Suspense fallback={<h1>Loading.....</h1>}>
             <Avatar
+            className="rounded-full w-[32px] h-[32px] cursor-pointer mt-[15px]"
               size="small"
-              style={{
-                borderRadius: "50%",
-                width: "32px",
-                height: "32px",
-                cursor: "pointer",
-                marginTop: "15px",
-              }}
               icon={<UserOutlined />}
             />
           </Suspense>
@@ -118,27 +96,18 @@ function NavbarMain() {
               placement="bottomLeft"
             >
               <h5
-                style={{
-                  marginTop: "12px",
-                  marginBottom: "0px",
-                  cursor: "pointer",
-                }}
+              className="mt-[14px] mb-0 cursor-pointer font-bold"
               >
                 John Doe
               </h5>
             </Dropdown>
-            <h6 style={{ color: "#898989" }}>Admin</h6>
+            <h6 className="text-grey-400">Admin</h6>
           </div>
         </div>
       </Header>
 
       <Divider
-        style={{
-          backgroundColor: "#DCDCDC",
-          marginTop: "0px",
-          marginBottom: "0px",
-          opacity: "45%",
-        }}
+         className="bg-gray-400 mt-0 mb-0 opacity-45"
       />
     </>
   );

@@ -26,15 +26,41 @@
   }
 
   .ant-table {
-    @apply text-sm;
+    @apply !text-sm;
   }
 
   .ant-table-tbody > tr > td {
-    @apply h-1 p-1;
+    @apply !h-1 !p-1;
   }
 
   .customer-table .my-tag {
     @apply text-xs w-36 h-4;
+  }
+
+
+/* Invoice Table */
+
+.invoice-table .my-tag {
+  @apply text-xs w-36 h-4;
+}
+
+.invoice-table .ant-table-tbody > tr > td {
+  @apply !h-[5px] !p-[4px];
+
+}
+
+.invoice-table .ant-table-thead > tr > th {
+  @apply h-1 p-1 text-green;
+}
+
+.invoice-table .ant-table-thead > tr > th:nth-child(3),
+.invoice-table .ant-table-thead > tr > th:nth-child(4) {
+  @apply !border-b-[3px] !border-orange;
+}
+
+
+  .customer-table .ant-table-tbody > tr > td {
+    @apply !h-[5px] !p-[4px];
   }
 
   .customer-table .ant-table-thead > tr > th {
@@ -50,15 +76,5 @@
     @apply !border-0;
   }
 
-  .customer-table tr > td:nth-child(1),
-  .customer-table tr > td:nth-child(2),
-  .customer-table tr > td:nth-child(3),
-  .customer-table tr > td:nth-child(4),
-  .customer-table tr > td:nth-child(5) {
-    @apply !text-green;
-  }
-}
 
-.ant-input-outlined{
-  @apply !bg-white
 }

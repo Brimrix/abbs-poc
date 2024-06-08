@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Table as AntDTable, Typography } from 'antd';
-import '@styles/TableStyle.css';
 import { useBillContext } from '@/context/BillContext';
 import Editable from '@/components/invoices/Editable.jsx';
 
@@ -137,6 +136,7 @@ function Table() {
     <>
       <AntDTable
         components={components}
+        className='invoice-table'
         style={{ marginBottom: '20px' }}
         pagination={false}
         loading={tableLoading}
