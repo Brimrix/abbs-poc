@@ -1,11 +1,13 @@
-import { useEffect, useState, useCallback } from 'react';
-import { Table as AntDTable, Typography } from 'antd';
-import { useBillContext } from '@/context/BillContext';
-import Editable from '@/components/invoices/Editable.jsx';
+import { useEffect, useState, useCallback } from "react";
+import { Table as AntDTable, Typography } from "antd";
+import { useBillContext } from "@/context/BillContext";
+import Editable from "@/components/invoices/Editable.jsx";
 
 function Table() {
-
-  const { state: { billData }, dispatch } = useBillContext()
+  const {
+    state: { billData },
+    dispatch,
+  } = useBillContext();
 
   const [rowsTable, setRowsTable] = useState([]);
   const [actualRows, setActualRows] = useState([]);
@@ -20,93 +22,97 @@ function Table() {
   }, [rowsTable]);
 
   useEffect(() => {
-    if (billData.length > 1)
-      setTableLoading(true);
+    if (billData.length > 1) setTableLoading(true);
 
     setRowsTable(billData);
   }, [billData]);
 
   const handleAddRows = () => {
     dispatch({
-      type: 'ADD_ROW',
+      type: "ADD_ROW",
     });
   };
 
-  const handleSave = useCallback((row, cellSource) => {
-    dispatch({
-      type: 'UPDATE_ROW',
-      payload: { row, key: row.key, cellSource },
-    });
-  }, [dispatch]);
+  const handleSave = useCallback(
+    (row, cellSource) => {
+      dispatch({
+        type: "UPDATE_ROW",
+        payload: { row, key: row.key, cellSource },
+      });
+    },
+    [dispatch]
+  );
 
   const columns = [
     {
-      title: '',
-      dataIndex: 'actions',
-      key: 'actions',
-      width: '5%',
-      align: 'center',
+      title: "",
+      dataIndex: "actions",
+      key: "actions",
+      width: "5%",
+      align: "center",
     },
     {
-      title: 'Sr#',
-      dataIndex: 'order',
-      key: 'order',
-      width: '5%',
-      align: 'center',
+      title: "Sr#",
+      dataIndex: "order",
+      key: "order",
+      width: "5%",
+      align: "center",
     },
     {
-      title: <span className="column-underlined">Description and Upload Image</span>,
-      dataIndex: 'image_name',
-      key: 'image_name',
+      title: (
+        <span className="column-underlined">Description and Upload Image</span>
+      ),
+      dataIndex: "image_name",
+      key: "image_name",
       ellipsis: true,
-      width: '25%',
-      align: 'start',
+      width: "25%",
+      align: "start",
       editable: true,
     },
     {
-      title: '',
-      dataIndex: 'upload',
-      key: 'upload',
-      align: 'center',
-      width: '10%',
+      title: "",
+      dataIndex: "upload",
+      key: "upload",
+      align: "center",
+      width: "10%",
     },
     {
-      title: 'Height',
-      dataIndex: 'height',
-      key: 'height',
-      align: 'center',
+      title: "Height",
+      dataIndex: "height",
+      key: "height",
+      align: "center",
       editable: true,
     },
     {
-      title: 'Width',
-      dataIndex: 'width',
-      key: 'width',
-      align: 'center',
+      title: "Width",
+      dataIndex: "width",
+      key: "width",
+      align: "center",
       editable: true,
     },
     {
-      title: 'Area (Sq.ft)',
-      dataIndex: 'area',
-      key: 'area',
-      align: 'center',
+      title: "Area (Sq.ft)",
+      dataIndex: "area",
+      key: "area",
+      align: "center",
     },
     {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
-      align: 'center',
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      align: "center",
     },
     {
-      title: 'Quantity',
-      dataIndex: 'quantity',
-      key: 'quantity',
-      align: 'center',
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+      align: "center",
     },
     {
-      title: 'Amount',
-      dataIndex: 'amount',
-      key: 'amount',
-      align: 'center',
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+      align: "center",
     },
   ];
 
@@ -136,18 +142,18 @@ function Table() {
     <>
       <AntDTable
         components={components}
-        className='invoice-table'
-        style={{ marginBottom: '20px' }}
+        className="invoice-table"
+        style={{ marginBottom: "20px" }}
         pagination={false}
         loading={tableLoading}
         dataSource={actualRows}
         columns={columnsConfig}
         size="small"
-        rowClassName={() => 'editable-row'}
+        rowClassName={() => "editable-row"}
       />
       <Typography.Text
         onClick={handleAddRows}
-        style={{ cursor: 'pointer', color: '#0B6E4F', marginLeft: '120px' }}
+        style={{ cursor: "pointer", color: "#0B6E4F", marginLeft: "120px" }}
         strong
       >
         Add More Rows

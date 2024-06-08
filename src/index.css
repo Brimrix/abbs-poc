@@ -37,27 +37,24 @@
     @apply text-xs w-36 h-4;
   }
 
+  /* Invoice Table */
 
-/* Invoice Table */
+  .invoice-table .my-tag {
+    @apply text-xs w-36 h-4;
+  }
 
-.invoice-table .my-tag {
-  @apply text-xs w-36 h-4;
-}
+  .invoice-table .ant-table-tbody > tr > td {
+    @apply !h-[5px] !p-[4px];
+  }
 
-.invoice-table .ant-table-tbody > tr > td {
-  @apply !h-[5px] !p-[4px];
+  .invoice-table .ant-table-thead > tr > th {
+    @apply h-1 p-1 text-green;
+  }
 
-}
-
-.invoice-table .ant-table-thead > tr > th {
-  @apply h-1 p-1 text-green;
-}
-
-.invoice-table .ant-table-thead > tr > th:nth-child(3),
-.invoice-table .ant-table-thead > tr > th:nth-child(4) {
-  @apply !border-b-[3px] !border-orange;
-}
-
+  .invoice-table .ant-table-thead > tr > th:nth-child(3),
+  .invoice-table .ant-table-thead > tr > th:nth-child(4) {
+    @apply !border-b-[3px] !border-orange;
+  }
 
   .customer-table .ant-table-tbody > tr > td {
     @apply !h-[5px] !p-[4px];
@@ -75,6 +72,4 @@
   .customer-table .ant-table-thead > tr > th:nth-child(4) {
     @apply !border-0;
   }
-
-
 }
