@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import "@styles/Menu.css";
+// import "@styles/Menu.css";
 const { Title } = Typography;
 const { Sider } = Layout;
 
@@ -57,25 +57,18 @@ function SideBar() {
         {collapse ?
           <BarsOutlined
             onClick={handleClick}
-            style={{
-              color: "white",
-              fontSize: "28px",
-              padding: "10px 0px"
-            }}
+            className="text-white text-2xl py-2"
           /> : <>
             <Title className="text-nowrap text-white mb-0">ABBS</Title>
             <LeftCircleOutlined
               onClick={handleClick}
-              style={{
-                float: 'right',
-                color: "white",
-                fontSize: "28px"
-              }}
+              className="float-right text-white text-3xl"
             />
 
           </>}
       </div>
       <Menu
+      className="sider-menu"
         theme="dark"
         mode="inline"
         style={{ backgroundColor: primary_color }}

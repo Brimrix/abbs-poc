@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "@styles/NotFound.css";
 import { Button } from "antd";
 import { HomeFilled } from "@ant-design/icons";
 
@@ -19,8 +18,8 @@ const NotFound = () => {
               <div>
                 <h3 className="h2 mb-2">Oops! You're lost.</h3>
                 <p className="mb-5">Please try to navigate to valid routes.</p>
-                <Button icon={<HomeFilled />} className="page-button">
-                  <Link className="link-home" to={"/"}>
+                <Button icon={<HomeFilled />} className="btn-orange-secondary">
+                  <Link className="no-underline" to={"/"}>
                     Back to Home
                   </Link>
                 </Button>
