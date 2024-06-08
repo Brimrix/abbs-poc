@@ -15,4 +15,63 @@
         @apply  bg-red hover:!bg-redHover;
     }
 
+    /* Invoice upload class */
+
+    .invoice-upload .ant-upload{
+
+        height: 20px !important;
+        width: 70px I !important;
+
+
+    }
+
+    /* Customer Table */
+    .ant-table {
+      @apply text-sm;
+    }
+
+    /* Target table body rows and cells */
+    .ant-table-tbody > tr > td {
+      height: 5px !important; /* Custom height */
+      padding: 4px !important; /* Custom padding */
+      @apply h-1 p-1;
+    }
+
+    /* Style the 'my-tag' class */
+    .customer-table .my-tag {
+      @apply text-xs w-36 h-4;
+      font-size: 12px !important; /* Tailwind equivalent: text-xs */
+      width: 150px !important; /* Tailwind equivalent: w-36 */
+      height: 16px !important; /* Tailwind equivalent: h-4 */
+    }
+
+    /* Target table header rows and cells */
+    .customer-table .ant-table-thead > tr > th {
+      height: 5px !important; /* Custom height */
+      padding: 4px !important; /* Custom padding */
+      color: #0B6E4F !important; /* Custom color */
+      @apply h-1 p-1 text-green;
+    }
+
+    .customer-table .ant-table-thead > tr > th:nth-child(2),
+    .customer-table .ant-table-thead > tr > th:nth-child(3) {
+      border-bottom: 3px solid #FA9F42 !important; /* Custom border */
+      @apply border-orange;
+    }
+
+    .customer-table .ant-table-thead > tr > th:nth-child(4) {
+      border-bottom: none !important; /* Remove border */
+      @apply border-0;
+    }
+
+    /* Target specific table body cells */
+    .customer-table tr > td:nth-child(1),
+    .customer-table tr > td:nth-child(2),
+    .customer-table tr > td:nth-child(3),
+    .customer-table tr > td:nth-child(4),
+    .customer-table tr > td:nth-child(5) {
+      color: #0B6E4F !important; /* Custom color */
+      @apply text-green;
+    }
+
   }
