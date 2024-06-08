@@ -45,25 +45,3 @@
 .booking_information_table tr > td:nth-child(5) {
   color: #0B6E4F !important;
 }
-
-.primary-btn{
-  background-color: #FA9F42 !important;
-}
-.primary-btn:hover{
-  background-color: #ed963f !important;
-}
-/* .ant-btn-primary{
-  background-color: #FA9F42;
-
-}
-.ant-btn-primary:hover{
-  background-color: #ed963f ;
-} */
-.danger-btn{
-  background-color: #db304d !important;
-
-}
-
-.danger-btn:hover{
-  background-color: #be253f !important;
-}

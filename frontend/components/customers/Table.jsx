@@ -131,7 +131,7 @@ const Table = () => {
         <Space size="middle">
           <Button
             type="primary"
-            className="primary-btn"
+            className="btn-orange-primary"
             icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
           >
@@ -139,8 +139,7 @@ const Table = () => {
           </Button>
           <Button
             type="primary"
-            danger={true}
-            className="danger-btn"
+            className="btn-red-primary"
             icon={<UserDeleteOutlined />}
             onClick={() => {
               setDeleteKey(record.key);
@@ -157,7 +156,7 @@ const Table = () => {
   return (
     <div>
       <Button
-        className="float-end mx-4 my-3 primary-btn"
+        className="float-end mx-4 my-3 btn-red-primary"
         type="primary"
         onClick={handleAdd}
         icon={<PlusOutlined />}
@@ -177,7 +176,8 @@ const Table = () => {
         open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
-        okButtonProps={{ className: "primary-btn" }}
+        okButtonProps={{ className: "btn-orange-primary" }}
+        cancelButtonProps={{className: "btn-orange-secondary"}}
       >
         <Form form={form} layout="vertical" name="form_in_modal">
           <Form.Item
@@ -233,7 +233,8 @@ const Table = () => {
       </Modal>
 
       <Modal
-        okButtonProps={{ className: "danger-btn" }}
+        okButtonProps={{ className: "btn-red-primary" }}
+        cancelButtonProps={{className: "btn-orange-secondary"}}
         open={isDeleteOpen}
         okText="Delete"
         title="Are you sure you want to Delete ?"

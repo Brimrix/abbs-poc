@@ -16,7 +16,7 @@ function Dashboard() {
 
   return (
     <Spin spinning={mount} tip="Loading...">
-        <h2 className='p-2 h-2'>Dashboard</h2>
+        <h2 className='text-3xl font-bold bg-orange'>Dashboard</h2>
     </ Spin>
   );
 }
