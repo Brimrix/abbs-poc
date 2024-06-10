@@ -12,6 +12,12 @@ import customerData from "@/data/customer.json";
 
 const { Header } = Layout;
 
+const IconLink = ({ icon }) => (
+  <div className="text-white text-lg flex justify-center bg-orange p-[6px] rounded-lg cursor-pointer h-[30px] w-[30px]">
+   {icon}
+  </div>
+);
+
 function ClientSearch() {
   const [currentOptions, setCurrentOptions] = useState([]);
 
@@ -28,9 +34,6 @@ function ClientSearch() {
     });
     setCurrentOptions(options);
   }, []);
-
-  const Secondary_Nav_Icon_style =
-    "text-white text-lg bg-orange p-[6px] rounded-lg cursor-pointer h-[30px] w-[30px]";
 
   const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
@@ -54,10 +57,10 @@ function ClientSearch() {
         </Popover>
       </div>
       <div className="flex items-center gap-1 mr-5">
-        <MessageOutlined className={Secondary_Nav_Icon_style} />
-        <CloudDownloadOutlined className={Secondary_Nav_Icon_style} />
-        <MailOutlined className={Secondary_Nav_Icon_style} />
-        <PrinterOutlined className={Secondary_Nav_Icon_style} />
+        <IconLink icon={<MessageOutlined />} />
+        <IconLink icon={<CloudDownloadOutlined />} />
+        <IconLink icon={<MailOutlined />} />
+        <IconLink icon={<PrinterOutlined />} />
       </div>
     </Header>
   );
