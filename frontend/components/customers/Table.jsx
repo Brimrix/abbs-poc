@@ -5,7 +5,6 @@ import {
   EditOutlined,
   UserDeleteOutlined,
 } from "@ant-design/icons";
-import "@styles/customer_table.css";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import customerData from "@/data/customer.json";
@@ -131,7 +130,7 @@ const Table = () => {
         <Space size="middle">
           <Button
             type="primary"
-            className="primary-btn"
+            className="btn-app-primary"
             icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
           >
@@ -139,8 +138,7 @@ const Table = () => {
           </Button>
           <Button
             type="primary"
-            danger={true}
-            className="danger-btn"
+            className="btn-app-accent"
             icon={<UserDeleteOutlined />}
             onClick={() => {
               setDeleteKey(record.key);
@@ -157,7 +155,7 @@ const Table = () => {
   return (
     <div>
       <Button
-        className="float-end mx-4 my-3 primary-btn"
+        className="float-end mx-4 my-3 btn-app-accent"
         type="primary"
         onClick={handleAdd}
         icon={<PlusOutlined />}
@@ -165,8 +163,7 @@ const Table = () => {
         Add
       </Button>
       <AntDTable
-        className="booking_information_table"
-        scroll={{ y: 220 }}
+        className="customer-table"
         pagination={false}
         columns={columns}
         dataSource={data}
@@ -177,7 +174,8 @@ const Table = () => {
         open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
-        okButtonProps={{ className: "primary-btn" }}
+        okButtonProps={{ className: "btn-app-primary" }}
+        cancelButtonProps={{className: "btn-app-transparent"}}
       >
         <Form form={form} layout="vertical" name="form_in_modal">
           <Form.Item
@@ -233,7 +231,8 @@ const Table = () => {
       </Modal>
 
       <Modal
-        okButtonProps={{ className: "danger-btn" }}
+        okButtonProps={{ className: "btn-app-accent" }}
+        cancelButtonProps={{className: "btn-app-transparent"}}
         open={isDeleteOpen}
         okText="Delete"
         title="Are you sure you want to Delete ?"
