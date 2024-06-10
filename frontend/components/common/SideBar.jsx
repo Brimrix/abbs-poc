@@ -42,7 +42,7 @@ function SideBar() {
   return (
     <Sider
       collapsible
-      className="!bg-green"
+      className="!bg-primary"
       collapsed={collapse}
       width="320px"
       trigger={null}
@@ -68,7 +68,7 @@ function SideBar() {
         )}
       </div>
       <Menu
-        className="sider-menu bg-green"
+        className="sider-menu !bg-primary"
         theme="dark"
         mode="inline"
         selectedKeys={[route.pathname]}

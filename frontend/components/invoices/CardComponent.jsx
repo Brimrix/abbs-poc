@@ -108,12 +108,12 @@ function CardComponent() {
 
         <div className="row gx-4 mt-1">
           <div className="col">
-            <Button className='bg-orange border-none text-white w-[135px] h-[38px] hover:!bg-orangeHover'>Print Slip</Button>
+            <Button className='!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-orangeHover'>Print Slip</Button>
 
           </div>
           <div className="col">
 
-            <Button className="bg-orange border-none text-white w-[135px] h-[38px] hover:!bg-orangeHover">Save</Button>
+            <Button className="!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-orangeHover">Save</Button>
 
           </div>
         </div>

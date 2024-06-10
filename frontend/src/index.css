@@ -4,21 +4,21 @@
 
 @layer components {
   .btn-orange-primary {
-    @apply bg-orange hover:!bg-orangeHover;
+    @apply bg-secondary hover:!bg-orangeHover;
   }
 
   .btn-orange-secondary {
-    @apply bg-white text-black hover:!border-orange hover:!text-orange;
+    @apply bg-white text-black hover:!border-secondary hover:!text-secondary;
   }
 
   .btn-red-primary {
-    @apply bg-red hover:!bg-redHover;
+    @apply bg-accent hover:!bg-redHover;
   }
 
   /* Invoice upload class */
 
   .sider-menu > .ant-menu-item-selected {
-    @apply bg-orange !important;
+    @apply bg-secondary !important;
   }
 
   .invoice-upload .ant-upload {
@@ -48,12 +48,12 @@
   }
 
   .invoice-table .ant-table-thead > tr > th {
-    @apply h-1 p-1 text-green;
+    @apply h-1 p-1 text-primary;
   }
 
   .invoice-table .ant-table-thead > tr > th:nth-child(3),
   .invoice-table .ant-table-thead > tr > th:nth-child(4) {
-    @apply !border-b-[3px] !border-orange;
+    @apply !border-b-[3px] !border-secondary;
   }
 
   .customer-table .ant-table-tbody > tr > td {
@@ -66,7 +66,7 @@
 
   .customer-table .ant-table-thead > tr > th:nth-child(2),
   .customer-table .ant-table-thead > tr > th:nth-child(3) {
-    @apply !border-b-[3px] !border-orange;
+    @apply !border-b-[3px] !border-secondary;
   }
 
   .customer-table .ant-table-thead > tr > th:nth-child(4) {
