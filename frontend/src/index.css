@@ -4,7 +4,7 @@
 
 @layer components {
   .btn-orange-primary {
-    @apply bg-secondary hover:!bg-orangeHover;
+    @apply bg-secondary hover:!bg-hover-color-secondary;
   }
 
   .btn-orange-secondary {
@@ -12,7 +12,7 @@
   }
 
   .btn-red-primary {
-    @apply bg-accent hover:!bg-redHover;
+    @apply bg-accent hover:!bg-hover-color-accent;
   }
 
   /* Invoice upload class */
@@ -61,7 +61,7 @@
   }
 
   .customer-table .ant-table-thead > tr > th {
-    @apply h-1 p-1 text-green;
+    @apply h-1 p-1 text-primary;
   }
 
   .customer-table .ant-table-thead > tr > th:nth-child(2),

@@ -13,7 +13,7 @@ import customerData from "@/data/customer.json";
 const { Header } = Layout;
 
 const IconLink = ({ icon }) => (
-  <div className="text-white text-lg flex justify-center bg-orange p-[6px] rounded-lg cursor-pointer h-[30px] w-[30px]">
+  <div className="text-white text-lg flex justify-center !bg-secondary p-[6px] rounded-lg cursor-pointer h-[30px] w-[30px]">
     {icon}
   </div>
 );
@@ -42,7 +42,7 @@ function ClientSearch() {
     <Header className="bg-white flex items-center justify-between">
       <div className="flex justify-start items-center">
         <Select
-          suffixIcon={<UserOutlined className="text-orange text-lg" />}
+          suffixIcon={<UserOutlined className="!text-secondary !text-lg" />}
           showSearch
           allowClear
           filterOption={filterOption}
@@ -52,7 +52,7 @@ function ClientSearch() {
         />
         <Popover placement="top" content={<span>Due Date</span>}>
           <DatePicker
-            suffixIcon={<CalendarOutlined className="text-orange text-lg" />}
+            suffixIcon={<CalendarOutlined className="!text-secondary !text-lg" />}
           />
         </Popover>
       </div>

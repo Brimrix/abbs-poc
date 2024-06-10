@@ -153,7 +153,7 @@ function Table() {
       />
       <Typography.Text
         onClick={handleAddRows}
-        style={{ cursor: "pointer", color: "#0B6E4F", marginLeft: "120px" }}
+        className="!text-primary !cursor-pointer !ml-[120px]"
         strong
       >
         Add More Rows

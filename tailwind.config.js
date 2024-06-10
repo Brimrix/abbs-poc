@@ -10,13 +10,9 @@ export default {
         secondary: "#FA9F42",
         accent: "#FA2D2D",
 
+        // hover colors for cursor-pointers.
         "hover-color-secondary": "#ed963f",
-
-        'green': "#0B6E4F",
-        'orange': "#FA9F42",
-        'orangeHover': "#ed963f",
-        'red': "#db304d",
-        'redHover': "#be253f"
+        "hover-color-accent": "#be253f",
       }
     },
   },

@@ -97,23 +97,23 @@ function CardComponent() {
 
         <div className="row gx-5 mt-2">
           <div className="col">
-            <Typography.Text style={{ color: '#0B6E4F' }} strong>Grand Total</Typography.Text>
+            <Typography.Text className='!text-primary' strong>Grand Total</Typography.Text>
 
           </div>
           <div className="col">
-            <Typography.Text style={{ color: '#0B6E4F' }} strong>{grandTotal}</Typography.Text>
+            <Typography.Text className='!text-primary' strong>{grandTotal}</Typography.Text>
 
           </div>
         </div>
 
         <div className="row gx-4 mt-1">
           <div className="col">
-            <Button className='!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-orangeHover'>Print Slip</Button>
+            <Button className='!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-hover-color-secondary'>Print Slip</Button>
 
           </div>
           <div className="col">
 
-            <Button className="!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-orangeHover">Save</Button>
+            <Button className="!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-hover-color-secondary">Save</Button>
 
           </div>
         </div>
