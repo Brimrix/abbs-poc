@@ -19,6 +19,8 @@ function SideBar() {
   const handleClick = () => {
     setCollapse(!collapse);
   };
+
+
   const menuItems = [
     {
       key: "/",
@@ -40,13 +42,13 @@ function SideBar() {
   return (
     <Sider
       collapsible
+      className="!bg-green"
       collapsed={collapse}
       width="320px"
       trigger={null}
       style={{
         overflow: "auto",
         height: "100vh",
-        backgroundColor: primary_color,
       }}
     >
       <div className="d-flex justify-content-between px-4 my-3">
@@ -66,10 +68,9 @@ function SideBar() {
         )}
       </div>
       <Menu
-        className="sider-menu"
+        className="sider-menu bg-green"
         theme="dark"
         mode="inline"
-        style={{ backgroundColor: primary_color }}
         selectedKeys={[route.pathname]}
         items={menuItems}
         onClick={(props) => {
