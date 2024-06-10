@@ -23,7 +23,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 urlpatterns = [
     path("login/", obtain_auth_token),
     path("admin/", admin.site.urls),
-    path("", include("core.urls")),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path("docs/", SpectacularSwaggerView.as_view(), name="documentation"),
+    path("", include("core.urls")),
 ]

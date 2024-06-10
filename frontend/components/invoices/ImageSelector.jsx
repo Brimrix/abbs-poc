@@ -5,13 +5,12 @@ import {
   FileAddOutlined,
 } from "@ant-design/icons";
 import { message, Upload, Typography, Popover } from "antd";
-import "@/assets/styles/ImageUploaderStyle.css";
 import exifr from "exifr";
 import { useBillContext } from "@/context/BillContext";
 
 const imageHoverPopover = (actualImageURL, isProcess) =>
   actualImageURL && isProcess ? (
-    <img style={{ height: "200px", width: "160px" }} src={actualImageURL} />
+    <img className="h-[200px] w-[160px] object-cover" src={actualImageURL} />
   ) : (
     <span>Upload image</span>
   );
@@ -146,7 +145,7 @@ function ImageSelector({ _id, reRender, renderSource }) {
   const UploadButton = () => {
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
+      <div className="mt-8">Upload</div>
     </div>;
   };
 
@@ -158,7 +157,7 @@ function ImageSelector({ _id, reRender, renderSource }) {
       <Upload
         name="avatar"
         listType="picture-card"
-        className="avatar-uploader"
+        className="avatar-uploader invoice-upload"
         showUploadList={false}
         beforeUpload={beforeUpload}
         onChange={handleChange}
@@ -166,9 +165,9 @@ function ImageSelector({ _id, reRender, renderSource }) {
       >
         <UploadButton />
         <div
-          style={{ color: "#0B6E4F" }}
-          className="d-flex align-items-center justify-content-between"
-        >
+
+          className="flex items-center justify-between !text-primary"
+          >
           <FileAddOutlined />
           <Typography.Text>Select File</Typography.Text>
         </div>

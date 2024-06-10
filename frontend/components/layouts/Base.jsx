@@ -1,5 +1,4 @@
 import React from 'react';
-import '@/assets/styles/ImageUploaderStyle.css';
 import { Outlet } from 'react-router-dom';
 import {
   Layout

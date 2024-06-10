@@ -55,13 +55,11 @@ function CardComponent() {
     setGrandTotal(grandTotal);
   }, [state]);
 
-  const buttonStyle = {
-    backgroundColor: '#FA9F42', color: 'white', width: '135px', height: '38px',
-  };
+
 
   return (
 
-    <Card  className='shadow border w-auto' style={{ backgroundColor: '#F6F6F6' }}>
+    <Card  className='bg shadow border w-auto' style={{ backgroundColor: '#F6F6F6' }}>
       <div className="container">
         <div className="row gx-5 gy-5">
           <div className="col">
@@ -99,23 +97,23 @@ function CardComponent() {
 
         <div className="row gx-5 mt-2">
           <div className="col">
-            <Typography.Text style={{ color: '#0B6E4F' }} strong>Grand Total</Typography.Text>
+            <Typography.Text className='!text-primary' strong>Grand Total</Typography.Text>
 
           </div>
           <div className="col">
-            <Typography.Text style={{ color: '#0B6E4F' }} strong>{grandTotal}</Typography.Text>
+            <Typography.Text className='!text-primary' strong>{grandTotal}</Typography.Text>
 
           </div>
         </div>
 
         <div className="row gx-4 mt-1">
           <div className="col">
-            <Button style={buttonStyle}>Print Slip</Button>
+            <Button className='!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-hover-color-secondary'>Print Slip</Button>
 
           </div>
           <div className="col">
 
-            <Button style={buttonStyle}>Save</Button>
+            <Button className="!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-hover-color-secondary">Save</Button>
 
           </div>
         </div>
