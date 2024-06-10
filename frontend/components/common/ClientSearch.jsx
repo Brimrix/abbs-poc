@@ -14,7 +14,7 @@ const { Header } = Layout;
 
 const IconLink = ({ icon }) => (
   <div className="text-white text-lg flex justify-center bg-orange p-[6px] rounded-lg cursor-pointer h-[30px] w-[30px]">
-   {icon}
+    {icon}
   </div>
 );
 
