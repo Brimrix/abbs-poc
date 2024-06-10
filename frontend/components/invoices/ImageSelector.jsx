@@ -166,7 +166,7 @@ function ImageSelector({ _id, reRender, renderSource }) {
         <UploadButton />
         <div
 
-          className="flex items-center justify-between text-green"
+          className="flex items-center justify-between !text-primary"
           >
           <FileAddOutlined />
           <Typography.Text>Select File</Typography.Text>
