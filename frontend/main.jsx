@@ -1,24 +1,7 @@
 import 'vite/modulepreload-polyfill';
 
 import ReactDOM from 'react-dom/client';
-import 'bootstrap/dist/css/bootstrap.css';
-import { RouterProvider } from 'react-router-dom';
-import router from '@/routes/index'
 import React from 'react';
-import { CookiesProvider } from "react-cookie";
-
-
-const App = (children) => {
-  return <>
-     <React.StrictMode>
-     <CookiesProvider>
-      <RouterProvider router={router}>
-        {children}
-      </RouterProvider>
-     </CookiesProvider>
-    </React.StrictMode>
-
-  </>
-}
+import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);

@@ -1,35 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import "@/assets/styles/LoginStyle.css";
 import { message, Form, Input, Button } from "antd";
+import "@/assets/styles/LoginStyle.css";
 
-const loginURL = import.meta.env.VITE_LOGIN_URL;
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [cookies, setCookie] = useCookies(["token"]);
-  const [token, setToken] = useState();
+  const [_, setCookie] = useCookies()
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setCookie("login", token, { path: "/" });
-
-    if (success) {
-      message.success("Successfully logged in");
-      navigate("/");
-    }
-
-    console.log(token);
-  }, [success]);
 
   const getCookieValue = (name) =>
     document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
 
   const handleFormSubmit = async () => {
-    const response = await fetch(loginURL, {
+    const response = await fetch(import.meta.env.VITE_BASE_SERVER + "login/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,83 +27,78 @@ const Login = () => {
       }),
     });
 
-    if (!response.ok)
-    message.error("Please check your email or password");
-
     const data = await response.json();
+    if (!response.ok)
+      message.error("Please check your email or password");
 
     if (response.ok) {
-      setToken(data.token);
-      setSuccess(response.ok);
+      setCookie('accessToken', data.token)
+      navigate('/')
     }
 
 
   };
   return (
-    <Form
-      name="login-form"
-      onFinish={handleFormSubmit}
-      className="vh-100 section-bg"
-    >
-      <div className="container py-5 h-100">
-        <div className="row d-flex justify-content-center align-items-center h-100">
-          <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-            <div className="card shadow-2-strong card-background">
-              <div className="card-body p-5 text-start">
-                <h3 className="mb-5">Login ABBS</h3>
+    <div className="!bg-primary min-h-dvh flex flex-col justify-center">
+      <div className="bg-white min-h-max w-2/5 mx-auto rounded-md p-5">
+        <Form
+          name="login-form"
+          onFinish={handleFormSubmit}
+        >
+          <div className="text-center">
+            <p className="text-3xl mb-10">Welcome to ABBS</p>
 
-                <Form.Item
-                  name="username"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your email",
-                    },
-                    {
-                      type: "email",
-                      message: "Please input a valid email",
-                    },
-                  ]}
-                >
-                  <Input
-                    placeholder="Email"
-                    className="form-control form-control-lg"
-                  />
-                </Form.Item>
+            <Form.Item
+              name="username"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your email",
+                },
+                {
+                  type: "email",
+                  message: "Please input a valid email",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Email"
+                value={username}
+                onChange={(event) => setUsername(event.currentTarget.value)}
+                className="text-3xl"
+              />
+            </Form.Item>
 
-                <Form.Item
-                  name="password"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your password",
-                    },
-                  ]}
-                >
-                  <Input.Password
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your password",
+                },
+              ]}
+            >
+              <Input.Password
+                placeholder="Password"
+                className="text-2xl"
+                value={password}
+                onChange={(event) => setPassword(event.currentTarget.value)}
+              />
+            </Form.Item>
 
-                    placeholder="Password"
-                    style={{display: "flex"}}
-                    className="form-control form-control-lg"
-                  />
-                </Form.Item>
-              </div>
-
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                style={{marginLeft: "180px", height: "40px"}}
-                  className="btn button-primary login-btn"
-                >
-                  Login
-                </Button>
-              </Form.Item>
-            </div>
+            <Form.Item className="">
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="mt-10 btn-app-primary w-full min-h-12 text-3xl"
+              >
+                Login
+              </Button>
+            </Form.Item>
           </div>
-        </div>
+        </Form>
       </div>
-    </Form>
+    </div>
   );
 };
 

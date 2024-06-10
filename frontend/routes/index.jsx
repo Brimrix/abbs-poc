@@ -5,14 +5,12 @@ import Invoices from "@/pages/Invoices";
 import Login from "@/pages/Login";
 import LayoutMain from "@/components/layouts/Base";
 import NotFound from "@/pages/NotFound";
-import { useAuth } from "@/hooks/AuthHook";
 import { Navigate } from "react-router-dom";
+import { useCookies } from 'react-cookie';
 
 function ProtectedRoute({ element }) {
-
-  const [loginToken, error] = useAuth();
-
-  return error ? <Navigate to="/login" /> : element;
+  const [cookie] = useCookies()
+  return !cookie.accessToken ? <Navigate to="login" /> : element;
 }
 
 const router = createBrowserRouter([
