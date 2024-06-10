@@ -18,7 +18,7 @@ const NotFound = () => {
               <div>
                 <h3 className="h2 mb-2">Oops! You're lost.</h3>
                 <p className="mb-5">Please try to navigate to valid routes.</p>
-                <Button icon={<HomeFilled />} className="btn-orange-secondary">
+                <Button icon={<HomeFilled />} className="btn-app-transparent">
                   <Link className="no-underline" to={"/"}>
                     Back to Home
                   </Link>

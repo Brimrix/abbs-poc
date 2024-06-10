@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 @layer components {
-  .btn-orange-primary {
+  .btn-app-primary {
     @apply bg-secondary hover:!bg-hover-color-secondary;
   }
 
-  .btn-orange-secondary {
+  .btn-app-transparent {
     @apply bg-white text-black hover:!border-secondary hover:!text-secondary;
   }
 
-  .btn-red-primary {
+  .btn-app-accent {
     @apply bg-accent hover:!bg-hover-color-accent;
   }
 

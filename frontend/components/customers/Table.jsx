@@ -130,7 +130,7 @@ const Table = () => {
         <Space size="middle">
           <Button
             type="primary"
-            className="btn-orange-primary"
+            className="btn-app-primary"
             icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
           >
@@ -138,7 +138,7 @@ const Table = () => {
           </Button>
           <Button
             type="primary"
-            className="btn-red-primary"
+            className="btn-app-accent"
             icon={<UserDeleteOutlined />}
             onClick={() => {
               setDeleteKey(record.key);
@@ -155,7 +155,7 @@ const Table = () => {
   return (
     <div>
       <Button
-        className="float-end mx-4 my-3 btn-red-primary"
+        className="float-end mx-4 my-3 btn-app-accent"
         type="primary"
         onClick={handleAdd}
         icon={<PlusOutlined />}
@@ -174,8 +174,8 @@ const Table = () => {
         open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
-        okButtonProps={{ className: "btn-orange-primary" }}
-        cancelButtonProps={{className: "btn-orange-secondary"}}
+        okButtonProps={{ className: "btn-app-primary" }}
+        cancelButtonProps={{className: "btn-app-transparent"}}
       >
         <Form form={form} layout="vertical" name="form_in_modal">
           <Form.Item
@@ -231,8 +231,8 @@ const Table = () => {
       </Modal>
 
       <Modal
-        okButtonProps={{ className: "btn-red-primary" }}
-        cancelButtonProps={{className: "btn-orange-secondary"}}
+        okButtonProps={{ className: "btn-app-accent" }}
+        cancelButtonProps={{className: "btn-app-transparent"}}
         open={isDeleteOpen}
         okText="Delete"
         title="Are you sure you want to Delete ?"

@@ -28,6 +28,8 @@ function DeleteIcon({ _id }) {
       <Modal
         open={open}
         okText="Delete"
+        okButtonProps={{className: 'btn-app-accent'}}
+        cancelButtonProps={{className: 'btn-app-transparent'}}
         title="Confirmation"
         onOk={() => handleOkay(_id)}
         onCancel={() => setOpen(false)}
