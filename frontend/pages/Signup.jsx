@@ -123,8 +123,8 @@ const SignUp = () => {
             className="w-full"
             name="email"
             rules={[
-              { type: "email", message: "The input is not valid email!" },
-              { required: true, message: "Please input your email!" },
+              { type: "email", message: "Enter valid input that you want to use for password reset!" },
+              { required: true, message: "Please enter the email that you want to use for password reset!" },
             ]}
           >
             <Input
