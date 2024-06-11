@@ -7,6 +7,7 @@ import {
   GlobalOutlined,
 } from "@ant-design/icons";
 import PhoneInput from "react-phone-input-2";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
   const [form, setForm] = useState({});
@@ -156,6 +157,7 @@ const SignUp = () => {
               placeholder="Confirm Password"
             />
           </Form.Item>
+
           <Form.Item>
             <Button
               type="primary"
@@ -166,6 +168,7 @@ const SignUp = () => {
             </Button>
           </Form.Item>
         </Form>
+        <span>Already have an account, <Link to={'/login'} className="text-secondary">Login</Link> instead.</span>
       </div>
     </div>
   );
