@@ -40,9 +40,10 @@ const Login = () => {
   return (
     <div className="!bg-primary min-h-dvh flex flex-col justify-center">
       <div className="bg-white min-h-max w-2/5 mx-auto rounded-md p-5">
-        <Form name="login-form" onFinish={handleFormSubmit}>
+        <Form name="login-form" onFinish={handleFormSubmit} >
           <div className="text-center">
             <p className="text-3xl mb-10">Welcome to ABBS</p>
+
 
             <Form.Item
               name="username"
@@ -93,8 +94,15 @@ const Login = () => {
             </Form.Item>
           </div>
         </Form>
-      <h1 className="text-2xl text-center mt-10">Dont have an account ? <span className="text-secondary cursor-pointer" onClick={() => navigate("/signup")}>Sign Up</span></h1>
-
+        <h1 className="text-2xl text-center mt-10">
+          Dont have an account ?{" "}
+          <span
+            className="text-secondary cursor-pointer"
+            onClick={() => navigate("/signup")}
+          >
+            Sign Up
+          </span>
+        </h1>
       </div>
     </div>
   );

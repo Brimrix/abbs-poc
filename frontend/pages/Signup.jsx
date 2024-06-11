@@ -59,6 +59,7 @@ const SignUp = () => {
             ]}
           >
             <Input
+              autoComplete="new-username"
               prefix={<UserOutlined className="site-form-item-icon" />}
               placeholder="Username"
             />
@@ -100,11 +101,12 @@ const SignUp = () => {
             className="w-full"
             required={true}
             name="password"
+            visible={true}
             rules={[
               () => ({
                 validator(_, value) {
                   if (value.length === 0) {
-                    return Promise.reject("Please input your password !");
+                    return Promise.reject("Please input your password!");
                   } else if (value.length < 6) {
                     return Promise.reject(
                       "The Password should be more than 6 characters"
@@ -124,10 +126,12 @@ const SignUp = () => {
             ]}
           >
             <Input.Password
+              autoComplete="new-password"
               prefix={<LockOutlined className="site-form-item-icon" />}
               placeholder="Password"
             />
           </Form.Item>
+
           <Form.Item
             required={true}
             name="password_confirmation"
