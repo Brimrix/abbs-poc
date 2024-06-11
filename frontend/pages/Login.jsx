@@ -38,15 +38,13 @@ const Login = () => {
     }
   };
   return (
-    <div className="!bg-primary min-h-dvh flex flex-col justify-center">
-      <div className="bg-white min-h-max w-2/5 mx-auto rounded-md p-5">
-        <Form name="login-form" onFinish={handleFormSubmit} >
-          <div className="text-center">
-            <p className="text-3xl mb-10">Welcome to ABBS</p>
-
-
+    <div className="flex items-center justify-center h-screen bg-primary">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-[40%]">
+        <h1 className="text-2xl font-bold mb-10">Welcome to ABBS</h1>
+     <Form name="login-form" className="flex flex-col items-center justify-center" onFinish={handleFormSubmit} >
             <Form.Item
               name="username"
+              className="w-[80%]"
               rules={[
                 {
                   required: true,
@@ -61,13 +59,15 @@ const Login = () => {
               <Input
                 placeholder="Email"
                 value={username}
+                autoComplete="new-username"
                 onChange={(event) => setUsername(event.currentTarget.value)}
-                className="text-3xl"
               />
             </Form.Item>
 
             <Form.Item
               name="password"
+              className="w-[80%]"
+
               rules={[
                 {
                   required: true,
@@ -77,7 +77,8 @@ const Login = () => {
             >
               <Input.Password
                 placeholder="Password"
-                className="text-2xl"
+                autoComplete="new-password"
+
                 value={password}
                 onChange={(event) => setPassword(event.currentTarget.value)}
               />
@@ -87,14 +88,13 @@ const Login = () => {
               <Button
                 type="primary"
                 htmlType="submit"
-                className="mt-10 btn-app-primary w-full min-h-12 text-3xl"
+                className="btn-app-primary w-[200px]"
               >
                 Login
               </Button>
             </Form.Item>
-          </div>
         </Form>
-        <h1 className="text-2xl text-center mt-10">
+        <h1 className="text-center mt-10">
           Dont have an account ?{" "}
           <span
             className="text-secondary cursor-pointer"
