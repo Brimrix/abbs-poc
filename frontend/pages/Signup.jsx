@@ -3,7 +3,7 @@ import { Form, Input, Button } from "antd";
 import {
   BarChartOutlined,
   UserOutlined,
-
+  MailOutlined,
   LockOutlined,
   HomeOutlined
 } from "@ant-design/icons";
@@ -59,14 +59,14 @@ const SignUp = () => {
 
           <Form.Item
             className="w-full"
-            name="email"
+            name="username"
             rules={[
               { type: "email", message: "Enter valid input that you want to use for password reset!" },
               { required: true, message: "Please enter the email that you want to use for password reset!" },
             ]}
           >
             <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
+              prefix={<MailOutlined className="site-form-item-icon" />}
               placeholder="UserName"
             />
           </Form.Item>
