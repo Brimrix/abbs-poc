@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button } from "antd";
 import {
-  PhoneOutlined,
   BarChartOutlined,
   UserOutlined,
-  MailOutlined,
+
   LockOutlined,
   HomeOutlined
 } from "@ant-design/icons";
@@ -32,19 +31,6 @@ const SignUp = () => {
           className="flex flex-col justify-center items-center"
         >
 
-          <Form.Item
-            name="username"
-            className="w-full"
-            rules={[
-              { required: true, message: "Please input your username!" },
-            ]}
-          >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
-            />
-          </Form.Item>
-
           <div className="w-full flex justify-between gap-2">
           <Form.Item
             name="firstname"
@@ -63,10 +49,6 @@ const SignUp = () => {
           <Form.Item
             name="lastname"
             className="w-1/2"
-            rules={[
-              { required: true, message: "Please input your last name!" },
-              { min: 2, message: "Enter your last name" },
-            ]}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
@@ -74,6 +56,20 @@ const SignUp = () => {
             />
           </Form.Item>
           </div>
+
+          <Form.Item
+            className="w-full"
+            name="email"
+            rules={[
+              { type: "email", message: "Enter valid input that you want to use for password reset!" },
+              { required: true, message: "Please enter the email that you want to use for password reset!" },
+            ]}
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="UserName"
+            />
+          </Form.Item>
 
           <Form.Item
             className="w-full"
@@ -117,20 +113,6 @@ const SignUp = () => {
           </Form.Item>
 
 
-
-          <Form.Item
-            className="w-full"
-            name="email"
-            rules={[
-              { type: "email", message: "Enter valid input that you want to use for password reset!" },
-              { required: true, message: "Please enter the email that you want to use for password reset!" },
-            ]}
-          >
-            <Input
-              prefix={<MailOutlined className="site-form-item-icon" />}
-              placeholder="Email"
-            />
-          </Form.Item>
           <Form.Item
             className="w-full"
             required={true}
