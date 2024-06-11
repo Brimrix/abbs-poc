@@ -18,36 +18,27 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from 'react-cookie';
+
 
 const { Header } = Layout;
 const { Search } = Input;
 
 function NavbarMain() {
   const navigate = useNavigate();
+  const [_, setCookie] = useCookies()
 
   const items = [
     {
       key: "1",
       label: (
-        <div className="position-relative p-3 w-[250px] h-[200px]">
-          <div className="d-flex align-items-center mb-3">
-            <UserOutlined className="me-2" style={{ fontSize: "20px" }} />
-            <Typography.Text>UserName</Typography.Text>
-          </div>
-          <Button
-            type="text"
-            icon={<CloseOutlined />}
-            onClick={() => setOpen(false)}
-            className="position-absolute top-4 right-4"
-          />
-          <div className="flex justify-between items-center">
-            <Button
-              onClick={() => navigate("/login")}
-              type="primary"
-              icon={<LogoutOutlined />}
-            >
-              Logout
-            </Button>
+        <div className="position-relative p-1 w-[250px]">
+          <div className="flex justify-between items-center"
+            onClick={() => {
+              setCookie('accessToken', null)
+              navigate("/login")
+            }}>
+            Logout <LogoutOutlined />
           </div>
         </div>
       ),
@@ -57,7 +48,7 @@ function NavbarMain() {
   return (
     <>
       <Header
-      className="bg-white flex items-center justify-between"
+        className="bg-white flex items-center justify-between"
       >
         <Search
           placeholder="Search"
@@ -66,7 +57,7 @@ function NavbarMain() {
         />
 
         <div
-        className="flex gap-[10px] mt-[10px]"
+          className="flex gap-[10px] mt-[10px]"
 
         >
           <Space>
@@ -75,39 +66,35 @@ function NavbarMain() {
             />
             <Badge dot>
               <BellFilled
-              className="text-xl text-gray-500"
+                className="text-xl text-gray-500"
               />
             </Badge>
           </Space>
 
-          <Suspense fallback={<h1>Loading.....</h1>}>
-            <Avatar
-            className="rounded-full w-[32px] h-[32px] cursor-pointer mt-[15px]"
-              size="small"
-              icon={<UserOutlined />}
-            />
-          </Suspense>
-
-          <div className="d-flex flex-column">
+          <div className="self-align-middle">
             <Dropdown
               menu={{
                 items,
               }}
               placement="bottomLeft"
             >
-              <h5
-              className="mt-[14px] mb-0 cursor-pointer font-bold"
-              >
-                John Doe
-              </h5>
+              <span className="flex gap-2">
+                <span className="flex flex-col">
+                  <p
+                    className="cursor-pointer font-bold"
+                  >
+                    John Doe
+                  </p>
+                </span>
+                <UserOutlined />
+              </span>
             </Dropdown>
-            <h6 className="text-grey-400">Admin</h6>
           </div>
         </div>
       </Header>
 
       <Divider
-         className="bg-gray-400 mt-0 mb-0 opacity-45"
+        className="bg-gray-400 mt-0 mb-0 opacity-45"
       />
     </>
   );
