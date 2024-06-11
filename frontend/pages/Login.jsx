@@ -82,7 +82,7 @@ const Login = () => {
               />
             </Form.Item>
 
-            <Form.Item className="">
+            <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"
@@ -93,6 +93,8 @@ const Login = () => {
             </Form.Item>
           </div>
         </Form>
+      <h1 className="text-2xl text-center mt-10">Dont have an account ? <span className="text-secondary cursor-pointer" onClick={() => navigate("/signup")}>Sign Up</span></h1>
+
       </div>
     </div>
   );
