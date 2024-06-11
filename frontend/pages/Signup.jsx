@@ -8,6 +8,8 @@ import {
   LockOutlined,
   HomeOutlined
 } from "@ant-design/icons";
+import PhoneInput from "react-phone-input-2";
+
 
 const SignUp = () => {
 
@@ -77,17 +79,14 @@ const SignUp = () => {
             className="w-full"
             name="phone"
             rules={[
-              { required: true, message: "Please input your phone number!" },
-              {
-                pattern: /^\d+$/,
-                message: "Phone number can only contain numbers",
-              },
+              { min: 6, message: "Please input your phone number!" },
             ]}
           >
-            <Input
-              prefix={<PhoneOutlined className="site-form-item-icon" />}
-              placeholder="Phone"
-            />
+
+            <PhoneInput inputStyle={{width: "100%"}} country={"pk"} />
+
+
+
           </Form.Item>
 
           <Form.Item
