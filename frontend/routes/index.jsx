@@ -4,6 +4,7 @@ import Dashboard from "@/pages/Dashboard"
 import Invoices from '@/pages/Invoices'
 import Login from '@/pages/Login'
 import LayoutMain from '@/components/layouts/Base';
+import SignUp from "../pages/Signup";
 
 const router = createBrowserRouter([
     {
@@ -23,7 +24,10 @@ const router = createBrowserRouter([
     }, {
         path: 'login',
         element: <Login />
-    }
+    }, {
+      path: 'signup',
+      element: <SignUp />
+  }
 ])
 
 export default router;
