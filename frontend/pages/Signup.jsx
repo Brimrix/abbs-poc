@@ -112,7 +112,7 @@ const SignUp = () => {
             ]}
           >
             <Input
-              prefix={<BarChartOutlined className="site-form-item-icon" />}
+              prefix={<HomeOutlined className="site-form-item-icon" />}
               placeholder="Address"
             />
           </Form.Item>
