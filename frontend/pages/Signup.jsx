@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Form, Input, Button } from "antd";
 import {
-  BarChartOutlined,
-  UserOutlined,
-  MailOutlined,
   LockOutlined,
-  HomeOutlined
+  HomeOutlined,
+  UserOutlined,
+  GlobalOutlined,
 } from "@ant-design/icons";
 import PhoneInput from "react-phone-input-2";
 
-
 const SignUp = () => {
-
-   const [form, setForm] = useState({});
-
-
+  const [form, setForm] = useState({});
 
   const onFinish = (values) => {
     setForm(values);
     alert(JSON.stringify(values));
-};
+  };
 
   return (
     <div className="flex items-center justify-center h-screen bg-primary">
@@ -30,59 +25,51 @@ const SignUp = () => {
           onFinish={onFinish}
           className="flex flex-col justify-center items-center"
         >
-
           <div className="w-full flex justify-between gap-2">
-          <Form.Item
-            name="firstname"
-            className="w-1/2"
-            rules={[
-              { required: true, message: "Please input your first name!" },
-              { min: 2, message: "Enter your first name" },
-            ]}
-          >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Enter your First Name"
-            />
-          </Form.Item>
+            <Form.Item
+              name="firstname"
+              className="w-1/2"
+              rules={[
+                { required: true, message: "Please input your first name!" },
+                { min: 2, message: "Enter your first name" },
+              ]}
+            >
+              <Input placeholder="First Name" />
+            </Form.Item>
 
-          <Form.Item
-            name="lastname"
-            className="w-1/2"
-          >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Enter your Last Name"
-            />
-          </Form.Item>
+            <Form.Item name="lastname" className="w-1/2">
+              <Input placeholder="Last Name" />
+            </Form.Item>
           </div>
 
           <Form.Item
             className="w-full"
             name="username"
             rules={[
-              { type: "email", message: "Enter valid input that you want to use for password reset!" },
-              { required: true, message: "Please enter the email that you want to use for password reset!" },
+              {
+                type: "email",
+                message:
+                  "Enter valid email that you want to use for password reset!",
+              },
+              {
+                required: true,
+                message:
+                  "Please enter the email that you want to use for password reset!",
+              },
             ]}
           >
             <Input
-              prefix={<MailOutlined className="site-form-item-icon" />}
-              placeholder="UserName"
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Username"
             />
           </Form.Item>
 
           <Form.Item
             className="w-full"
             name="phone"
-            rules={[
-              { min: 6, message: "Please input your phone number!" },
-            ]}
+            rules={[{ min: 6, message: "Please input your phone number!" }]}
           >
-
-            <PhoneInput inputStyle={{width: "100%"}} country={"pk"} />
-
-
-
+            <PhoneInput inputStyle={{ width: "100%" }} country={"pk"} />
           </Form.Item>
 
           <Form.Item
@@ -93,25 +80,21 @@ const SignUp = () => {
             ]}
           >
             <Input
-              prefix={<BarChartOutlined className="site-form-item-icon" />}
+              prefix={<GlobalOutlined className="site-form-item-icon" />}
               placeholder="Company"
             />
           </Form.Item>
 
-
           <Form.Item
             className="w-full"
             name="address"
-            rules={[
-              { required: true, message: "Please input your address!" },
-            ]}
+            rules={[{ required: true, message: "Please input your address!" }]}
           >
             <Input
               prefix={<HomeOutlined className="site-form-item-icon" />}
               placeholder="Address"
             />
           </Form.Item>
-
 
           <Form.Item
             className="w-full"
