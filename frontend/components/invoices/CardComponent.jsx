@@ -69,7 +69,7 @@ function CardComponent() {
           </tr>
           <tr>
             <td>
-              Total Total
+              Total Area
             </td>
             <td>
               <Typography.Text className='float-right' strong>{totalArea}</Typography.Text>

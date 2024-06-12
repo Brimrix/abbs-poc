@@ -10,5 +10,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class SignUpViewSet(viewsets.ModelViewSet):
+    permission_classes = []
     queryset = get_user_model().objects.all()
     serializer_class = serializers.SignUpSerializer
