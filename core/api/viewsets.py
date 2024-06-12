@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from core import serializers
+from core.api import serializers
 
 from django.contrib.auth import get_user_model
 

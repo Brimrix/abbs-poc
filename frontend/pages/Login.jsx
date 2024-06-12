@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate, Link } from "react-router-dom";
 import { message, Form, Input, Button } from "antd";
+import { getCookieValue } from "@/utils";
+
 import "@/assets/styles/LoginStyle.css";
 
 const Login = () => {
@@ -10,12 +12,9 @@ const Login = () => {
   const [_, setCookie] = useCookies();
   const navigate = useNavigate();
 
-  const getCookieValue = (name) => {
-        document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
-  }
 
   const handleFormSubmit = async () => {
-    const url = "http://localhost:8000/login/";
+    const url = `${import.meta.env.VITE_BASE_SERVER}login/`;
     const headers = {
       "Content-Type": "application/json",
       "X-CSRFToken": getCookieValue("csrftoken"),
@@ -40,8 +39,8 @@ const Login = () => {
   };
   return (
     <div className="flex items-center justify-center h-screen bg-primary">
-      <div className="bg-white rounded-lg shadow-lg p-8 w-[20%]">
-        <h1 className="text-center text-2xl font-bold mb-10">Welcome to ABBS</h1>
+      <div className="bg-white rounded-lg shadow-lg p-8 w-[30%]">
+        <h1 className="text-center text-4xl font-bold mb-10">Welcome to ABBS</h1>
         <Form
           name="login-form"
           layout="vertical"
@@ -61,6 +60,7 @@ const Login = () => {
           >
             <Input
               placeholder="Email"
+              className="text-2xl"
               value={username}
               autoComplete="new-username"
               onChange={(event) => setUsername(event.currentTarget.value)}
@@ -79,6 +79,7 @@ const Login = () => {
             <Input.Password
               placeholder="Password"
               autoComplete="new-password"
+              className="text-2xl"
               value={password}
               onChange={(event) => setPassword(event.currentTarget.value)}
             />
@@ -88,7 +89,7 @@ const Login = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="btn-app-primary w-full"
+              className="btn-app-primary w-full text-2xl h-auto"
             >
               Login
             </Button>

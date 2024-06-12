@@ -55,7 +55,7 @@ function SideBar() {
         {collapse ? (
           <BarsOutlined
             onClick={handleClick}
-            className="text-2xl mx-auto"
+            className="text-2xl mx-auto my-2"
           />
         ) : (
           <>

@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { Form, Input, Button, message } from "antd";
 import {
   LockOutlined,
@@ -8,13 +7,11 @@ import {
 } from "@ant-design/icons";
 import PhoneInput from "react-phone-input-2";
 import { Link, useNavigate } from "react-router-dom";
+import { getCookieValue } from "@/utils";
 
 const SignUp = () => {
   const navigate = useNavigate();
 
-  const getCookieValue = (name) => {
-    document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
-}
 
   const onFinish = async (values) => {
     const {
@@ -29,7 +26,7 @@ const SignUp = () => {
     } = values;
 
     try {
-      const response = await fetch("http://localhost:8000/signup/", {
+      const response = await fetch(`${import.meta.env.VITE_BASE_SERVER}api/signup/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
