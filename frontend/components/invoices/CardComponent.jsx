@@ -1,11 +1,9 @@
-import { useState, useEffect } from 'react';
-import {
-  Typography, Card, Button, InputNumber,
-} from 'antd';
-import { useBillContext } from '@/context/BillContext';
+import { useState, useEffect } from "react";
+import { Typography, Card, Button, InputNumber } from "antd";
+import { useBillContext } from "@/context/BillContext";
 
 function CardComponent() {
-  const { state } = useBillContext()
+  const { state } = useBillContext();
 
   const [totalArea, setTotalArea] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
@@ -24,8 +22,7 @@ function CardComponent() {
 
   useEffect(() => {
     let area = state.billData.reduce((accumulator, element) => {
-
-      if (element && typeof element.area !== 'undefined') {
+      if (element && typeof element.area !== "undefined") {
         return accumulator + element.area;
       } else {
         return accumulator + 0;
@@ -33,13 +30,12 @@ function CardComponent() {
     }, 0);
 
     let subTotal = state.billData.reduce((accumulator, element) => {
-      if (element && typeof element.amount !== 'undefined') {
+      if (element && typeof element.amount !== "undefined") {
         return accumulator + element.amount;
       } else {
         return accumulator + 0;
       }
     }, 0);
-
 
     if (discountInput !== 0) {
       const subTotalValue = subTotal - discountInput;
@@ -55,73 +51,50 @@ function CardComponent() {
     setGrandTotal(grandTotal);
   }, [state]);
 
-
-
   return (
-
-    <Card  className='bg shadow border w-auto' style={{ backgroundColor: '#F6F6F6' }}>
-      <div className="container">
-        <div className="row gx-5 gy-5">
-          <div className="col">
-
-            <Typography.Text strong>Sub Total</Typography.Text>
-
-          </div>
-          <div className="col">
-            <Typography.Text strong>{subTotal}</Typography.Text>
-
-          </div>
+    <Card
+      className="bg shadow border w-[35%] p-3"
+      style={{ backgroundColor: "#F6F6F6" }}
+    >
+      <div className="flex justify-between">
+        <div className="flex flex-col gap-3">
+          <Typography.Text strong className="text-sm">
+            Sub Total
+          </Typography.Text>
+          <Typography.Text strong className="text-sm">
+            Total Area
+          </Typography.Text>
+          <Typography.Text strong className="text-sm">
+            Add Discount
+          </Typography.Text>
+          <Typography.Text strong className="text-sm text-primary">
+            Grand Total
+          </Typography.Text>
         </div>
 
-        <div className="row gx-5 mt-2">
-          <div className="col">
-            <Typography.Text strong>Total Area</Typography.Text>
-
-          </div>
-          <div className="col">
-            <Typography.Text strong>{totalArea}</Typography.Text>
-
-          </div>
+        <div className="flex flex-col gap-3 items-center">
+          <Typography.Text strong className="text-sm">
+            {subTotal}
+          </Typography.Text>
+          <Typography.Text strong className="text-sm">
+            {totalArea}
+          </Typography.Text>
+          <InputNumber onChange={handleDiscountChange} />
+          <Typography.Text strong className="text-sm text-primary">
+            {grandTotal}
+          </Typography.Text>
         </div>
-
-        <div className="row mt-2">
-          <div className="col">
-            <Typography.Text strong>Add Discount</Typography.Text>
-
-          </div>
-          <div className="col">
-            <InputNumber onChange={handleDiscountChange} />
-
-          </div>
-        </div>
-
-        <div className="row gx-5 mt-2">
-          <div className="col">
-            <Typography.Text className='!text-primary' strong>Grand Total</Typography.Text>
-
-          </div>
-          <div className="col">
-            <Typography.Text className='!text-primary' strong>{grandTotal}</Typography.Text>
-
-          </div>
-        </div>
-
-        <div className="row gx-4 mt-1">
-          <div className="col">
-            <Button className='!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-hover-color-secondary'>Print Slip</Button>
-
-          </div>
-          <div className="col">
-
-            <Button className="!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-hover-color-secondary">Save</Button>
-
-          </div>
-        </div>
-
       </div>
 
+      <div className="flex justify-around gap-3">
+        <Button className="!btn-app-primary w-[50%] text-white hover:!border-none hover:!text-white">
+          Print Slip
+        </Button>
+        <Button className="!btn-app-primary w-[50%] text-white hover:!border-none hover:!text-white">
+          Save
+        </Button>
+      </div>
     </Card>
-
   );
 }
 

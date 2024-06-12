@@ -20,13 +20,15 @@ const Invoices = () => {
     ? <Spin spinning={mount} tip="Loading..." />
     : <BillProvider>
       <ClientSearch />
-      <Divider className="m-0 border-2" />
-      <div className="flex-grow-1">
+      <Divider className="m-0" />
+      <div className="flex-grow-1 min-h-[45vh]">
         <Table />
       </div>
-      <div className="align-self-end">
+      <div className="flex justify-end">
+
         <CardComponent />
       </div>
+
     </BillProvider>
 };
 
