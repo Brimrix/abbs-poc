@@ -45,9 +45,11 @@ class SignUpSerializer(serializers.Serializer):
     def create(self, validated_data):
         user_data = {
             field: validated_data[field]
-            for field in ["username", "password", "first_name", "last_name"]
+            for field in ["username", "first_name", "last_name"]
         }
         User = get_user_model()
-        user = User.objects.create(**user_data)
+        user = User.objects.create(**user_data, is_active=True)
+        user.set_password(validated_data["password"])
+        user.save()
         Profile.objects.create(user=user, **validated_data["profile"])
         return user

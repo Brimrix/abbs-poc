@@ -55,73 +55,49 @@ function CardComponent() {
     setGrandTotal(grandTotal);
   }, [state]);
 
-
-
   return (
-
-    <Card  className='bg shadow border w-auto' style={{ backgroundColor: '#F6F6F6' }}>
-      <div className="container">
-        <div className="row gx-5 gy-5">
-          <div className="col">
-
-            <Typography.Text strong>Sub Total</Typography.Text>
-
-          </div>
-          <div className="col">
-            <Typography.Text strong>{subTotal}</Typography.Text>
-
-          </div>
-        </div>
-
-        <div className="row gx-5 mt-2">
-          <div className="col">
-            <Typography.Text strong>Total Area</Typography.Text>
-
-          </div>
-          <div className="col">
-            <Typography.Text strong>{totalArea}</Typography.Text>
-
-          </div>
-        </div>
-
-        <div className="row mt-2">
-          <div className="col">
-            <Typography.Text strong>Add Discount</Typography.Text>
-
-          </div>
-          <div className="col">
-            <InputNumber onChange={handleDiscountChange} />
-
-          </div>
-        </div>
-
-        <div className="row gx-5 mt-2">
-          <div className="col">
-            <Typography.Text className='!text-primary' strong>Grand Total</Typography.Text>
-
-          </div>
-          <div className="col">
-            <Typography.Text className='!text-primary' strong>{grandTotal}</Typography.Text>
-
-          </div>
-        </div>
-
-        <div className="row gx-4 mt-1">
-          <div className="col">
-            <Button className='!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-hover-color-secondary'>Print Slip</Button>
-
-          </div>
-          <div className="col">
-
-            <Button className="!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-hover-color-secondary">Save</Button>
-
-          </div>
-        </div>
-
+    <Card className='flex flex-col shadow border bg-stone-100'>
+      <table className='w-full'>
+        <tbody>
+          <tr>
+            <td>
+              Sub Total
+            </td>
+            <td>
+              <Typography.Text className='float-right' strong>{subTotal}</Typography.Text>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Total Area
+            </td>
+            <td>
+              <Typography.Text className='float-right' strong>{totalArea}</Typography.Text>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Discount
+            </td>
+            <td>
+              <InputNumber className='float-right' onChange={handleDiscountChange} />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Grand Total
+            </td>
+            <td>
+              <Typography.Text className='float-right' strong>{grandTotal}</Typography.Text>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="space-x-3 mt-5">
+        <Button className='!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-hover-color-secondary'>Print Slip</Button>
+        <Button className="!bg-secondary border-none text-white w-[135px] h-[38px] hover:!bg-hover-color-secondary">Save</Button>
       </div>
-
     </Card>
-
   );
 }
 

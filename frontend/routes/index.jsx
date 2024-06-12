@@ -7,6 +7,8 @@ import LayoutMain from "@/components/layouts/Base";
 import NotFound from "@/pages/NotFound";
 import { Navigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
+import SignUp from "@/pages/Signup";
+
 
 function ProtectedRoute({ element }) {
   const [cookie] = useCookies()
@@ -36,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "login",
     element: <Login />,
+  },
+  {
+    path: 'signup',
+    element: <SignUp />
   },
   {
     path: "*",

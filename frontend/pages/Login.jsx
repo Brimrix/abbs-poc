@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { message, Form, Input, Button } from "antd";
+import { getCookieValue } from "@/utils";
+
 import "@/assets/styles/LoginStyle.css";
 
 const Login = () => {
@@ -10,11 +12,9 @@ const Login = () => {
   const [_, setCookie] = useCookies();
   const navigate = useNavigate();
 
-  const getCookieValue = (name) =>
-    document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
 
   const handleFormSubmit = async () => {
-    const url = "http://localhost:8000/login/";
+    const url = `${import.meta.env.VITE_BASE_SERVER}login/`;
     const headers = {
       "Content-Type": "application/json",
       "X-CSRFToken": getCookieValue("csrftoken"),
@@ -38,61 +38,70 @@ const Login = () => {
     }
   };
   return (
-    <div className="!bg-primary min-h-dvh flex flex-col justify-center">
-      <div className="bg-white min-h-max w-2/5 mx-auto rounded-md p-5">
-        <Form name="login-form" onFinish={handleFormSubmit}>
-          <div className="text-center">
-            <p className="text-3xl mb-10">Welcome to ABBS</p>
+    <div className="flex items-center justify-center h-screen bg-primary">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-[30%]">
+        <h1 className="text-center text-4xl font-bold mb-10">Welcome to ABBS</h1>
+        <Form
+          name="login-form"
+          layout="vertical"
+          onFinish={handleFormSubmit} >
+          <Form.Item
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: "Please input your email",
+              },
+              {
+                type: "email",
+                message: "Please input a valid email",
+              },
+            ]}
+          >
+            <Input
+              placeholder="Email"
+              className="text-2xl"
+              value={username}
+              autoComplete="new-username"
+              onChange={(event) => setUsername(event.currentTarget.value)}
+            />
+          </Form.Item>
 
-            <Form.Item
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your email",
-                },
-                {
-                  type: "email",
-                  message: "Please input a valid email",
-                },
-              ]}
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your password",
+              },
+            ]}
+          >
+            <Input.Password
+              placeholder="Password"
+              autoComplete="new-password"
+              className="text-2xl"
+              value={password}
+              onChange={(event) => setPassword(event.currentTarget.value)}
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="btn-app-primary w-full text-2xl h-auto"
             >
-              <Input
-                placeholder="Email"
-                value={username}
-                onChange={(event) => setUsername(event.currentTarget.value)}
-                className="text-3xl"
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your password",
-                },
-              ]}
-            >
-              <Input.Password
-                placeholder="Password"
-                className="text-2xl"
-                value={password}
-                onChange={(event) => setPassword(event.currentTarget.value)}
-              />
-            </Form.Item>
-
-            <Form.Item className="">
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="mt-10 btn-app-primary w-full min-h-12 text-3xl"
-              >
-                Login
-              </Button>
-            </Form.Item>
-          </div>
+              Login
+            </Button>
+            <p>
+              Already got an account ?{" "}
+              <Link to={'/signup'} className="text-secondary">
+                Sign Up
+              </Link>
+            </p>
+          </Form.Item>
         </Form>
+
       </div>
     </div>
   );

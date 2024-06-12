@@ -51,18 +51,18 @@ function SideBar() {
         height: "100vh",
       }}
     >
-      <div className="d-flex justify-content-between px-4 my-3">
+      <div className="flex !text-white justify-between px-4 my-3">
         {collapse ? (
           <BarsOutlined
             onClick={handleClick}
-            className="text-white text-2xl py-2 mx-auto"
+            className="text-2xl mx-auto my-2"
           />
         ) : (
           <>
-            <Title className="text-nowrap text-white mb-0">ABBS</Title>
+            <p className="inline text-4xl font-bold">ABBS</p>
             <LeftCircleOutlined
               onClick={handleClick}
-              className="float-right text-white text-3xl"
+              className="text-3xl"
             />
           </>
         )}
