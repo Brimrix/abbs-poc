@@ -12,6 +12,10 @@ import { Link, useNavigate } from "react-router-dom";
 const SignUp = () => {
   const navigate = useNavigate();
 
+  const getCookieValue = (name) => {
+    document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
+}
+
   const onFinish = async (values) => {
     const {
       company,
@@ -29,6 +33,8 @@ const SignUp = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRFToken": getCookieValue("csrftoken"),
+
         },
 
         body: JSON.stringify({

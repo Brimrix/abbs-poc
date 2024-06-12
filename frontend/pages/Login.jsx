@@ -10,8 +10,9 @@ const Login = () => {
   const [_, setCookie] = useCookies();
   const navigate = useNavigate();
 
-  const getCookieValue = (name) =>
-    document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
+  const getCookieValue = (name) => {
+        document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
+  }
 
   const handleFormSubmit = async () => {
     const url = "http://localhost:8000/login/";
