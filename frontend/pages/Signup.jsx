@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Form, Input, Button } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Button, message } from "antd";
 import {
   LockOutlined,
   HomeOutlined,
@@ -7,14 +7,56 @@ import {
   GlobalOutlined,
 } from "@ant-design/icons";
 import PhoneInput from "react-phone-input-2";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
-  const [form, setForm] = useState({});
+  const navigate = useNavigate();
 
-  const onFinish = (values) => {
-    setForm(values);
-    alert(JSON.stringify(values));
+  const onFinish = async (values) => {
+    const {
+      company,
+      address,
+      username,
+      firstname,
+      lastname,
+      phone,
+      password,
+      password_confirmation,
+    } = values;
+
+    try {
+      const response = await fetch("http://localhost:8000/signup/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          company,
+          address,
+          username,
+          first_name: firstname,
+          last_name: lastname,
+          phone,
+          password,
+          confirm_password: password_confirmation,
+        }),
+      });
+
+      if (response.status === 201) {
+        message.success("Account created successfully");
+        navigate("/login");
+      } else {
+        console.log(response);
+        const { non_field_errors } = await response.json();
+        message.error("non_field_errors");
+      }
+    }
+
+    catch (error) {
+      console.log(error);
+      message.error("An error in Signup");
+    }
   };
 
   return (
@@ -102,7 +144,6 @@ const SignUp = () => {
             className="w-full"
             required={true}
             name="password"
-            visible={true}
             rules={[
               () => ({
                 validator(_, value) {
@@ -168,7 +209,13 @@ const SignUp = () => {
             </Button>
           </Form.Item>
         </Form>
-        <span>Already have an account, <Link to={'/login'} className="text-secondary">Login</Link> instead.</span>
+        <span>
+          Already have an account,{" "}
+          <Link to={"/login"} className="text-secondary">
+            Login
+          </Link>{" "}
+          instead.
+        </span>
       </div>
     </div>
   );
