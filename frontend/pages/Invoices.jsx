@@ -21,10 +21,10 @@ const Invoices = () => {
     : <BillProvider>
       <ClientSearch />
       <Divider className="m-0 border-2" />
-      <div className="flex-grow-1">
+      <div className="grow">
         <Table />
       </div>
-      <div className="align-self-end">
+      <div className="self-end">
         <CardComponent />
       </div>
     </BillProvider>

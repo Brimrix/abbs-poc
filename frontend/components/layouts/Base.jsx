@@ -12,9 +12,9 @@ function LayoutMain({ children }) {
   return (
     <Layout>
       <SideBar />
-      <Content className='d-flex flex-column bg-white z-index-1 overflow-hidden'>
+      <Content className='flex flex-col bg-white z-index-1 overflow-hidden'>
         <NavbarMain />
-        <div className='flex-grow-1 px-4 pb-4 d-flex flex-column'>
+        <div className='grow px-4 pb-4 flex flex-col'>
           <Outlet />
         </div>
       </Content>
