@@ -18,6 +18,7 @@ function PriceComponent({ _id, defaultInputValue, reRender }) {
           _key: _id,
           actualPrice: defaultInputValue,
           AMOUNT: Math.round((state.billData[_id].area * defaultInputValue * state.billData[_id].actualQuantity) * 100) / 100,
+          tableId: 0,
         },
       });
     }
@@ -34,6 +35,8 @@ function PriceComponent({ _id, defaultInputValue, reRender }) {
         _key: _id,
         actualPrice: value,
         AMOUNT: Math.round((state.billData[_id].area * value * state.billData[_id].actualQuantity) * 100) / 100,
+        tableId: 0,
+
       },
     });
   };

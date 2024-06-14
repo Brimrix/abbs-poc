@@ -5,6 +5,7 @@ import ImageSelector from '@/components/invoices/ImageSelector';
 import PriceComponent from '@/components/invoices/PriceComponent';
 import QuantityComponent from '@/components/invoices/QuantityComponent';
 import DeleteIcon from '@/components/invoices/RemoveComponent';
+import {message} from 'antd';
 
 const billContext = createContext();
 
@@ -12,17 +13,18 @@ export function BillProvider({ children }) {
   const initialState = {
     billData: [
       {
+        tableId:0,
         key: 0,
         image_name: '\u200b',
-        upload: <ImageSelector _id={0} reRender={false} />,
+        upload: <ImageSelector _id={0} reRender={false} tableId={0} />,
         height: 0,
         width: 0,
         area: 0,
         actualPrice: 0,
         actualQuantity: 0,
-        actions: <DeleteIcon _id={0} />,
-        price: <PriceComponent _id={0} defaultInputValue={0} reRender={false} />,
-        quantity: <QuantityComponent _id={0} defaultInputValue={1} reRender={false} />,
+        actions: <DeleteIcon _id={0} tableId={0} />,
+        price: <PriceComponent _id={0} defaultInputValue={0} reRender={false} tableId={0} />,
+        quantity: <QuantityComponent _id={0} defaultInputValue={1} reRender={false} tableId={0} />,
         amount: 0,
         order: 1,
         image_src: '',
@@ -32,6 +34,10 @@ export function BillProvider({ children }) {
     clientDetails: {
       clientName: '',
       billDate: '',
+    },
+
+    orderCount: {
+      count: 1,
     },
 
     utilities: {
@@ -48,19 +54,21 @@ export function BillProvider({ children }) {
 
     switch (action.type) {
       case 'PRICE_CHANGE':
-        newState.billData = state.billData.map((item) => (item.key === action.payload._key
+        newState.billData = state.billData.map((item) => (item.key === action.payload._key && item.tableId === Number(action.payload.tableId)
           ? { ...item, actualPrice: action.payload.actualPrice, amount: action.payload.AMOUNT }
           : item));
         break;
 
       case 'QUANTITY_CHANGE':
-        newState.billData = state.billData.map((item) => (item.key === action.payload._key
+        newState.billData = state.billData.map((item) => (item.key === action.payload._key && item.tableId === Number(action.payload.tableId)
           ? { ...item, actualQuantity: action.payload.actualQuantity, amount: action.payload.AMOUNT }
           : item));
         break;
 
       case 'ADD_ROW':
+
         const newItem = {
+          tableId: Number(action.payload.tableId),
           key: state.billData.length,
           image_name: '\u200b',
           height: 0,
@@ -68,19 +76,21 @@ export function BillProvider({ children }) {
           area: 0,
           actualPrice: 0,
           actualQuantity: 0,
-          upload: <ImageSelector _id={state.billData.length} reRender={false} />,
-          price: <PriceComponent _id={state.billData.length} defaultInputValue={0} reRender={false} />,
-          quantity: <QuantityComponent _id={state.billData.length} defaultInputValue={1} reRender={false} />,
+          upload: <ImageSelector _id={state.billData.length} reRender={false} tableId={Number(action.payload.tableId)} />,
+          price: <PriceComponent _id={state.billData.length} defaultInputValue={0} reRender={false} tableId={Number(action.payload.tableId)} />,
+          quantity: <QuantityComponent _id={state.billData.length} defaultInputValue={1} reRender={false} tableId={Number(action.payload.tableId)} />,
           amount: 0,
           order: state.billData.length + 1,
-          actions: <DeleteIcon _id={state.billData.length} />,
+          actions: <DeleteIcon _id={state.billData.length} tableId={Number(action.payload.tableId)} />,
           image_src: '',
         };
         newState.billData = [...state.billData, newItem];
         break;
 
       case 'SET_DIMENSION':
-        newState.billData = state.billData.map((item) => (item.key === action.payload._key
+        debugger;
+        alert(action.payload.tableId);
+        newState.billData = state.billData.map((item) => (item.key === action.payload._key && item.tableId ===  Number(action.payload.tableId)
           ? {
             ...item,
             height: action.payload.HEIGHT,
@@ -94,14 +104,14 @@ export function BillProvider({ children }) {
         break;
 
       case 'REMOVE_ROW':
-        const filteredData = state.billData.filter((item) => item.key !== action.payload._key);
+        const filteredData = state.billData.filter((item) => item.key !== action.payload._key && item.tableId ===  Number(action.payload.tableId) );
         const newShouldReRender = !state.shouldReRender;
         newState.shouldReRender = newShouldReRender;
         newState.billData = filteredData.map((item, index) => ({
           ...item,
-          upload: <ImageSelector _id={Number(index)} reRender={newShouldReRender} renderSource={filteredData[index].image_src} />,
-          price: <PriceComponent _id={Number(index)} defaultInputValue={filteredData[index].actualPrice} reRender={newShouldReRender} />,
-          quantity: <QuantityComponent _id={Number(index)} defaultInputValue={filteredData[index].actualQuantity} reRender={newShouldReRender} />,
+          upload: <ImageSelector _id={Number(index)} reRender={newShouldReRender} renderSource={filteredData[index].image_src} tableId={Number(action.payload.tableId)} />,
+          price: <PriceComponent _id={Number(index)} defaultInputValue={filteredData[index].actualPrice} reRender={newShouldReRender} tableId={Number(action.payload.tableId)} />,
+          quantity: <QuantityComponent _id={Number(index)} defaultInputValue={filteredData[index].actualQuantity} reRender={newShouldReRender} tableId={Number(action.payload.tableId)} />,
           actions: <DeleteIcon _id={Number(index)} />,
           key: index,
           order: index + 1,
@@ -117,7 +127,7 @@ export function BillProvider({ children }) {
 
       case 'UPDATE_ROW':
         newState.billData = state.billData.map((item) => {
-          if (item.key === action.payload.key) {
+          if (item.key === action.payload.key && item.tableId ===  Number(action.payload.tableId)) {
             if (action.payload.cellSource.dataIndex === "height") {
               return {
                 ...item,
@@ -148,6 +158,12 @@ export function BillProvider({ children }) {
       case 'DISPATCH_COLLAPSE':
         newState.utilities.collapsed = action.payload.collapse;
         break;
+
+        case 'ADD_ORDER':
+          newState.orderCount.count++;
+          message.success(newState.orderCount.count);
+          break;
+
 
       default:
         break;

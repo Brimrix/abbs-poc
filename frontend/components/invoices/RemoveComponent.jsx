@@ -16,6 +16,7 @@ function DeleteIcon({ _id }) {
       type: 'REMOVE_ROW',
       payload: {
         _key: requiredKey,
+        tableId: 0,
       },
     });
 

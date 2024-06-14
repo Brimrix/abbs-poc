@@ -15,6 +15,7 @@ function QuantityComponent({ _id, defaultInputValue, reRender }) {
           _key: _id,
           actualQuantity: defaultInputValue,
           AMOUNT: Math.round((state.billData[_id].area * state.billData[_id].actualPrice * defaultInputValue) * 100) / 100,
+          tableId: 0,
 
         },
       });
@@ -33,6 +34,7 @@ function QuantityComponent({ _id, defaultInputValue, reRender }) {
         _key: _id,
         actualQuantity: value,
         AMOUNT: Math.round((state.billData[_id].area * state.billData[_id].actualPrice * value) * 100) / 100,
+        tableId: 0,
 
       },
     });

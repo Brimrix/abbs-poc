@@ -81,6 +81,9 @@ function ImageSelector({ _id, reRender, renderSource }) {
             if (state.billData[_id].image_src === "") {
               dispatch({
                 type: "ADD_ROW",
+                payload: {
+                  tableId: 0,
+                }
               });
               dispatch({
                 type: "SET_DIMENSION",
@@ -99,6 +102,7 @@ function ImageSelector({ _id, reRender, renderSource }) {
                     ) / 100,
 
                   _key: _id,
+                  tableId: 0,
                 },
               });
               setIsProcess(true);
@@ -136,7 +140,7 @@ function ImageSelector({ _id, reRender, renderSource }) {
     }
   };
 
-  const customRequest = ({ file, onSuccess }) => {
+  const customRequest = ({ onSuccess }) => {
     setTimeout(() => {
       onSuccess("ok");
     }, 0);

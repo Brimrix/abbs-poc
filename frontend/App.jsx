@@ -6,13 +6,13 @@ import '@/src/index.css';
 
 const App = (children) => {
     return <>
-        <React.StrictMode>
+        {/* <React.StrictMode> */}
             <RouterProvider router={router}>
                 <CookiesProvider>
                     {children}
                 </CookiesProvider>
             </RouterProvider>
-        </React.StrictMode>
+        {/* </React.StrictMode> */}
     </>
 }
 

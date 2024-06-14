@@ -3,6 +3,13 @@ import { Table as AntDTable, Typography } from "antd";
 import { useBillContext } from "@/context/BillContext";
 import Editable from "@/components/invoices/Editable.jsx";
 
+import React from 'react';
+import {
+    PlusOutlined
+  } from "@ant-design/icons";
+import { Button } from 'antd';
+
+
 function Table() {
   const {
     state: { billData },
@@ -30,14 +37,23 @@ function Table() {
   const handleAddRows = () => {
     dispatch({
       type: "ADD_ROW",
+      payload: {
+        tableId: 0,
+      }
     });
   };
+
+  const handleOrderAdd = () => {
+    dispatch({
+      type: "ADD_ORDER"
+    });
+  }
 
   const handleSave = useCallback(
     (row, cellSource) => {
       dispatch({
         type: "UPDATE_ROW",
-        payload: { row, key: row.key, cellSource },
+        payload: { row, key: row.key, cellSource, tableId: 0 },
       });
     },
     [dispatch]
@@ -140,6 +156,15 @@ function Table() {
 
   return (
     <>
+      <Button
+      className="float-end mx-4 my-3 btn-app-primary"
+      type="primary"
+      onClick={handleOrderAdd}
+      icon={<PlusOutlined />}
+    >
+      Add Order
+    </Button>
+
       <AntDTable
         components={components}
         className="invoice-table"
