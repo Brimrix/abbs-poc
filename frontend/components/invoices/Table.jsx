@@ -10,7 +10,7 @@ import {
 import { Button } from 'antd';
 
 
-function Table() {
+function Table({tableId}) {
   const {
     state: { billData },
     dispatch,
@@ -25,7 +25,16 @@ function Table() {
   }, [actualRows]);
 
   useEffect(() => {
-    setActualRows(rowsTable);
+
+    let counter = rowsTable.length;
+    let tableData = rowsTable.filter((item) => item.tableId === tableId);
+
+    for(let i=0; i<counter; i++){
+      if(tableData[i])
+      tableData[i].order = i + 1;
+    }
+
+    setActualRows(tableData);
   }, [rowsTable]);
 
   useEffect(() => {
@@ -38,7 +47,7 @@ function Table() {
     dispatch({
       type: "ADD_ROW",
       payload: {
-        tableId: 0,
+        tableId,
       }
     });
   };
@@ -53,7 +62,7 @@ function Table() {
     (row, cellSource) => {
       dispatch({
         type: "UPDATE_ROW",
-        payload: { row, key: row.key, cellSource, tableId: 0 },
+        payload: { row, key: row.key, cellSource, tableId },
       });
     },
     [dispatch]

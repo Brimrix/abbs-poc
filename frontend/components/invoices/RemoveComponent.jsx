@@ -3,7 +3,7 @@ import { MinusCircleOutlined } from '@ant-design/icons';
 import { Modal, message, Popover } from 'antd';
 import { useBillContext } from '@/context/BillContext';
 
-function DeleteIcon({ _id }) {
+function DeleteIcon({ _id, tableId }) {
   const [open, setOpen] = useState(false);
   const { state, dispatch } = useBillContext()
 
@@ -16,7 +16,7 @@ function DeleteIcon({ _id }) {
       type: 'REMOVE_ROW',
       payload: {
         _key: requiredKey,
-        tableId: 0,
+        tableId,
       },
     });
 

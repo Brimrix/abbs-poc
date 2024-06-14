@@ -13,7 +13,7 @@ export const Grid = () => {
   return (
     <div>
     {Array.from({ length: tableCount }).map((_, index) => (
-      <Table />
+      <Table tableId={index + 1} />
     ))}
   </div>
 

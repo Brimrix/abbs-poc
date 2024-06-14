@@ -14,7 +14,7 @@ const Login = () => {
 
 
   const handleFormSubmit = async () => {
-    const url = `${import.meta.env.VITE_BASE_SERVER}login/`;
+    const url = "http://localhost:8000/login/";
     const headers = {
       "Content-Type": "application/json",
       "X-CSRFToken": getCookieValue("csrftoken"),

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { InputNumber } from 'antd';
 import { useBillContext } from '@/context/BillContext';
 
-function QuantityComponent({ _id, defaultInputValue, reRender }) {
+function QuantityComponent({ _id, defaultInputValue, reRender, tableId }) {
   const [value, setValue] = useState('');
   const { state, dispatch } = useBillContext()
   useEffect(() => {
@@ -15,7 +15,7 @@ function QuantityComponent({ _id, defaultInputValue, reRender }) {
           _key: _id,
           actualQuantity: defaultInputValue,
           AMOUNT: Math.round((state.billData[_id].area * state.billData[_id].actualPrice * defaultInputValue) * 100) / 100,
-          tableId: 0,
+          tableId,
 
         },
       });
@@ -34,7 +34,7 @@ function QuantityComponent({ _id, defaultInputValue, reRender }) {
         _key: _id,
         actualQuantity: value,
         AMOUNT: Math.round((state.billData[_id].area * state.billData[_id].actualPrice * value) * 100) / 100,
-        tableId: 0,
+        tableId,
 
       },
     });

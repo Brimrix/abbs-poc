@@ -4,7 +4,7 @@ import React, {
 import { InputNumber } from 'antd';
 import { useBillContext } from '@/context/BillContext';
 
-function PriceComponent({ _id, defaultInputValue, reRender }) {
+function PriceComponent({ _id, defaultInputValue, reRender, tableId }) {
   const [value, setValue] = useState(0);
   const { state, dispatch } = useBillContext()
 
@@ -18,7 +18,7 @@ function PriceComponent({ _id, defaultInputValue, reRender }) {
           _key: _id,
           actualPrice: defaultInputValue,
           AMOUNT: Math.round((state.billData[_id].area * defaultInputValue * state.billData[_id].actualQuantity) * 100) / 100,
-          tableId: 0,
+          tableId,
         },
       });
     }
@@ -35,7 +35,7 @@ function PriceComponent({ _id, defaultInputValue, reRender }) {
         _key: _id,
         actualPrice: value,
         AMOUNT: Math.round((state.billData[_id].area * value * state.billData[_id].actualQuantity) * 100) / 100,
-        tableId: 0,
+        tableId,
 
       },
     });

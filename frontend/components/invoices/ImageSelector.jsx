@@ -34,7 +34,7 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLessThanHundredMB;
 };
 
-function ImageSelector({ _id, reRender, renderSource }) {
+function ImageSelector({ _id, reRender, renderSource, tableId }) {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [actualImageURL, setActualImageURL] = useState("");
@@ -82,7 +82,7 @@ function ImageSelector({ _id, reRender, renderSource }) {
               dispatch({
                 type: "ADD_ROW",
                 payload: {
-                  tableId: 0,
+                  tableId,
                 }
               });
               dispatch({
@@ -102,7 +102,7 @@ function ImageSelector({ _id, reRender, renderSource }) {
                     ) / 100,
 
                   _key: _id,
-                  tableId: 0,
+                  tableId,
                 },
               });
               setIsProcess(true);

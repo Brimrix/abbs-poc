@@ -13,18 +13,18 @@ export function BillProvider({ children }) {
   const initialState = {
     billData: [
       {
-        tableId:0,
+        tableId:1,
         key: 0,
         image_name: '\u200b',
-        upload: <ImageSelector _id={0} reRender={false} tableId={0} />,
+        upload: <ImageSelector _id={0} reRender={false} tableId={1} />,
         height: 0,
         width: 0,
         area: 0,
         actualPrice: 0,
         actualQuantity: 0,
-        actions: <DeleteIcon _id={0} tableId={0} />,
-        price: <PriceComponent _id={0} defaultInputValue={0} reRender={false} tableId={0} />,
-        quantity: <QuantityComponent _id={0} defaultInputValue={1} reRender={false} tableId={0} />,
+        actions: <DeleteIcon _id={0} tableId={1} />,
+        price: <PriceComponent _id={0} defaultInputValue={0} reRender={false} tableId={1} />,
+        quantity: <QuantityComponent _id={0} defaultInputValue={1} reRender={false} tableId={1} />,
         amount: 0,
         order: 1,
         image_src: '',
@@ -90,7 +90,7 @@ export function BillProvider({ children }) {
       case 'SET_DIMENSION':
         debugger;
         alert(action.payload.tableId);
-        newState.billData = state.billData.map((item) => (item.key === action.payload._key && item.tableId ===  Number(action.payload.tableId)
+        newState.billData = state.billData.map((item) => (item.key === action.payload._key)
           ? {
             ...item,
             height: action.payload.HEIGHT,
@@ -100,11 +100,11 @@ export function BillProvider({ children }) {
             image_src: action.payload.IMAGE_SOURCE,
             amount: action.payload.AMOUNT,
           }
-          : item));
+          : item);
         break;
 
       case 'REMOVE_ROW':
-        const filteredData = state.billData.filter((item) => item.key !== action.payload._key && item.tableId ===  Number(action.payload.tableId) );
+        const filteredData = state.billData.filter((item) => item.key !== action.payload._key);
         const newShouldReRender = !state.shouldReRender;
         newState.shouldReRender = newShouldReRender;
         newState.billData = filteredData.map((item, index) => ({
