@@ -4,10 +4,7 @@ import { useBillContext } from "@/context/BillContext";
 import Editable from "@/components/invoices/Editable.jsx";
 
 import React from 'react';
-import {
-    PlusOutlined
-  } from "@ant-design/icons";
-import { Button } from 'antd';
+
 
 
 function Table({tableId}) {

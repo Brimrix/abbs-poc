@@ -18,16 +18,8 @@
   /* Order Table */
 
 
-  .order-table .my-tag {
-    @apply text-xs w-36 h-4;
-  }
-
-  .order-table .ant-table-tbody > tr > td {
-    @apply !h-[5px] !p-[4px];
-  }
-
   .order-table .ant-table-thead > tr > th {
-    @apply h-1 p-1 text-primary;
+    @apply h-[50px] p-1 text-primary;
   }
 
 

@@ -31,6 +31,15 @@ export function BillProvider({ children }) {
       }
     ],
 
+    orderData: [
+        {
+          key: 1,
+          order: 'Order #1',
+          price: 0,
+          area: 0,
+        }
+    ],
+
     clientDetails: {
       clientName: '',
       billDate: '',
@@ -52,7 +61,17 @@ export function BillProvider({ children }) {
   const reducerMethod = (state, action) => {
     const newState = { ...state }; // Create a new state variable
 
+
     switch (action.type) {
+
+      case 'ORDER_ADD':
+        newState.orderData = [...state.orderData,  {
+          key: action.payload.key,
+          order: `Order #${action.payload.key}`,
+          price: 0,
+          area: 0,
+        }]
+
       case 'PRICE_CHANGE':
         newState.billData = state.billData.map((item) => (item.key === action.payload._key && item.tableId === Number(action.payload.tableId)
           ? { ...item, actualPrice: action.payload.actualPrice, amount: action.payload.AMOUNT }
@@ -88,8 +107,6 @@ export function BillProvider({ children }) {
         break;
 
       case 'SET_DIMENSION':
-        debugger;
-        alert(action.payload.tableId);
         newState.billData = state.billData.map((item) => (item.key === action.payload._key)
           ? {
             ...item,
