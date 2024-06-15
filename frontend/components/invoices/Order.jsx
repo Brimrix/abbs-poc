@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Table as AntDTable, Input, Form, message } from "antd";
 import MainTable from "./Table";
 import { useBillContext } from "@/context/BillContext";
-import { PlusOutlined , DeleteOutlined} from "@ant-design/icons";
+import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Button, Space, Modal } from "antd";
-
 
 const Order = () => {
   const {
@@ -17,9 +16,7 @@ const Order = () => {
   const [deleteKey, setDeleteKey] = useState();
 
   useEffect(() => {
-
     setData(orderData);
-
   }, [orderData]);
 
   const handleOrderEdit = (key, newOrder) => {
@@ -42,22 +39,22 @@ const Order = () => {
 
   const handleDelete = () => {
     dispatch({
-        type: "ORDER_DELETE",
-        payload: {
-            key: deleteKey,
-        }
-    })
+      type: "ORDER_DELETE",
+      payload: {
+        key: deleteKey,
+      },
+    });
     setIsDeleteOpen(false);
-
-  }
+  };
   const handleDeleteCancel = () => {
     setIsDeleteOpen(false);
-  }
+  };
   const columns = [
     {
       title: "Order",
       dataIndex: "order",
       key: "order",
+      width: "25%",
 
       render: (text, record) => (
         <EditableCell
@@ -70,38 +67,38 @@ const Order = () => {
       title: "Total price",
       dataIndex: "price",
       key: "price",
-      width: "30%",
+      width: "25%",
       align: "center",
     },
     {
       title: "Area",
       dataIndex: "area",
       key: "area",
-      width: "30%",
+      width: "25%",
       align: "center",
     },
     {
-        title: "Action",
-        key: "action",
-        align: "center",
+      title: "Action",
+      key: "action",
+      align: "center",
+      width: "25%",
 
-        render: (record) => (
-          <Space size="middle">
-
-            <Button
-              type="primary"
-              className="btn-app-accent"
-              icon={<DeleteOutlined />}
-              onClick={() => {
-                setDeleteKey(record.key);
-                setIsDeleteOpen(true);
-              }}
-            >
+      render: (record) => (
+        <Space size="middle">
+          <Button
+            type="primary"
+            className="btn-app-accent"
+            icon={<DeleteOutlined />}
+            onClick={() => {
+              setDeleteKey(record.key);
+              setIsDeleteOpen(true);
+            }}
+          >
             Delete
-            </Button>
-          </Space>
-        ),
-      },
+          </Button>
+        </Space>
+      ),
+    },
   ];
 
   return (
@@ -127,16 +124,15 @@ const Order = () => {
         }}
       />
 
-    <Modal
+      <Modal
         okButtonProps={{ className: "btn-app-accent" }}
-        cancelButtonProps={{className: "btn-app-transparent"}}
+        cancelButtonProps={{ className: "btn-app-transparent" }}
         open={isDeleteOpen}
         okText="Delete"
         title="Are you sure you want to Delete ?"
         onOk={() => handleDelete(deleteKey)}
         onCancel={handleDeleteCancel}
       ></Modal>
-
     </>
   );
 };
@@ -166,7 +162,6 @@ const EditableCell = ({ value, onSave }) => {
       rules={[{ required: true, message: "Order is required" }]}
     >
       <Input
-        className="w-[40%]"
         value={inputValue}
         defaultValue={inputValue}
         onChange={handleInputChange}

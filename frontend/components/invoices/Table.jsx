@@ -3,11 +3,8 @@ import { Table as AntDTable, Typography } from "antd";
 import { useBillContext } from "@/context/BillContext";
 import Editable from "@/components/invoices/Editable.jsx";
 
-import React from 'react';
-
-
-
-function Table({tableId}) {
+import React from "react";
+function Table({ tableId }) {
   const {
     state: { billData },
     dispatch,
@@ -22,9 +19,8 @@ function Table({tableId}) {
   }, [actualRows]);
 
   useEffect(() => {
-
     let tableData = rowsTable.filter((item) => item.tableId === tableId);
-    for(let i=0; i<tableData.length; i++){
+    for (let i = 0; i < tableData.length; i++) {
       tableData[i].order = i + 1;
     }
     setActualRows(tableData);
@@ -41,15 +37,9 @@ function Table({tableId}) {
       type: "ADD_ROW",
       payload: {
         tableId,
-      }
+      },
     });
   };
-
-  // const handleOrderAdd = () => {
-  //   dispatch({
-  //     type: "ADD_ORDER"
-  //   });
-  // }
 
   const handleSave = useCallback(
     (row, cellSource) => {
@@ -158,15 +148,6 @@ function Table({tableId}) {
 
   return (
     <>
-      {/* <Button
-      className="float-end mx-4 my-3 btn-app-primary"
-      type="primary"
-      onClick={handleOrderAdd}
-      icon={<PlusOutlined />}
-    >
-      Add Order
-    </Button> */}
-
       <AntDTable
         components={components}
         className="invoice-table"
