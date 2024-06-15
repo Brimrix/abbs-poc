@@ -26,14 +26,10 @@ function Table({tableId}) {
 
   useEffect(() => {
 
-    let counter = rowsTable.length;
     let tableData = rowsTable.filter((item) => item.tableId === tableId);
-
-    for(let i=0; i<counter; i++){
-      if(tableData[i])
+    for(let i=0; i<tableData.length; i++){
       tableData[i].order = i + 1;
     }
-
     setActualRows(tableData);
   }, [rowsTable]);
 
@@ -52,11 +48,11 @@ function Table({tableId}) {
     });
   };
 
-  const handleOrderAdd = () => {
-    dispatch({
-      type: "ADD_ORDER"
-    });
-  }
+  // const handleOrderAdd = () => {
+  //   dispatch({
+  //     type: "ADD_ORDER"
+  //   });
+  // }
 
   const handleSave = useCallback(
     (row, cellSource) => {
@@ -165,14 +161,14 @@ function Table({tableId}) {
 
   return (
     <>
-      <Button
+      {/* <Button
       className="float-end mx-4 my-3 btn-app-primary"
       type="primary"
       onClick={handleOrderAdd}
       icon={<PlusOutlined />}
     >
       Add Order
-    </Button>
+    </Button> */}
 
       <AntDTable
         components={components}

@@ -13,7 +13,7 @@ export function BillProvider({ children }) {
   const initialState = {
     billData: [
       {
-        tableId:1,
+        tableId: 1,
         key: 0,
         image_name: '\u200b',
         upload: <ImageSelector _id={0} reRender={false} tableId={1} />,
@@ -28,7 +28,7 @@ export function BillProvider({ children }) {
         amount: 0,
         order: 1,
         image_src: '',
-      },
+      }
     ],
 
     clientDetails: {
