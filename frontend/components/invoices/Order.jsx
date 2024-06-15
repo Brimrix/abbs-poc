@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Table as AntDTable, Input, Form, message } from "antd";
 import MainTable from "./Table";
 import { useBillContext } from "@/context/BillContext";
-import { PlusOutlined } from "@ant-design/icons";
-import { Button } from "antd";
+import { PlusOutlined , DeleteOutlined} from "@ant-design/icons";
+import { Button, Space, Modal } from "antd";
+
 
 const Order = () => {
   const {
@@ -12,9 +13,13 @@ const Order = () => {
   } = useBillContext();
 
   const [data, setData] = useState([]);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteKey, setDeleteKey] = useState();
 
   useEffect(() => {
+
     setData(orderData);
+
   }, [orderData]);
 
   const handleOrderEdit = (key, newOrder) => {
@@ -30,10 +35,24 @@ const Order = () => {
     dispatch({
       type: "ORDER_ADD",
       payload: {
-        key: data.length + 1,
+        key: Number(Date.now()),
       },
     });
   };
+
+  const handleDelete = () => {
+    dispatch({
+        type: "ORDER_DELETE",
+        payload: {
+            key: deleteKey,
+        }
+    })
+    setIsDeleteOpen(false);
+
+  }
+  const handleDeleteCancel = () => {
+    setIsDeleteOpen(false);
+  }
   const columns = [
     {
       title: "Order",
@@ -61,6 +80,28 @@ const Order = () => {
       width: "30%",
       align: "center",
     },
+    {
+        title: "Action",
+        key: "action",
+        align: "center",
+
+        render: (record) => (
+          <Space size="middle">
+
+            <Button
+              type="primary"
+              className="btn-app-accent"
+              icon={<DeleteOutlined />}
+              onClick={() => {
+                setDeleteKey(record.key);
+                setIsDeleteOpen(true);
+              }}
+            >
+            Delete
+            </Button>
+          </Space>
+        ),
+      },
   ];
 
   return (
@@ -85,6 +126,17 @@ const Order = () => {
           rowExpandable: () => true,
         }}
       />
+
+    <Modal
+        okButtonProps={{ className: "btn-app-accent" }}
+        cancelButtonProps={{className: "btn-app-transparent"}}
+        open={isDeleteOpen}
+        okText="Delete"
+        title="Are you sure you want to Delete ?"
+        onOk={() => handleDelete(deleteKey)}
+        onCancel={handleDeleteCancel}
+      ></Modal>
+
     </>
   );
 };
