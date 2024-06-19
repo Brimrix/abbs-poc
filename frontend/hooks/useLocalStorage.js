@@ -13,10 +13,7 @@ const useLocalStorage = (key, defaultValue) => {
     }
   });
   const setLocalStorageStateValue = (valueOrFn) => {
-    let newValue;
-    newValue =
-      typeof valueOrFn === Function ? valueOrFn(localStorageValue) : valueOrFn;
-
+    const newValue = typeof valueOrFn === Function ? valueOrFn(localStorageValue) : valueOrFn;
     localStorage.setItem(key, JSON.stringify(newValue));
     setLocalStorageValue(newValue);
   };
