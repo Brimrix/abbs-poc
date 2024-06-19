@@ -5,7 +5,7 @@ import CardComponent from "@/components/invoices/CardComponent";
 import { Spin, Divider } from "antd";
 import { BillProvider } from "@/context/BillContext.jsx";
 
-const Invoices = () => {
+const InvoiceCreate = () => {
   const [spinning, setSpinning] = useState(false);
   const [mount, setMount] = useState(true);
 
@@ -33,4 +33,4 @@ const Invoices = () => {
   );
 };
 
-export default Invoices;
+export default InvoiceCreate;
