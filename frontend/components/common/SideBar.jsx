@@ -8,13 +8,15 @@ import {
   FundViewOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
-const { Title } = Typography;
+import useLocalStorage from "@/hooks/useLocalStorage"
+
 const { Sider } = Layout;
+
 
 function SideBar() {
   const route = useLocation();
   const navigate = useNavigate();
-  const [collapse, setCollapse] = useState(false);
+  const [collapse, setCollapse] = useLocalStorage("collapse", false);
 
   const handleClick = () => {
     setCollapse(!collapse);
