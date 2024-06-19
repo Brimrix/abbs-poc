@@ -3,7 +3,7 @@ import Order from "@/components/invoices/Order";
 import ClientSearch from "@/components/common/ClientSearch";
 import CardComponent from "@/components/invoices/CardComponent";
 import { Spin, Divider } from "antd";
-import { BillProvider } from "@/context/BillContext.jsx";
+import Context from "@/components/invoices/Context";
 
 const InvoiceCreate = () => {
   const [spinning, setSpinning] = useState(false);
@@ -18,9 +18,9 @@ const InvoiceCreate = () => {
   }, [spinning]);
 
   return mount ? (
-    <Spin spinning={mount} tip="Loading..." />
+    <Spin spinning={mount} />
   ) : (
-    <BillProvider>
+    <>
       <ClientSearch />
       <Divider className="m-0 border-2" />
       <div className="grow">
@@ -29,7 +29,7 @@ const InvoiceCreate = () => {
       <div className="self-end">
         <CardComponent />
       </div>
-    </BillProvider>
+    </>
   );
 };
 

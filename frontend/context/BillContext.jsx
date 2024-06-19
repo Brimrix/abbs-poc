@@ -101,12 +101,12 @@ export function BillProvider({ children }) {
       case "PRICE_CHANGE":
         newState.billData = state.billData.map((item) =>
           item.key === action.payload._key &&
-          item.tableId === Number(action.payload.tableId)
+            item.tableId === Number(action.payload.tableId)
             ? {
-                ...item,
-                actualPrice: action.payload.actualPrice,
-                amount: action.payload.AMOUNT,
-              }
+              ...item,
+              actualPrice: action.payload.actualPrice,
+              amount: action.payload.AMOUNT,
+            }
             : item
         );
         break;
@@ -114,12 +114,12 @@ export function BillProvider({ children }) {
       case "QUANTITY_CHANGE":
         newState.billData = state.billData.map((item) =>
           item.key === action.payload._key &&
-          item.tableId === Number(action.payload.tableId)
+            item.tableId === Number(action.payload.tableId)
             ? {
-                ...item,
-                actualQuantity: action.payload.actualQuantity,
-                amount: action.payload.AMOUNT,
-              }
+              ...item,
+              actualQuantity: action.payload.actualQuantity,
+              amount: action.payload.AMOUNT,
+            }
             : item
         );
         break;
@@ -174,14 +174,14 @@ export function BillProvider({ children }) {
         newState.billData = state.billData.map((item) =>
           item.key === action.payload._key
             ? {
-                ...item,
-                height: action.payload.HEIGHT,
-                image_name: action.payload.name,
-                width: action.payload.WIDTH,
-                area: action.payload.area,
-                image_src: action.payload.IMAGE_SOURCE,
-                amount: action.payload.AMOUNT,
-              }
+              ...item,
+              height: action.payload.HEIGHT,
+              image_name: action.payload.name,
+              width: action.payload.WIDTH,
+              area: action.payload.area,
+              image_src: action.payload.IMAGE_SOURCE,
+              amount: action.payload.AMOUNT,
+            }
             : item
         );
         break;
@@ -246,7 +246,7 @@ export function BillProvider({ children }) {
                 area:
                   Math.round(
                     ((item.width * Number(action.payload.row.height)) / 144) *
-                      100
+                    100
                   ) / 100,
               };
             } else if (action.payload.cellSource.dataIndex === "width") {
@@ -258,7 +258,7 @@ export function BillProvider({ children }) {
                 area:
                   Math.round(
                     ((item.height * Number(action.payload.row.width)) / 144) *
-                      100
+                    100
                   ) / 100,
               };
             } else if (action.payload.cellSource.dataIndex === "image_name") {
@@ -294,10 +294,17 @@ export function BillProvider({ children }) {
     return newState;
   };
 
+  const fetchInvoices = async () => {
+    const response = await fetch(`${import.meta.env.VITE_BASE_SERVER}api/invoices/`)
+    const data = await response.json()
+
+    return data
+  }
+
   // UseReducer setup
   const [state, dispatch] = useReducer(reducerMethod, initialState);
   return (
-    <billContext.Provider value={{ state, dispatch }}>
+    <billContext.Provider value={{ state, dispatch, fetchInvoices }}>
       {children}
     </billContext.Provider>
   );

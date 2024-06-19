@@ -7,7 +7,7 @@ import {
 import SideBar from '@/components/common/SideBar';
 import NavbarMain from '@/components/common/NavbarMain';
 
-function LayoutMain({ children }) {
+function LayoutMain() {
   const { Content } = Layout
   return (
     <Layout>

@@ -20,11 +20,15 @@ from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
+apiurlpatterns = [
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("docs/", SpectacularSwaggerView.as_view(), name="documentation"),
+    path("", include("core.api.urls")),
+]
+
 urlpatterns = [
     path("login/", obtain_auth_token),
     path("admin/", admin.site.urls),
-    path("schema/", SpectacularAPIView.as_view(), name="schema"),
-    path("docs/", SpectacularSwaggerView.as_view(), name="documentation"),
-    path("api/", include("core.api.urls")),
+    path("api/", include(apiurlpatterns)),
     path("", include("core.urls")),
 ]

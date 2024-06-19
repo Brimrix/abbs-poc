@@ -8,7 +8,10 @@ from django.contrib.contenttypes.models import ContentType
 class User(AbstractUser):
     username = models.EmailField(unique=True)
     company = models.ForeignKey(
-        "Company", on_delete=models.SET_NULL, related_name="employees"
+        "Company",
+        on_delete=models.SET_NULL,
+        related_name="employees",
+        null=True,
     )
 
     EMAIL_FIELD = "username"
@@ -32,7 +35,13 @@ class Invoice(models.Model):
     company = models.ForeignKey(
         Company, on_delete=models.PROTECT, related_name="invoices"
     )
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL)
+
+    paid = models.BooleanField(default=False)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -40,13 +49,19 @@ class Order(models.Model):
     invoice = models.ForeignKey(
         Invoice, on_delete=models.PROTECT, related_name="orders"
     )
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Item(models.Model):
-    content_type = models.ForeignKey()
-    object_id = models.PositiveIntegerField(ContentType)
+    content_type = models.ForeignKey(
+        ContentType, on_delete=models.CASCADE, related_name="items"
+    )
+    object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey()
 
     width = models.FloatField()

@@ -12,4 +12,4 @@ class UserAdmin(UserAdmin):
 
 @admin.register(models.Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ["user", "company"]
+    list_display = ["user"]

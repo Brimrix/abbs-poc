@@ -149,6 +149,7 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "CONTACT": {"name": "Team Brimrix", "email": "ping@brimrix.com"},
     "SERVE_PUBLIC": False,
+    "SCHEMA_PATH_PREFIX": "/api/",
     # include schema endpoint into schema
     "SERVE_INCLUDE_SCHEMA": False,
 }

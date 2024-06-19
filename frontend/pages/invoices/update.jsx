@@ -1,4 +1,4 @@
 const InvoiceUpdate = () => {
-    return <div>The details page</div>
+    return <div className="text-5xl">The details page,will show invoice in editable mode.</div>
 }
 export default InvoiceUpdate
