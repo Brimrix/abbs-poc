@@ -4,6 +4,7 @@ import ClientSearch from "@/components/common/ClientSearch";
 import CardComponent from "@/components/invoices/CardComponent";
 import { Spin, Divider } from "antd";
 import Context from "@/components/invoices/Context";
+import Table from "@/components/invoices/Table";
 
 const InvoiceCreate = () => {
   const [spinning, setSpinning] = useState(false);
@@ -24,7 +25,9 @@ const InvoiceCreate = () => {
       <ClientSearch />
       <Divider className="m-0 border-2" />
       <div className="grow">
-        <Order />
+        <Table tableId={Number(Date.now())} />
+        {/* <Order /> */}
+
       </div>
       <div className="self-end">
         <CardComponent />

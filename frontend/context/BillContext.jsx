@@ -74,16 +74,32 @@ export function BillProvider({ children }) {
 
     switch (action.type) {
       case "ORDER_ADD":
-        debugger;
-        newState.orderData = [
-          ...state.orderData,
-          {
-            key: action.payload.key,
-            order: `Order #${action.payload.key}`,
-            price: 0,
-            area: 0,
-          },
-        ];
+        const orderRow = {
+          tableId: Number(action.payload.tableId),
+          key: state.billData.length,
+          image_name: `ORDER #${Number(Date.now())}`,
+          // height: 0,
+          // width: 0,
+          type: "order",
+          orderId: Number(Date.now()),
+          // area: 0,
+          // actualPrice: 0,
+          // actualQuantity: 0,
+          upload: "",
+          price: "",
+          quantity: "",
+          // amount: 0,
+          order: state.billData.length + 1,
+          actions: (
+            <DeleteIcon
+              _id={state.billData.length}
+              tableId={Number(action.payload.tableId)}
+            />
+          ),
+          image_src: "",
+        };
+        newState.billData = [...state.billData, orderRow];
+
         break;
 
       case "ORDER_DELETE":
@@ -124,6 +140,7 @@ export function BillProvider({ children }) {
         );
         break;
 
+
       case "ADD_ROW":
         const newItem = {
           tableId: Number(action.payload.tableId),
@@ -131,6 +148,8 @@ export function BillProvider({ children }) {
           image_name: "\u200b",
           height: 0,
           width: 0,
+          type: "item",
+          orderId: Number(Date.now()),
           area: 0,
           actualPrice: 0,
           actualQuantity: 0,
@@ -192,36 +211,42 @@ export function BillProvider({ children }) {
         );
         const newShouldReRender = !state.shouldReRender;
         newState.shouldReRender = newShouldReRender;
-        newState.billData = filteredData.map((item, index) => ({
-          ...item,
-          upload: (
-            <ImageSelector
-              _id={Number(index)}
-              reRender={newShouldReRender}
-              renderSource={filteredData[index].image_src}
-              tableId={Number(action.payload.tableId)}
-            />
-          ),
-          price: (
-            <PriceComponent
-              _id={Number(index)}
-              defaultInputValue={filteredData[index].actualPrice}
-              reRender={newShouldReRender}
-              tableId={Number(action.payload.tableId)}
-            />
-          ),
-          quantity: (
-            <QuantityComponent
-              _id={Number(index)}
-              defaultInputValue={filteredData[index].actualQuantity}
-              reRender={newShouldReRender}
-              tableId={Number(action.payload.tableId)}
-            />
-          ),
-          actions: <DeleteIcon _id={Number(index)} />,
-          key: index,
-          order: index + 1,
-        }));
+        newState.billData = filteredData.map((item, index) => {
+          if (item.type === "item") {
+            return {
+              ...item,
+              upload: (
+                <ImageSelector
+                  _id={Number(index)}
+                  reRender={newShouldReRender}
+                  renderSource={filteredData[index].image_src}
+                  tableId={Number(action.payload.tableId)}
+                />
+              ),
+              price: (
+                <PriceComponent
+                  _id={Number(index)}
+                  defaultInputValue={filteredData[index].actualPrice}
+                  reRender={newShouldReRender}
+                  tableId={Number(action.payload.tableId)}
+                />
+              ),
+              quantity: (
+                <QuantityComponent
+                  _id={Number(index)}
+                  defaultInputValue={filteredData[index].actualQuantity}
+                  reRender={newShouldReRender}
+                  tableId={Number(action.payload.tableId)}
+                />
+              ),
+              actions: <DeleteIcon _id={Number(index)} />,
+              key: index,
+              order: index + 1,
+            };
+          }
+          return item;
+        });
+
         break;
 
       case "SET_CLIENT_DETAILS":

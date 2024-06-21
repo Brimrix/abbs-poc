@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Table as AntDTable, Typography } from "antd";
 import { useBillContext } from "@/context/BillContext";
 import Editable from "@/components/invoices/Editable.jsx";
+import Order from "@/components/invoices/Order";
 
 import React from "react";
 function Table({ tableId }) {
@@ -158,14 +159,41 @@ function Table({ tableId }) {
         columns={columnsConfig}
         size="small"
         rowClassName={() => "editable-row"}
+        onRow={() => ({
+          style:  { height: '40px' },
+        })}
+
+        expandable={{
+          expandedRowRender: (row) =>  <Order tableId={row.orderId} />,
+          rowExpandable: (row) => {
+            if(row.type === "order")
+              return true;
+          },
+        }}
+
       />
+      <div>
       <Typography.Text
         onClick={handleAddRows}
-        className="!text-primary !cursor-pointer !ml-[120px]"
+        className="text-primary font-bold hover:bg-primary hover:text-white border-2 border-primary float-right p-2 rounded-md"
         strong
       >
-        Add More Rows
+        Add item
       </Typography.Text>
+
+      <Typography.Text
+        onClick={() => dispatch({
+          type: "ORDER_ADD",
+          payload: {
+            tableId
+          }
+        })}
+        className="text-primary font-bold hover:bg-primary hover:text-white border-2 border-primary float-right p-2 rounded-md"
+        strong
+      >
+        Add Order
+      </Typography.Text>
+      </div>
     </>
   );
 }

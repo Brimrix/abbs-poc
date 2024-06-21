@@ -25,7 +25,7 @@ function CardComponent() {
   useEffect(() => {
     let area = state.billData.reduce((accumulator, element) => {
 
-      if (element && typeof element.area !== 'undefined') {
+      if (element && typeof element.area !== 'undefined' && element.type === "item") {
         return accumulator + element.area;
       } else {
         return accumulator + 0;
@@ -33,7 +33,7 @@ function CardComponent() {
     }, 0);
 
     let subTotal = state.billData.reduce((accumulator, element) => {
-      if (element && typeof element.amount !== 'undefined') {
+      if (element && typeof element.amount !== 'undefined' && element.type === "item") {
         return accumulator + element.amount;
       } else {
         return accumulator + 0;

@@ -1,180 +1,169 @@
-import React, { useEffect, useState } from "react";
-import { Table as AntDTable, Input, Form, message } from "antd";
-import MainTable from "./Table";
+import { useEffect, useState, useCallback } from "react";
+import { Table as AntDTable, Typography } from "antd";
 import { useBillContext } from "@/context/BillContext";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Button, Space, Modal } from "antd";
+import Editable from "@/components/invoices/Editable.jsx";
 
-const Order = () => {
+import React from "react";
+function Order({ tableId }) {
   const {
-    state: { orderData },
+    state: { billData },
     dispatch,
   } = useBillContext();
 
-  const [data, setData] = useState([]);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [deleteKey, setDeleteKey] = useState();
+  const [rowsTable, setRowsTable] = useState([]);
+  const [actualRows, setActualRows] = useState([]);
+
+
 
   useEffect(() => {
-    setData(orderData);
-  }, [orderData]);
-
-  const handleOrderEdit = (key, newOrder) => {
-    const newData = [...data];
-    const index = newData.findIndex((item) => key === item.key);
-    if (index > -1) {
-      newData[index].order = newOrder;
-      setData(newData);
+    let tableData = rowsTable.filter((item) => item.tableId === tableId);
+    for (let i = 0; i < tableData.length; i++) {
+      tableData[i].order = i + 1;
     }
-  };
+    setActualRows(tableData);
+  }, [rowsTable]);
 
-  const handelAddOrder = () => {
+  useEffect(() => {
+    setRowsTable(billData);
+  }, [billData]);
+
+  const handleAddRows = () => {
     dispatch({
-      type: "ORDER_ADD",
+      type: "ADD_ROW",
       payload: {
-        key: Number(Date.now()),
+        tableId,
       },
     });
   };
 
-  const handleDelete = () => {
-    dispatch({
-      type: "ORDER_DELETE",
-      payload: {
-        key: deleteKey,
-      },
-    });
-    setIsDeleteOpen(false);
-  };
-  const handleDeleteCancel = () => {
-    setIsDeleteOpen(false);
-  };
+  const handleSave = useCallback(
+    (row, cellSource) => {
+      dispatch({
+        type: "UPDATE_ROW",
+        payload: { row, key: row.key, cellSource, tableId },
+      });
+    },
+    [dispatch]
+  );
+
   const columns = [
     {
-      title: "Order",
+      title: "",
+      dataIndex: "actions",
+      key: "actions",
+      width: "5%",
+      align: "center",
+    },
+    {
+      title: "Sr#",
       dataIndex: "order",
       key: "order",
-      width: "25%",
-
-      render: (text, record) => (
-        <EditableCell
-          value={text}
-          onSave={(newOrder) => handleOrderEdit(record.key, newOrder)}
-        />
-      ),
-    },
-    {
-      title: "Total price",
-      dataIndex: "price",
-      key: "price",
-      width: "25%",
+      width: "5%",
       align: "center",
     },
     {
-      title: "Area",
+      title: (
+        <span className="column-underlined">Description and Upload Image</span>
+      ),
+      dataIndex: "image_name",
+      key: "image_name",
+      ellipsis: true,
+      width: "25%",
+      align: "start",
+      editable: true,
+    },
+    {
+      title: "",
+      dataIndex: "upload",
+      key: "upload",
+      align: "center",
+      width: "10%",
+    },
+    {
+      title: "Height",
+      dataIndex: "height",
+      key: "height",
+      align: "center",
+      editable: true,
+    },
+    {
+      title: "Width",
+      dataIndex: "width",
+      key: "width",
+      align: "center",
+      editable: true,
+    },
+    {
+      title: "Area (Sq.ft)",
       dataIndex: "area",
       key: "area",
-      width: "25%",
       align: "center",
     },
     {
-      title: "Action",
-      key: "action",
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
       align: "center",
-      width: "25%",
-
-      render: (record) => (
-        <Space size="middle">
-          <Button
-            type="primary"
-            className="btn-app-accent"
-            icon={<DeleteOutlined />}
-            onClick={() => {
-              setDeleteKey(record.key);
-              setIsDeleteOpen(true);
-            }}
-          >
-            Delete
-          </Button>
-        </Space>
-      ),
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+      align: "center",
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+      align: "center",
     },
   ];
 
+  const components = {
+    body: {
+      cell: Editable,
+    },
+  };
+
+  const columnsConfig = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        editable: col.editable,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        handleSave,
+      }),
+    };
+  });
+
   return (
     <>
-      <Button
-        className="float-end mx-4 my-3 btn-app-primary"
-        type="primary"
-        classNames={handelAddOrder}
-        onClick={handelAddOrder}
-        icon={<PlusOutlined />}
-      >
-        Add Order
-      </Button>
-
       <AntDTable
-        columns={columns}
-        dataSource={data}
+        components={components}
+        className="invoice-table"
+        style={{ marginBottom: "20px" }}
         pagination={false}
-        className="order-table"
-        expandable={{
-          expandedRowRender: (row) => <MainTable tableId={row.key} />,
-          rowExpandable: () => true,
-        }}
-      />
+        dataSource={actualRows}
+        columns={columnsConfig}
+        size="small"
+        rowClassName={() => "editable-row"}
 
-      <Modal
-        okButtonProps={{ className: "btn-app-accent" }}
-        cancelButtonProps={{ className: "btn-app-transparent" }}
-        open={isDeleteOpen}
-        okText="Delete"
-        title="Are you sure you want to Delete ?"
-        onOk={() => handleDelete(deleteKey)}
-        onCancel={handleDeleteCancel}
-      ></Modal>
+
+      />
+      <Typography.Text
+        onClick={handleAddRows}
+        className="!text-primary !cursor-pointer !ml-[120px]"
+        strong
+      >
+        Add More Rows
+      </Typography.Text>
     </>
   );
-};
-
-const EditableCell = ({ value, onSave }) => {
-  const [editing, setEditing] = useState(false);
-  const [inputValue, setInputValue] = useState(value);
-
-  const toggleEdit = () => {
-    setEditing(!editing);
-    setInputValue(value); // Reset input value on toggle
-  };
-
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleSave = () => {
-    onSave(inputValue);
-    setEditing(false);
-  };
-
-  return editing ? (
-    <Form.Item
-      style={{ margin: 0 }}
-      name="order"
-      rules={[{ required: true, message: "Order is required" }]}
-    >
-      <Input
-        value={inputValue}
-        defaultValue={inputValue}
-        onChange={handleInputChange}
-        onPressEnter={handleSave}
-        onBlur={handleSave}
-        autoFocus
-      />
-    </Form.Item>
-  ) : (
-    <div style={{ minHeight: 32 }} onClick={toggleEdit}>
-      {value}
-    </div>
-  );
-};
+}
 
 export default Order;
