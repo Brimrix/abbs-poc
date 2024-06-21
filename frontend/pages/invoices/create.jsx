@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Order from "@/components/invoices/Order";
 import ClientSearch from "@/components/common/ClientSearch";
 import CardComponent from "@/components/invoices/CardComponent";
 import { Spin, Divider } from "antd";
-import Context from "@/components/invoices/Context";
 import Table from "@/components/invoices/Table";
 
 const InvoiceCreate = () => {
@@ -26,8 +24,6 @@ const InvoiceCreate = () => {
       <Divider className="m-0 border-2" />
       <div className="grow">
         <Table tableId={Number(Date.now())} />
-        {/* <Order /> */}
-
       </div>
       <div className="self-end">
         <CardComponent />

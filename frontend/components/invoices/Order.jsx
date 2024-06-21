@@ -13,8 +13,6 @@ function Order({ tableId }) {
   const [rowsTable, setRowsTable] = useState([]);
   const [actualRows, setActualRows] = useState([]);
 
-
-
   useEffect(() => {
     let tableData = rowsTable.filter((item) => item.tableId === tableId);
     for (let i = 0; i < tableData.length; i++) {
@@ -147,13 +145,11 @@ function Order({ tableId }) {
         components={components}
         className="invoice-table"
         style={{ marginBottom: "20px" }}
-        pagination={false}
         dataSource={actualRows}
         columns={columnsConfig}
         size="small"
         rowClassName={() => "editable-row"}
-
-
+        pagination={false}
       />
       <Typography.Text
         onClick={handleAddRows}

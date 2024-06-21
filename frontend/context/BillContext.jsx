@@ -3,7 +3,6 @@ import ImageSelector from "@/components/invoices/ImageSelector";
 import PriceComponent from "@/components/invoices/PriceComponent";
 import QuantityComponent from "@/components/invoices/QuantityComponent";
 import DeleteIcon from "@/components/invoices/RemoveComponent";
-import { message } from "antd";
 
 const billContext = createContext();
 
@@ -43,15 +42,6 @@ export function BillProvider({ children }) {
       },
     ],
 
-    orderData: [
-      {
-        key: 1,
-        order: `Order #${Number(Date.now())}`,
-        price: 0,
-        area: 0,
-      },
-    ],
-
     clientDetails: {
       clientName: "",
       billDate: "",
@@ -74,43 +64,26 @@ export function BillProvider({ children }) {
 
     switch (action.type) {
       case "ORDER_ADD":
+        const orderID = Number(Date.now());
         const orderRow = {
           tableId: Number(action.payload.tableId),
           key: state.billData.length,
           image_name: `ORDER #${Number(Date.now())}`,
-          // height: 0,
-          // width: 0,
           type: "order",
-          orderId: Number(Date.now()),
-          // area: 0,
-          // actualPrice: 0,
-          // actualQuantity: 0,
+          orderId: orderID,
           upload: "",
           price: "",
           quantity: "",
-          // amount: 0,
           order: state.billData.length + 1,
           actions: (
             <DeleteIcon
               _id={state.billData.length}
-              tableId={Number(action.payload.tableId)}
+              orderId={orderID}
             />
           ),
           image_src: "",
         };
         newState.billData = [...state.billData, orderRow];
-
-        break;
-
-      case "ORDER_DELETE":
-        debugger;
-        newState.orderData = newState.orderData.filter(
-          (item) => item.key !== action.payload.key
-        );
-        newState.billData = newState.billData.filter(
-          (item) => item.tableId !== action.payload.key
-        );
-        message.success("Successfully Removed");
 
         break;
 
@@ -139,7 +112,6 @@ export function BillProvider({ children }) {
             : item
         );
         break;
-
 
       case "ADD_ROW":
         const newItem = {
@@ -206,8 +178,12 @@ export function BillProvider({ children }) {
         break;
 
       case "REMOVE_ROW":
-        const filteredData = state.billData.filter(
+        let filteredData = state.billData.filter(
           (item) => item.key !== action.payload._key
+        );
+        if(action.payload.orderId)
+        filteredData = filteredData.filter(
+          (item) => item.tableId !== action.payload.orderId
         );
         const newShouldReRender = !state.shouldReRender;
         newState.shouldReRender = newShouldReRender;
@@ -305,11 +281,6 @@ export function BillProvider({ children }) {
 
       case "DISPATCH_COLLAPSE":
         newState.utilities.collapsed = action.payload.collapse;
-        break;
-
-      case "ADD_ORDER":
-        newState.orderCount.count++;
-        message.success(newState.orderCount.count);
         break;
 
       default:

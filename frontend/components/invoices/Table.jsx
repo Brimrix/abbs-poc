@@ -3,6 +3,7 @@ import { Table as AntDTable, Typography } from "antd";
 import { useBillContext } from "@/context/BillContext";
 import Editable from "@/components/invoices/Editable.jsx";
 import Order from "@/components/invoices/Order";
+import { PlusOutlined } from "@ant-design/icons";
 
 import React from "react";
 function Table({ tableId }) {
@@ -151,8 +152,7 @@ function Table({ tableId }) {
     <>
       <AntDTable
         components={components}
-        className="invoice-table"
-        style={{ marginBottom: "20px" }}
+        className="invoice-table !h-[300px] overflow-y-auto"
         pagination={false}
         loading={tableLoading}
         dataSource={actualRows}
@@ -160,39 +160,40 @@ function Table({ tableId }) {
         size="small"
         rowClassName={() => "editable-row"}
         onRow={() => ({
-          style:  { height: '40px' },
+          style: { height: "40px" },
         })}
-
         expandable={{
-          expandedRowRender: (row) =>  <Order tableId={row.orderId} />,
+          expandedRowRender: (row) => <Order tableId={row.orderId} />,
           rowExpandable: (row) => {
-            if(row.type === "order")
-              return true;
+            if (row.type === "order") return true;
           },
         }}
-
       />
-      <div>
-      <Typography.Text
-        onClick={handleAddRows}
-        className="text-primary font-bold hover:bg-primary hover:text-white border-2 border-primary float-right p-2 rounded-md"
-        strong
-      >
-        Add item
-      </Typography.Text>
+      <div className="flex gap-4 mt-4">
+        <Typography.Text
+          onClick={handleAddRows}
+          className="text-primary font-bold w-[10%] cursor-pointer hover:bg-primary hover:text-white border-2 border-primary float-right p-2 rounded-md"
+          strong
+        >
+          <PlusOutlined />
+          Add item
+        </Typography.Text>
 
-      <Typography.Text
-        onClick={() => dispatch({
-          type: "ORDER_ADD",
-          payload: {
-            tableId
+        <Typography.Text
+          onClick={() =>
+            dispatch({
+              type: "ORDER_ADD",
+              payload: {
+                tableId,
+              },
+            })
           }
-        })}
-        className="text-primary font-bold hover:bg-primary hover:text-white border-2 border-primary float-right p-2 rounded-md"
-        strong
-      >
-        Add Order
-      </Typography.Text>
+          className="text-primary font-bold  w-[10%] cursor-pointer hover:bg-primary hover:text-white border-2 border-primary float-right p-2 rounded-md"
+          strong
+        >
+          <PlusOutlined />
+          Add Order
+        </Typography.Text>
       </div>
     </>
   );

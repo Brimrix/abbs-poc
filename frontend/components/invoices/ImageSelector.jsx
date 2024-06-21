@@ -78,6 +78,7 @@ function ImageSelector({ _id, reRender, renderSource, tableId }) {
               Math.round(((calculatedHeight * calculatedWidth) / 144) * 100) /
               100;
             setActualImageURL(imageUrl);
+
             if (state.billData[_id].image_src === "") {
               dispatch({
                 type: "ADD_ROW",
