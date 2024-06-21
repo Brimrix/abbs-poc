@@ -58,14 +58,14 @@ function Table({ tableId }) {
       title: "",
       dataIndex: "actions",
       key: "actions",
-      width: "5%",
+      width: "2%",
       align: "center",
     },
     {
       title: "Sr#",
       dataIndex: "order",
       key: "order",
-      width: "5%",
+      width: "3%",
       align: "center",
     },
     {
@@ -152,7 +152,7 @@ function Table({ tableId }) {
     <>
       <AntDTable
         components={components}
-        className="invoice-table !h-[300px] overflow-y-auto"
+        className="invoice-table max-h-[50vh] overflow-auto border rounded-md shadow-md"
         pagination={false}
         loading={tableLoading}
         dataSource={actualRows}
@@ -169,10 +169,10 @@ function Table({ tableId }) {
           },
         }}
       />
-      <div className="flex gap-4 mt-4">
+      <div className="flex gap-2 mt-2">
         <Typography.Text
           onClick={handleAddRows}
-          className="text-primary font-bold w-[10%] cursor-pointer hover:bg-primary hover:text-white border-2 border-primary float-right p-2 rounded-md"
+          className="text-primary p-2 hover:bg-primary hover:text-white border border-primary rounded-md"
           strong
         >
           <PlusOutlined />
@@ -188,7 +188,7 @@ function Table({ tableId }) {
               },
             })
           }
-          className="text-primary font-bold  w-[10%] cursor-pointer hover:bg-primary hover:text-white border-2 border-primary float-right p-2 rounded-md"
+          className="text-primary  p-2  hover:bg-primary hover:text-white border border-primary rounded-md"
           strong
         >
           <PlusOutlined />

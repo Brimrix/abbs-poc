@@ -36,7 +36,6 @@ function DeleteIcon({ _id, orderId }) {
         onCancel={() => setOpen(false)}
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
-
             <CancelBtn />
             <OkBtn />
           </>
@@ -49,11 +48,8 @@ function DeleteIcon({ _id, orderId }) {
       <Popover
         placement="top"
         content="Remove Row"
-
       >
-
         <MinusCircleOutlined onClick={handleClick} style={{ fontSize: '15px', color: '#C41E3A' }} />
-
       </Popover>
     </>
 

@@ -21,8 +21,7 @@ const InvoiceCreate = () => {
   ) : (
     <>
       <ClientSearch />
-      <Divider className="m-0 border-2" />
-      <div className="grow">
+      <div className="grow flex flex-col justify-between">
         <Table tableId={Number(Date.now())} />
       </div>
       <div className="self-end">

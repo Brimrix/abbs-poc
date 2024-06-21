@@ -140,11 +140,12 @@ function Order({ tableId }) {
   });
 
   return (
-    <>
+    <div className="flex flex-col">
       <AntDTable
+        showHeader={false}
         components={components}
         className="invoice-table"
-        style={{ marginBottom: "20px" }}
+        style={{marginLeft:"40px" }}
         dataSource={actualRows}
         columns={columnsConfig}
         size="small"
@@ -153,12 +154,12 @@ function Order({ tableId }) {
       />
       <Typography.Text
         onClick={handleAddRows}
-        className="!text-primary !cursor-pointer !ml-[120px]"
+        className="text-primary cursor-pointer ml-32 px-2 p-px m-px hover:bg-primary hover:text-white max-w-max rounded-md"
         strong
       >
         Add More Rows
       </Typography.Text>
-    </>
+    </div>
   );
 }
 
