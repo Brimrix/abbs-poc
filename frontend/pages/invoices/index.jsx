@@ -6,16 +6,33 @@ import { useEffect, useState } from "react";
 
 const Index = () => {
     const { Column } = Table
-    const { fetchInvoices } = useBillContext()
+    const {dispatch} = useBillContext();
     const [invoices, setInvoices] = useState([])
 
     useEffect(() => {
-        const fetchData = async () => {
-            const data = await fetchInvoices()
-            setInvoices(data)
-        }
-        fetchData()
-    }, [])
+        const fetchInvoices = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_BASE_SERVER}api/invoices/`);
+                if (!response.ok) {
+                    throw new Error('Response was not ok');
+                }
+                const data = await response.json();
+                setInvoices(data);
+            } catch (error) {
+                console.error('Failed to fetch invoices:', error);
+            }
+        };
+
+        fetchInvoices();
+    }, []);
+    useEffect(() => {
+        dispatch({
+            type: "SET_INVOICES",
+            payload: {
+                data: invoices
+            }
+        })
+    }, [invoices])
 
     return <>
         <div className='mb-2'>

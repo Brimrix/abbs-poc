@@ -6,6 +6,7 @@ import DeleteIcon from "@/components/invoices/RemoveComponent";
 
 const billContext = createContext();
 
+
 export function BillProvider({ children }) {
   const initialState = {
     billData: [
@@ -57,6 +58,7 @@ export function BillProvider({ children }) {
     },
 
     shouldReRender: false,
+    invoiceData: []
   };
 
   const reducerMethod = (state, action) => {
@@ -283,24 +285,24 @@ export function BillProvider({ children }) {
         newState.utilities.collapsed = action.payload.collapse;
         break;
 
+        case "SET_INVOICES":
+         newState.invoiceData = action.payload.data;
+         break;
+
       default:
         break;
     }
 
+    debugger;
     return newState;
   };
 
-  const fetchInvoices = async () => {
-    const response = await fetch(`${import.meta.env.VITE_BASE_SERVER}api/invoices/`)
-    const data = await response.json()
 
-    return data
-  }
 
   // UseReducer setup
   const [state, dispatch] = useReducer(reducerMethod, initialState);
   return (
-    <billContext.Provider value={{ state, dispatch, fetchInvoices }}>
+    <billContext.Provider value={{ state, dispatch }}>
       {children}
     </billContext.Provider>
   );
