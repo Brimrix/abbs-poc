@@ -26,7 +26,7 @@ function CardComponent() {
     let area = state.billData.reduce((accumulator, element) => {
 
       if (element && typeof element.area !== 'undefined' && element.type === "item") {
-        return accumulator + element.area;
+        return accumulator + Number(element.area);
       } else {
         return accumulator + 0;
       }
@@ -47,7 +47,6 @@ function CardComponent() {
     }
 
     subTotal = Math.round(subTotal * 100) / 100;
-    area = Math.round(area * 100) / 100;
     const grandTotal = Math.round((subTotal - discountInput) * 100) / 100;
 
     setTotalArea(area);

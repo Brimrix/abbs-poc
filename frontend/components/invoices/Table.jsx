@@ -1,11 +1,15 @@
 import { useEffect, useState, useCallback } from "react";
-import { Table as AntDTable, Typography } from "antd";
+import { Table as AntDTable, Typography, InputNumber, Modal, Popover } from "antd";
 import { useBillContext } from "@/context/BillContext";
 import Editable from "@/components/invoices/Editable.jsx";
 import Order from "@/components/invoices/Order";
 import { PlusOutlined } from "@ant-design/icons";
+import ImageSelector from "@/components/invoices/ImageSelector";
+import { MinusCircleOutlined } from '@ant-design/icons';
+
 
 import React from "react";
+
 function Table({ tableId }) {
   const {
     state: { billData },
@@ -15,6 +19,8 @@ function Table({ tableId }) {
   const [rowsTable, setRowsTable] = useState([]);
   const [actualRows, setActualRows] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
+  const [deleteRow, setDeleteRow] = useState(null);
+
 
   useEffect(() => {
     setTableLoading(false);
@@ -53,13 +59,33 @@ function Table({ tableId }) {
     [dispatch]
   );
 
+  const handleDeleteRow = () => {
+    dispatch({
+      type: 'REMOVE_ROW',
+      payload: {
+        key: deleteRow,
+      },
+    });
+    setDeleteRow()
+  }
+
   const columns = [
     {
       title: "",
       dataIndex: "actions",
       key: "actions",
       width: "2%",
-      align: "center",
+      align: "left",
+      render(_, row) {
+        return <Popover
+          placement="top"
+          content="Remove Row"
+        >
+          <MinusCircleOutlined
+            className="text-red-500"
+            onClick={() => setDeleteRow(row.key)} />
+        </Popover>
+      }
     },
     {
       title: "Sr#",
@@ -69,22 +95,28 @@ function Table({ tableId }) {
       align: "center",
     },
     {
-      title: (
-        <span className="column-underlined">Description and Upload Image</span>
-      ),
-      dataIndex: "image_name",
-      key: "image_name",
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
       ellipsis: true,
       width: "25%",
       align: "start",
       editable: true,
     },
     {
-      title: "",
+      title: "Image",
       dataIndex: "upload",
       key: "upload",
       align: "center",
       width: "10%",
+      render(_, row) {
+        return row.type === 'item' ? <ImageSelector
+          id={row.key}
+          reRender={true}
+          renderSource={row.image_src}
+          tableId={Number(1)}
+        /> : ''
+      }
     },
     {
       title: "Height",
@@ -111,18 +143,49 @@ function Table({ tableId }) {
       dataIndex: "price",
       key: "price",
       align: "center",
+      render(text, row) {
+        return row.type === 'item' ? <InputNumber
+          value={text}
+          onInput={(value) => dispatch({
+            type: 'setPrice',
+            payload: {
+              key: row.key,
+              tableId: row.tableId,
+              price: value,
+            },
+          })}
+          min={1}
+          max={1000}
+          variant="filled" precision={2} /> : ''
+      }
     },
     {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
       align: "center",
+      render(text, row) {
+        return row.type === 'item' ? <InputNumber
+          value={text}
+          onInput={(value) => dispatch({
+            type: 'setQuantity',
+            payload: {
+              key: row.key,
+              tableId: row.tableId,
+              quantity: value,
+            },
+          })}
+          min={1}
+          max={1000}
+          variant="filled" precision={0} /> : ''
+      }
     },
     {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
       align: "center",
+      render: (value) => Number(value.toFixed(2))
     },
   ];
 
@@ -150,6 +213,23 @@ function Table({ tableId }) {
 
   return (
     <>
+      <Modal
+        open={Boolean(deleteRow)}
+        okText="Delete"
+        okButtonProps={{ className: 'btn-app-accent' }}
+        cancelButtonProps={{ className: 'text-primary' }}
+        title="Confirmation"
+        onOk={handleDeleteRow}
+        onCancel={() => setDeleteRow(null)}
+        footer={(_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <OkBtn />
+          </>
+        )}
+      >
+        <span>Are you sure you want to delete ? </span>
+      </Modal>
       <AntDTable
         components={components}
         className="invoice-table max-h-[50vh] overflow-auto border rounded-md shadow-md"
@@ -172,7 +252,7 @@ function Table({ tableId }) {
       <div className="flex gap-2 mt-2">
         <Typography.Text
           onClick={handleAddRows}
-          className="text-primary p-2 hover:bg-primary hover:text-white border border-primary rounded-md"
+          className="text-primary px-2 hover:bg-primary hover:text-white border border-primary rounded-md"
           strong
         >
           <PlusOutlined />
@@ -188,7 +268,7 @@ function Table({ tableId }) {
               },
             })
           }
-          className="text-primary  p-2  hover:bg-primary hover:text-white border border-primary rounded-md"
+          className="text-primary  px-2  hover:bg-primary hover:text-white border border-primary rounded-md"
           strong
         >
           <PlusOutlined />

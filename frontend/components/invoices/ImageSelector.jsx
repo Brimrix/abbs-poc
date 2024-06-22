@@ -34,7 +34,7 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLessThanHundredMB;
 };
 
-function ImageSelector({ _id, reRender, renderSource, tableId }) {
+function ImageSelector({ id, reRender, renderSource, tableId }) {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [actualImageURL, setActualImageURL] = useState("");
@@ -74,12 +74,9 @@ function ImageSelector({ _id, reRender, renderSource, tableId }) {
               Math.round((this.height / yResolution) * 100) / 100;
             const calculatedWidth =
               Math.round((this.width / xResolution) * 100) / 100;
-            const calculatedAREA =
-              Math.round(((calculatedHeight * calculatedWidth) / 144) * 100) /
-              100;
             setActualImageURL(imageUrl);
 
-            if (state.billData[_id].image_src === "") {
+            {
               dispatch({
                 type: "ADD_ROW",
                 payload: {
@@ -87,32 +84,21 @@ function ImageSelector({ _id, reRender, renderSource, tableId }) {
                 }
               });
               dispatch({
-                type: "SET_DIMENSION",
+                type: "uploadImage",
                 payload: {
-                  name: infoFile.name,
+                  name: infoFile.name.split('.')[0],
                   IMAGE_SOURCE: imageUrl,
                   HEIGHT: calculatedHeight,
                   WIDTH: calculatedWidth,
-                  area: calculatedAREA,
-                  AMOUNT:
-                    Math.round(
-                      calculatedAREA *
-                        state.billData[_id].actualPrice *
-                        state.billData[_id].actualQuantity *
-                        100
-                    ) / 100,
-
-                  _key: _id,
+                  key: id,
                   tableId,
                 },
               });
               setIsProcess(true);
               message.success("Successfully uploaded");
-            } else {
-              message.error("Invalid Image");
             }
           }
-        } catch {
+        } catch (exc) {
           message.error("There is an error in the image");
         }
 
@@ -172,7 +158,7 @@ function ImageSelector({ _id, reRender, renderSource, tableId }) {
         <div
 
           className="flex items-center justify-between !text-primary"
-          >
+        >
           <FileAddOutlined />
           <Typography.Text>Select File</Typography.Text>
         </div>
