@@ -1,58 +1,14 @@
-import { useState, useEffect } from 'react';
 import {
   Typography, Card, Button, InputNumber,
 } from 'antd';
 import { useBillContext } from '@/context/BillContext';
 
 function CardComponent() {
-  const { state } = useBillContext()
+  const { state: { selectedInvoice }, dispatch } = useBillContext()
 
-  const [totalArea, setTotalArea] = useState(0);
-  const [subTotal, setSubTotal] = useState(0);
-
-  const [grandTotal, setGrandTotal] = useState(0);
-  const [discountInput, setDiscountInput] = useState(0);
-
-  const handleDiscountChange = (value) => {
-    setDiscountInput(value);
-  };
-
-  useEffect(() => {
-    const grandTotal = Math.round((subTotal - discountInput) * 100) / 100;
-    setGrandTotal(grandTotal);
-  }, [discountInput]);
-
-  useEffect(() => {
-    let area = state.billData.reduce((accumulator, element) => {
-
-      if (element && typeof element.area !== 'undefined' && element.type === "item") {
-        return accumulator + Number(element.area);
-      } else {
-        return accumulator + 0;
-      }
-    }, 0);
-
-    let subTotal = state.billData.reduce((accumulator, element) => {
-      if (element && typeof element.amount !== 'undefined' && element.type === "item") {
-        return accumulator + element.amount;
-      } else {
-        return accumulator + 0;
-      }
-    }, 0);
-
-
-    if (discountInput !== 0) {
-      const subTotalValue = subTotal - discountInput;
-      setGrandTotal(subTotalValue);
-    }
-
-    subTotal = Math.round(subTotal * 100) / 100;
-    const grandTotal = Math.round((subTotal - discountInput) * 100) / 100;
-
-    setTotalArea(area);
-    setSubTotal(subTotal);
-    setGrandTotal(grandTotal);
-  }, [state]);
+  const subTotal = selectedInvoice.items.reduce((acc, item) => acc + item.amount, 0)
+  const areaTotal = selectedInvoice.items.reduce((acc, item) => acc + Number(item.area), 0)
+  const total = subTotal - selectedInvoice.discount
 
   return (
     <Card className='flex flex-col shadow border bg-stone-100'>
@@ -71,7 +27,7 @@ function CardComponent() {
               Total Area
             </td>
             <td>
-              <Typography.Text className='float-right' strong>{totalArea}</Typography.Text>
+              <Typography.Text className='float-right' strong>{areaTotal.toFixed(2)}</Typography.Text>
             </td>
           </tr>
           <tr>
@@ -79,7 +35,17 @@ function CardComponent() {
               Discount
             </td>
             <td>
-              <InputNumber className='float-right' onChange={handleDiscountChange} />
+              <InputNumber
+                className='float-right'
+                min={0}
+                max={subTotal}
+                value={selectedInvoice.discount} onChange={(value) => dispatch({
+                  type: 'setDiscount',
+                  payload: {
+                    discount: value
+                  }
+                }
+                )} />
             </td>
           </tr>
           <tr>
@@ -87,7 +53,6 @@ function CardComponent() {
               Grand Total
             </td>
             <td>
-              <Typography.Text className='float-right' strong>{grandTotal}</Typography.Text>
             </td>
           </tr>
         </tbody>

@@ -7,37 +7,12 @@ export function BillProvider({ children }) {
   const initialState = {
     selectedInvoice: {
       items: [],
-      orders: [],
       customer: {
         name: '',
         defaultRate: 0
       },
       discount: 0,
-      data() {
-        return this.items.concat(this.orders)
-      }
     },
-    billData: [
-      {
-        tableId: 1,
-        key: 0,
-        description: "\u200b",
-        upload: null,
-        height: 0,
-        width: 0,
-        area: 0,
-        price: () => this.selectedInvoice.customer.defaultRate,
-        quantity: 1,
-        amount: 0,
-        order: 1,
-        image_src: "",
-      },
-    ],
-    orderCount: {
-      count: 1,
-    },
-
-    shouldReRender: false,
   };
 
   function calculateArea(width, height, unit = 144) {
@@ -46,6 +21,47 @@ export function BillProvider({ children }) {
 
   function calculateRowAmount(row) {
     return Number((row.area * row.quantity * row.price).toFixed(2))
+  }
+
+  const createItemKey = (state, payload) => {
+    let key = state.selectedInvoice.items.length + 1
+    return key
+  }
+
+  const createItemDescription = (state, payload) => {
+    let description = "\u200b"
+    return description
+  }
+
+  function addItem(state, action) {
+    return {
+      tableId: action.payload.tableId,
+      key: createItemKey(state, action.payload),
+      description: createItemDescription(state, action.payload),
+      upload: null,
+      image_src: "",
+      height: 0,
+      width: 0,
+      area: 0,
+      price: state.selectedInvoice.customer.defaultRate,
+      quantity: 1,
+      amount: 0,
+      order: Boolean(action.payload.order)
+    };
+  }
+
+  function setItemImage(row, payload) {
+    payload['area'] = calculateArea(payload.width, payload.height)
+    return updateRow(row, payload)
+  }
+
+  function updateRow(row, items) {
+    const newRow = {
+      ...row,
+      ...items,
+    }
+    newRow['amount'] = calculateRowAmount(newRow)
+    return newRow
   }
 
   const reducerMethod = (state, action) => {
@@ -60,106 +76,34 @@ export function BillProvider({ children }) {
         newState.selectedInvoice.customer.defaultRate = action.payload
         break
 
-      case "ORDER_ADD":
-        const orderID = Number(Date.now());
-        const orderRow = {
-          tableId: Number(action.payload.tableId),
-          key: state.billData.length,
-          description: `ORDER #${Number(Date.now())}`,
-          type: "order",
-          orderId: orderID,
-          upload: "",
-          price: '',
-          quantity: "",
-          order: state.billData.length + 1,
-          image_src: "",
-        };
-        newState.billData = [...state.billData, orderRow];
+      case 'setDiscount':
+        newState.selectedInvoice.discount = action.payload.discount
+        break
+      case "addItem":
+        // Adds all type of rows, depends on tableId & order
+        newState.selectedInvoice.items = [
+          ...state.selectedInvoice.items,
+          addItem(state, action)
+        ]
         break;
 
       case "setPrice":
-        newState.billData = state.billData.map((item) =>
-          item.key === action.payload.key &&
-            item.tableId === Number(action.payload.tableId)
-            ? {
-              ...item,
-              price: action.payload.price,
-              amount: action.payload.price * item.quantity * item.area,
-            }
-            : item
-        );
-        break;
-
       case "setQuantity":
-        newState.billData = state.billData.map((item) =>
-          (item.key === action.payload.key &&
-            item.tableId === action.payload.tableId)
-            ? {
-              ...item,
-              quantity: action.payload.quantity,
-              amount: item.price * action.payload.quantity * item.area,
-            }
-            : item
-        );
+        newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
+          item.key === action.payload.key ? updateRow(item, action.payload) : item
+        )
         break;
 
-      case "ADD_ROW":
-        const newItem = {
-          tableId: Number(action.payload.tableId),
-          key: state.billData.length + 1,
-          description: "\u200b",
-          height: 0,
-          width: 0,
-          type: "item",
-          orderId: Number(Date.now()),
-          area: 0,
-          upload: null,
-          price: state.selectedInvoice.customer.defaultRate,
-          quantity: 1,
-          amount: 0,
-          order: state.billData.length + 1,
-          image_src: "",
-        };
-        newState.billData = [...state.billData, newItem];
-        break;
-
-      case "uploadImage":
-        newState.billData = state.billData.map((item) =>
+      case "setImageData":
+        newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
           item.key === action.payload.key
-            ? {
-              ...item,
-              description: action.payload.name,
-              height: action.payload.HEIGHT,
-              width: action.payload.WIDTH,
-              area: calculateArea(action.payload.WIDTH, action.payload.HEIGHT),
-              image_src: action.payload.IMAGE_SOURCE,
-              amount: item.price * item.quantity * calculateArea(action.payload.WIDTH, action.payload.HEIGHT),
-            }
-            : item
-        );
+            ? setItemImage(item, action.payload)
+            : item)
         break;
 
-      case "REMOVE_ROW":
-        let filteredData = state.billData.filter(
-          (item) => item.key !== action.payload._key
-        );
-        if (action.payload.orderId)
-          filteredData = filteredData.filter(
-            (item) => item.tableId !== action.payload.orderId
-          );
-        const newShouldReRender = !state.shouldReRender;
-        newState.shouldReRender = newShouldReRender;
-        newState.billData = filteredData.map((item, index) => {
-          if (item.type === "item") {
-            return {
-              ...item,
-              key: index,
-              order: index + 1,
-            };
-          }
-          return item;
-        });
-
+      case "deleteRow":
+        newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.key !== action.payload.key)
+        // Remove nested rows too.
         break;
 
       case "UPDATE_ROW":
@@ -208,8 +152,6 @@ export function BillProvider({ children }) {
       default:
         break;
     }
-
-    debugger;
     return newState;
   };
 

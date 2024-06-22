@@ -1,34 +1,24 @@
-import { useEffect, useState, useCallback } from "react";
-import { Table as AntDTable, Typography } from "antd";
+import { useCallback } from "react";
+import { Table as AntDTable, Typography, InputNumber, Popover } from "antd";
 import { useBillContext } from "@/context/BillContext";
 import Editable from "@/components/invoices/Editable.jsx";
+import ImageSelector from "@/components/invoices/ImageSelector";
+import { MinusCircleOutlined } from '@ant-design/icons';
+
 
 import React from "react";
 function Order({ tableId }) {
   const {
-    state: { billData },
+    state: { selectedInvoice },
     dispatch,
   } = useBillContext();
 
-  const [rowsTable, setRowsTable] = useState([]);
-  const [actualRows, setActualRows] = useState([]);
-
-  useEffect(() => {
-    let tableData = rowsTable.filter((item) => item.tableId === tableId);
-    for (let i = 0; i < tableData.length; i++) {
-      tableData[i].order = i + 1;
-    }
-    setActualRows(tableData);
-  }, [rowsTable]);
-
-  useEffect(() => {
-    setRowsTable(billData);
-  }, [billData]);
 
   const handleAddRows = () => {
     dispatch({
-      type: "ADD_ROW",
+      type: "addItem",
       payload: {
+        order: tableId,
         tableId,
       },
     });
@@ -49,33 +39,48 @@ function Order({ tableId }) {
       title: "",
       dataIndex: "actions",
       key: "actions",
-      width: "5%",
+      width: "2%",
       align: "center",
+      render(_, row) {
+        return <Popover
+          placement="top"
+          content="Remove Row"
+        >
+          <MinusCircleOutlined
+            className="text-red-500"
+            onClick={() => setDeleteRow(row.key)} />
+        </Popover>
+      }
     },
     {
       title: "Sr#",
-      dataIndex: "order",
-      key: "order",
-      width: "5%",
+      dataIndex: "key",
+      key: "key",
+      width: "3%",
       align: "center",
     },
     {
-      title: (
-        <span className="column-underlined">Description and Upload Image</span>
-      ),
-      dataIndex: "image_name",
-      key: "image_name",
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
       ellipsis: true,
-      width: "25%",
+      width: "30%",
       align: "start",
       editable: true,
     },
     {
-      title: "",
+      title: "Image",
       dataIndex: "upload",
       key: "upload",
       align: "center",
       width: "10%",
+      render(text, row) {
+        return <ImageSelector
+          id={row.key}
+          renderSource={row.image_src}
+          tableId={tableId}
+        />
+      }
     },
     {
       title: "Height",
@@ -102,12 +107,37 @@ function Order({ tableId }) {
       dataIndex: "price",
       key: "price",
       align: "center",
+      render: (text, row) => <InputNumber
+        value={text}
+        onInput={(value) => dispatch({
+          type: 'setPrice',
+          payload: {
+            key: row.key,
+            tableId: row.tableId,
+            price: value,
+          },
+        })}
+        min={1}
+        variant="filled" precision={2} />
     },
     {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
       align: "center",
+      render: (text, row) => <InputNumber
+        value={text}
+        onInput={(value) => dispatch({
+          type: 'setQuantity',
+          payload: {
+            key: row.key,
+            tableId: row.tableId,
+            quantity: value,
+          },
+        })}
+        min={1}
+        max={1000}
+        variant="filled" precision={0} />
     },
     {
       title: "Amount",
@@ -142,11 +172,10 @@ function Order({ tableId }) {
   return (
     <div className="flex flex-col">
       <AntDTable
-        showHeader={false}
         components={components}
         className="invoice-table"
-        style={{marginLeft:"40px" }}
-        dataSource={actualRows}
+        style={{ marginLeft: "40px" }}
+        dataSource={selectedInvoice.items.filter(item => item.tableId === tableId)}
         columns={columnsConfig}
         size="small"
         rowClassName={() => "editable-row"}

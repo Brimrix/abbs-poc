@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import ClientSearch from "@/components/common/ClientSearch";
 import CardComponent from "@/components/invoices/CardComponent";
-import { Spin, Divider } from "antd";
+import { Spin } from "antd";
 import Table from "@/components/invoices/Table";
 
 
@@ -20,14 +19,7 @@ const InvoiceCreate = () => {
   return mount ? (
     <Spin spinning={mount} />
   ) : (
-    <>
-      <div className="grow">
-        <Table tableId={Number(Date.now())} />
-      </div>
-      <div className="self-end">
-        <CardComponent />
-      </div>
-    </>
+    <Table />
   );
 };
 

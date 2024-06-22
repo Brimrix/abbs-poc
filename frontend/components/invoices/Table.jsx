@@ -7,49 +7,44 @@ import { PlusOutlined } from "@ant-design/icons";
 import ImageSelector from "@/components/invoices/ImageSelector";
 import { MinusCircleOutlined } from '@ant-design/icons';
 
+import {
+  MessageOutlined,
+  CloudDownloadOutlined,
+  MailOutlined,
+  PrinterOutlined,
+} from "@ant-design/icons";
 
-import React from "react";
 
-function Table({ tableId }) {
+const IconLink = ({ icon }) => (
+  <div className="text-white text-lg flex justify-center !bg-secondary p-[6px] rounded-lg cursor-pointer h-[30px] w-[30px]">
+    {icon}
+  </div>
+);
+
+function Table({ tableId = 'root' }) {
   const {
-    state: { billData },
+    state: { selectedInvoice },
     dispatch,
   } = useBillContext();
 
-  const [rowsTable, setRowsTable] = useState([]);
-  const [actualRows, setActualRows] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
   const [deleteRow, setDeleteRow] = useState(null);
 
+  const subTotal = selectedInvoice.items.reduce((acc, item) => acc + item.amount, 0)
+  const areaTotal = selectedInvoice.items.reduce((acc, item) => acc + Number(item.area), 0)
+  const total = subTotal - selectedInvoice.discount
 
-  useEffect(() => {
-    setTableLoading(false);
-  }, [actualRows]);
-
-  useEffect(() => {
-    let tableData = rowsTable.filter((item) => item.tableId === tableId);
-    for (let i = 0; i < tableData.length; i++) {
-      tableData[i].order = i + 1;
-    }
-    setActualRows(tableData);
-  }, [rowsTable]);
-
-  useEffect(() => {
-    if (billData.length > 1) setTableLoading(true);
-
-    setRowsTable(billData);
-  }, [billData]);
-
-  const handleAddRows = () => {
+  const handleAddRow = (order = null) => {
     dispatch({
-      type: "ADD_ROW",
+      type: "addItem",
       payload: {
+        order,
         tableId,
       },
     });
   };
 
-  const handleSave = useCallback(
+  const handleSaveRow = useCallback(
     (row, cellSource) => {
       dispatch({
         type: "UPDATE_ROW",
@@ -61,13 +56,15 @@ function Table({ tableId }) {
 
   const handleDeleteRow = () => {
     dispatch({
-      type: 'REMOVE_ROW',
+      type: 'deleteRow',
       payload: {
         key: deleteRow,
       },
     });
     setDeleteRow()
   }
+
+  const isOrderRow = (row) => row.order
 
   const columns = [
     {
@@ -89,8 +86,8 @@ function Table({ tableId }) {
     },
     {
       title: "Sr#",
-      dataIndex: "order",
-      key: "order",
+      dataIndex: "key",
+      key: "key",
       width: "3%",
       align: "center",
     },
@@ -110,12 +107,11 @@ function Table({ tableId }) {
       align: "center",
       width: "10%",
       render(_, row) {
-        return row.type === 'item' ? <ImageSelector
+        return isOrderRow(row) ? "" : <ImageSelector
           id={row.key}
-          reRender={true}
           renderSource={row.image_src}
-          tableId={Number(1)}
-        /> : ''
+          tableId={tableId}
+        />
       }
     },
     {
@@ -124,6 +120,7 @@ function Table({ tableId }) {
       key: "height",
       align: "center",
       editable: true,
+      render: (text, row) => isOrderRow(row) ? '' : text
     },
     {
       title: "Width",
@@ -131,12 +128,14 @@ function Table({ tableId }) {
       key: "width",
       align: "center",
       editable: true,
+      render: (text, row) => isOrderRow(row) ? '' : text
     },
     {
       title: "Area (Sq.ft)",
       dataIndex: "area",
       key: "area",
       align: "center",
+      render: (text, row) => isOrderRow(row) ? 'Order Area' : text
     },
     {
       title: "Price",
@@ -144,7 +143,7 @@ function Table({ tableId }) {
       key: "price",
       align: "center",
       render(text, row) {
-        return row.type === 'item' ? <InputNumber
+        return isOrderRow(row) ? "" : <InputNumber
           value={text}
           onInput={(value) => dispatch({
             type: 'setPrice',
@@ -155,8 +154,7 @@ function Table({ tableId }) {
             },
           })}
           min={1}
-          max={1000}
-          variant="filled" precision={2} /> : ''
+          variant="filled" precision={2} />
       }
     },
     {
@@ -165,7 +163,7 @@ function Table({ tableId }) {
       key: "quantity",
       align: "center",
       render(text, row) {
-        return row.type === 'item' ? <InputNumber
+        return isOrderRow(row) ? "" : <InputNumber
           value={text}
           onInput={(value) => dispatch({
             type: 'setQuantity',
@@ -177,7 +175,7 @@ function Table({ tableId }) {
           })}
           min={1}
           max={1000}
-          variant="filled" precision={0} /> : ''
+          variant="filled" precision={0} />
       }
     },
     {
@@ -185,7 +183,7 @@ function Table({ tableId }) {
       dataIndex: "amount",
       key: "amount",
       align: "center",
-      render: (value) => Number(value.toFixed(2))
+      render: (value, row) => isOrderRow(row) ? 'Order Total' : Number(value.toFixed(2))
     },
   ];
 
@@ -206,7 +204,7 @@ function Table({ tableId }) {
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        handleSave,
+        handleSave: handleSaveRow,
       }),
     };
   });
@@ -230,50 +228,71 @@ function Table({ tableId }) {
       >
         <span>Are you sure you want to delete ? </span>
       </Modal>
-      <AntDTable
-        components={components}
-        className="invoice-table max-h-[50vh] overflow-auto border rounded-md shadow-md"
-        pagination={false}
-        loading={tableLoading}
-        dataSource={actualRows}
-        columns={columnsConfig}
-        size="small"
-        rowClassName={() => "editable-row"}
-        onRow={() => ({
-          style: { height: "40px" },
-        })}
-        expandable={{
-          expandedRowRender: (row) => <Order tableId={row.orderId} />,
-          rowExpandable: (row) => {
-            if (row.type === "order") return true;
-          },
-        }}
-      />
-      <div className="flex gap-2 mt-2">
-        <Typography.Text
-          onClick={handleAddRows}
-          className="text-primary px-2 hover:bg-primary hover:text-white border border-primary rounded-md"
-          strong
-        >
-          <PlusOutlined />
-          Add item
-        </Typography.Text>
+      <div className="flex flex-col py-2 bg-stone-100 shadow-lg border rounded space-y-2 max-h-full">
+        <div className="flex justify-between gap-2 mt-2 px-2">
+          <p className="text-2xl font-bold">New Invoice</p>
 
-        <Typography.Text
-          onClick={() =>
-            dispatch({
-              type: "ORDER_ADD",
-              payload: {
-                tableId,
-              },
-            })
-          }
-          className="text-primary  px-2  hover:bg-primary hover:text-white border border-primary rounded-md"
-          strong
-        >
-          <PlusOutlined />
-          Add Order
-        </Typography.Text>
+          <div className="flex items-center gap-1">
+            <IconLink icon={<MessageOutlined />} />
+            <IconLink icon={<CloudDownloadOutlined />} />
+            <IconLink icon={<MailOutlined />} />
+            <IconLink icon={<PrinterOutlined />} />
+          </div>
+        </div>
+        <AntDTable
+          sticky={true}
+          components={components}
+          className="invoice-table max-h-[75vh] overflow-auto border-y-2"
+          pagination={false}
+          loading={tableLoading}
+          dataSource={selectedInvoice.items.filter(item => item.tableId === 'root')}
+          columns={columnsConfig}
+          size="small"
+          expandable={{
+            columnWidth: "2%",
+            expandedRowRender: (row) => <Order tableId={row.key} />,
+            rowExpandable: (row) => isOrderRow(row),
+            expandedRowClassName: () => 'bg-sky-50'
+          }}
+        />
+        <div className="flex gap-2 px-10 items-center justify-between">
+          <div className="space-x-2">
+            <Typography.Text
+              onClick={() => handleAddRow()}
+              className="text-primary p-2 hover:bg-primary hover:text-white border border-primary rounded-md"
+              strong
+            >
+              <PlusOutlined />
+              Add item
+            </Typography.Text>
+
+            <Typography.Text
+              onClick={() => handleAddRow('order')}
+              className="text-primary  p-2  hover:bg-primary hover:text-white border border-primary rounded-md"
+              strong
+            >
+              <PlusOutlined />
+              Add Order
+            </Typography.Text>
+          </div>
+
+          <div className="flex space-x-4 items-center">
+            <span>SubTotal: <Typography.Text className='float-right ' >{subTotal}</Typography.Text></span> <div className="border border-2 border-primary h-4 rounded-md"></div>
+            <span>Total Area: <Typography.Text className='float-right'>{areaTotal.toFixed(2)}</Typography.Text></span> <div className="border border-2 border-primary h-4 rounded-md"></div>
+            <span className="align-bottom">Discount: <InputNumber
+              min={0}
+              max={subTotal}
+              value={selectedInvoice.discount} onChange={(value) => dispatch({
+                type: 'setDiscount',
+                payload: {
+                  discount: value
+                }
+              }
+              )} />
+            </span> <div className="border border-2 border-primary h-4 rounded-md"></div>
+            <span>Grand Total: <Typography.Text className='float-right' >{total}</Typography.Text></span>
+          </div>
+        </div>
       </div>
     </>
   );

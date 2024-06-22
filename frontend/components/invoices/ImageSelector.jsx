@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
-  LoadingOutlined,
-  PlusOutlined,
   FileAddOutlined,
 } from "@ant-design/icons";
-import { message, Upload, Typography, Popover } from "antd";
-import exifr from "exifr";
+import { message, Upload, Popover, Button, Descriptions } from "antd";
 import { useBillContext } from "@/context/BillContext";
+import exifr from "exifr";
 
 const imageHoverPopover = (actualImageURL, isProcess) =>
   actualImageURL && isProcess ? (
@@ -21,25 +19,11 @@ const getBase64 = (file, callback) => {
   reader.readAsDataURL(file);
 };
 
-const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
-  const isLessThanHundredMB = file.size / 1024 / 1024 < 100;
-  if (!isLessThanHundredMB) {
-    message.error("Image must smaller than 100MB!");
-  }
-  return isJpgOrPng && isLessThanHundredMB;
-};
-
-function ImageSelector({ id, reRender, renderSource, tableId }) {
-  const [loading, setLoading] = useState(false);
+function ImageSelector({ id, renderSource, tableId = null }) {
   const [imageUrl, setImageUrl] = useState(null);
-  const [actualImageURL, setActualImageURL] = useState("");
+  const [selectedFile, setSelectedFile] = useState();
+
   const [success, setSuccess] = useState(false);
-  const [infoFile, setInfoFile] = useState();
   const [isProcess, setIsProcess] = useState(false);
 
   const { state, dispatch } = useBillContext()
@@ -47,15 +31,15 @@ function ImageSelector({ id, reRender, renderSource, tableId }) {
   useEffect(() => {
     let flag = true;
     if (flag) {
-      setActualImageURL(renderSource);
+      setImageUrl(renderSource);
       setIsProcess(true);
     }
 
     return () => (flag = false);
-  }, [renderSource, reRender]);
+  }, [renderSource]);
 
   useEffect(() => {
-    if (imageUrl && infoFile) {
+    if (imageUrl && selectedFile) {
       const imageFile = new Image();
       imageFile.src = imageUrl;
       let xResolution = 0;
@@ -64,7 +48,7 @@ function ImageSelector({ id, reRender, renderSource, tableId }) {
 
       imageFile.onload = async function () {
         try {
-          const exifData = await exifr.parse(infoFile);
+          const exifData = await exifr.parse(selectedFile);
           xResolution = exifData.XResolution;
           yResolution = exifData.YResolution;
           resolutionUnit = exifData.ResolutionUnit;
@@ -74,22 +58,21 @@ function ImageSelector({ id, reRender, renderSource, tableId }) {
               Math.round((this.height / yResolution) * 100) / 100;
             const calculatedWidth =
               Math.round((this.width / xResolution) * 100) / 100;
-            setActualImageURL(imageUrl);
 
             {
               dispatch({
-                type: "ADD_ROW",
+                type: "addItem",
                 payload: {
                   tableId,
                 }
               });
               dispatch({
-                type: "uploadImage",
+                type: "setImageData",
                 payload: {
-                  name: infoFile.name.split('.')[0],
-                  IMAGE_SOURCE: imageUrl,
-                  HEIGHT: calculatedHeight,
-                  WIDTH: calculatedWidth,
+                  description: selectedFile.name.split('.')[0],
+                  image_src: imageUrl,
+                  height: calculatedHeight,
+                  width: calculatedWidth,
                   key: id,
                   tableId,
                 },
@@ -109,20 +92,16 @@ function ImageSelector({ id, reRender, renderSource, tableId }) {
     }
   }, [success]);
 
-  const handleChange = (info) => {
-    if (info.file.status === "uploading") {
-      return;
-    }
-
-    if (info.file.status === "done" || info.file.status === "removed") {
-      getBase64(info.file.originFileObj, (imageUrl) => {
+  const handleChange = ({ file }) => {
+    if (file.status === "done") {
+      getBase64(file.originFileObj, (imageUrl) => {
         setImageUrl(imageUrl);
+        setSelectedFile(file.originFileObj);
         setSuccess((prev) => !prev);
-        setInfoFile(info.file.originFileObj);
-        setLoading(false);
       });
-    } else if (info.file.status === "error") {
-      setLoading(false);
+    } else if (file.status === "removed") {
+      // TODO: Fix this, icon shows the file even it removed
+    } else if (file.status === "error") {
       message.error("Upload failed.");
     }
   };
@@ -133,35 +112,24 @@ function ImageSelector({ id, reRender, renderSource, tableId }) {
     }, 0);
   };
 
-  const UploadButton = () => {
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div className="mt-8">Upload</div>
-    </div>;
-  };
-
   return (
     <Popover
       placement="left"
-      content={imageHoverPopover(actualImageURL, isProcess)}
+      content={imageHoverPopover(imageUrl, isProcess)} // FIXME: One file should have one component only
     >
       <Upload
-        name="avatar"
-        listType="picture-card"
-        className="avatar-uploader invoice-upload"
-        showUploadList={false}
-        beforeUpload={beforeUpload}
+        accept="*.jpg,*.png"
         onChange={handleChange}
-        customRequest={customRequest}
+        customRequest={customRequest} // FIXME: Why do we need this ??
+        showUploadList={false}
+        multiple={false}
+        maxCount={1}
       >
-        <UploadButton />
-        <div
-
-          className="flex items-center justify-between !text-primary"
-        >
-          <FileAddOutlined />
-          <Typography.Text>Select File</Typography.Text>
-        </div>
+        <Button
+          size="small"
+          type="dashed"
+          className="bg-stone-100 rounded-lg"
+          icon={<FileAddOutlined />}>Select File</Button>
       </Upload>
     </Popover>
   );
