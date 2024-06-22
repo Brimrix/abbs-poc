@@ -50,14 +50,12 @@ const SignUp = () => {
         message.success("Account created successfully");
         navigate("/login");
       } else {
-        console.log(response);
         const { non_field_errors } = await response.json();
         message.error("non_field_errors");
       }
     }
 
     catch (error) {
-      console.log(error);
       message.error("An error in Signup");
     }
   };

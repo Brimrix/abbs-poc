@@ -1,13 +1,18 @@
 import { PlusOutlined, CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
-import { Table } from "antd";
+import { Table, Modal, Button, AutoComplete, Form, Input } from "antd";
 import { Link } from "react-router-dom";
 import { useBillContext } from "@/context/BillContext";
 import { useEffect, useState } from "react";
-
+import { useFetch } from '@/hooks/useFetch';
+import { useNavigate } from 'react-router-dom';
 const Index = () => {
     const { Column } = Table
-    const {dispatch} = useBillContext();
+    const { state: { selectedInvoice: { customer } }, dispatch } = useBillContext();
+    const navigate = useNavigate()
+
     const [invoices, setInvoices] = useState([])
+    const [open, setOpen] = useState(false)
+    const [customers, setCustomers] = useState([])
 
     useEffect(() => {
         const fetchInvoices = async () => {
@@ -25,22 +30,29 @@ const Index = () => {
 
         fetchInvoices();
     }, []);
+
     useEffect(() => {
         dispatch({
-            type: "SET_INVOICES",
-            payload: {
-                data: invoices
-            }
+            type: "setInvoices",
+            payload: invoices
         })
     }, [invoices])
+
+    useEffect(() => {
+        open && (async function () {
+            const data = await useFetch('api/users/')
+            setCustomers(data.map(customer => ({ value: customer.username })))
+        }())
+    }, [open])
 
     return <>
         <div className='mb-2'>
             <span className="text-3xl">Invoices</span>
-            <Link
-                to='create'
-                className="text-primary font-bold hover:bg-primary hover:text-white border-2 border-primary float-right p-2 rounded-md"
-            >New Invoice <PlusOutlined /></Link>
+            <Button
+                className="text-primary font-bold hover:bg-primary hover:text-white border-2 border-primary float-right px-2 rounded-md"
+                icon={<PlusOutlined />}
+                onClick={() => setOpen(true)}
+            >New Invoice</Button>
         </div>
         <Table
             dataSource={invoices}
@@ -48,8 +60,15 @@ const Index = () => {
             scroll={{ y: 900 }}
             pagination={{ pageSize: 15 }}
         >
-            <Column width="5%" title="Sr#" dataIndex='id' key='id'
-                render={srNo => <Link to={`${srNo}`} className="text-primary font-bold">{srNo}</Link>} />
+            <Column
+                width="5%"
+                title="Sr#"
+                dataIndex='id'
+                key='id'
+                render={srNo => <Link to={`${srNo}`}
+                    className="text-primary font-bold">{srNo}
+                </Link>}
+            />
             <Column title="Customer" dataIndex='company_name' key='company_name'
             />
             <Column
@@ -65,6 +84,52 @@ const Index = () => {
             />
             <Column title="Created At" dataIndex='created_at' key='created_at' />
         </Table>
+        {open && <Modal
+            width={400}
+            open={open}
+            okText="Proceed"
+            onOk={() => navigate('create')}
+            onCancel={() => setOpen(false)}
+            footer={(_, { OkBtn, CancelBtn }) => (
+                <>
+                    <CancelBtn />
+                    <OkBtn />
+                </>
+            )}
+        >
+            <p className='text-2xl font-bold'>New Invoice</p>
+            <Form layout='vertical mt-5'>
+                <Form.Item
+                    label="Customer"
+                    required
+                >
+                    <AutoComplete
+                        autoFocus={true}
+                        options={customers}
+                        value={customer.name}
+                        placeholder="Select a customer, staring typing for suggestions"
+                        onChange={(value) => dispatch({
+                            type: "setCustomerDetails",
+                            payload: {
+                                name: value,
+                                defaultRate: value ? 100:0,
+                            }
+                        })}
+                    />
+                </Form.Item>
+                <Form.Item
+                    label="Default Price"
+                    required
+                >
+                    <Input type='number' value={customer.defaultRate} onInput={(event) => dispatch({
+                        type: 'setCustomerRate',
+                        payload: {
+                            defaultRate: event.currentTarget.value
+                        }
+                    })} />
+                </Form.Item>
+            </Form>
+        </Modal>}
     </ >
 }
 

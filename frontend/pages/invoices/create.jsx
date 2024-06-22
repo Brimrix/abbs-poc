@@ -4,6 +4,7 @@ import CardComponent from "@/components/invoices/CardComponent";
 import { Spin, Divider } from "antd";
 import Table from "@/components/invoices/Table";
 
+
 const InvoiceCreate = () => {
   const [spinning, setSpinning] = useState(false);
   const [mount, setMount] = useState(true);
@@ -20,8 +21,7 @@ const InvoiceCreate = () => {
     <Spin spinning={mount} />
   ) : (
     <>
-      <ClientSearch />
-      <div className="grow flex flex-col justify-between">
+      <div className="grow">
         <Table tableId={Number(Date.now())} />
       </div>
       <div className="self-end">
