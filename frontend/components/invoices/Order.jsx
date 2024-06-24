@@ -27,7 +27,7 @@ function Order({ tableId }) {
   const handleSave = useCallback(
     (row, cellSource) => {
       dispatch({
-        type: "UPDATE_ROW",
+        type: "updateRow",
         payload: { row, key: row.key, cellSource, tableId },
       });
     },

@@ -47,7 +47,7 @@ function Table({ tableId = 'root' }) {
   const handleSaveRow = useCallback(
     (row, cellSource) => {
       dispatch({
-        type: "UPDATE_ROW",
+        type: "updateRow",
         payload: { row, key: row.key, cellSource, tableId },
       });
     },
@@ -243,8 +243,6 @@ function Table({ tableId = 'root' }) {
           sticky={true}
           components={components}
           className="invoice-table max-h-[75vh] overflow-auto border-y-2"
-          pagination={false}
-          loading={tableLoading}
           dataSource={selectedInvoice.items.filter(item => item.tableId === 'root')}
           columns={columnsConfig}
           size="small"

@@ -23,8 +23,8 @@ export function BillProvider({ children }) {
     return Number((row.area * row.quantity * row.price).toFixed(2))
   }
 
-  const createItemKey = (state, payload) => {
-    let key = state.selectedInvoice.items.length + 1
+  const createItemKey = () => {
+    let key = Number(Date.now());
     return key
   }
 
@@ -103,51 +103,43 @@ export function BillProvider({ children }) {
 
       case "deleteRow":
         newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.key !== action.payload.key)
-        // Remove nested rows too.
+        newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.tableId !== action.payload.key)
+
+        // I have Removed nested rows as well if any
         break;
 
-      case "UPDATE_ROW":
-        newState.billData = state.billData.map((item) => {
-          if (
-            item.key === action.payload.key &&
-            item.tableId === Number(action.payload.tableId)
-          ) {
-            if (action.payload.cellSource.dataIndex === "height") {
-              return {
-                ...item,
-                height: action.payload.row.height
-                  ? Number(action.payload.row.height)
-                  : 0,
-                area:
-                  Math.round(
-                    ((item.width * Number(action.payload.row.height)) / 144) *
-                    100
-                  ) / 100,
-              };
-            } else if (action.payload.cellSource.dataIndex === "width") {
-              return {
-                ...item,
-                width: action.payload.row.width
-                  ? Number(action.payload.row.width)
-                  : 0,
-                area:
-                  Math.round(
-                    ((item.height * Number(action.payload.row.width)) / 144) *
-                    100
-                  ) / 100,
-              };
-            } else if (action.payload.cellSource.dataIndex === "description") {
-              return {
-                ...item,
-                description: action.payload.row.description
-                  ? action.payload.row.description
-                  : "\u200b",
-              };
-            }
-          }
-          return item;
-        });
-        break;
+        case "updateRow":
+          const { key, tableId, cellSource, row } = action.payload;
+          const { dataIndex } = cellSource;
+          const updatedItems = state.selectedInvoice.items.map(item => {
+              if (item.key === key && item.tableId === tableId) {
+                  switch (dataIndex) {
+                      case "height":
+                          return {
+                              ...item,
+                              height: row.height || 0,
+                              area: calculateArea(item.width, row.height, 144),
+                          };
+                      case "width":
+                          return {
+                              ...item,
+                              width: row.width || 0,
+                              area: calculateArea(row.width, item.height, 144),
+                          };
+                      case "description":
+                          return {
+                              ...item,
+                              description: row.description || "\u200b",
+                          };
+                      default:
+                          return item;
+                  }
+              }
+              return item;
+          });
+
+          newState.selectedInvoice.items = updatedItems;
+          break;
 
       default:
         break;

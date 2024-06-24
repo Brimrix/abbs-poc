@@ -31,7 +31,7 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
 
   let childNode = children;
 
-  const isEditable = editable && (dataIndex === "height" && record.description === '' || dataIndex === "width" && record.description === '' || dataIndex === "description");
+  const isEditable = editable && (dataIndex === "height" && record.image_src === '' || dataIndex === "width" && record.image_src === '' || dataIndex === "description");
 
   if (isEditable) {
     childNode = editing ? (
@@ -46,7 +46,7 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
             },
           ]}
         >
-          {dataIndex === "height" && record.description === '' || dataIndex === "width" && record.description === '' ? (
+          {dataIndex === "height" || dataIndex === "width" ? (
             <InputNumber
               ref={inputRef}
               variant="filled"
