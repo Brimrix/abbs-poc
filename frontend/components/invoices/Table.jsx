@@ -1,10 +1,11 @@
-import { useEffect, useState, useCallback } from "react";
+import {  useState, useCallback } from "react";
 import { Table as AntDTable, Typography, InputNumber, Modal, Popover } from "antd";
 import { useBillContext } from "@/context/BillContext";
 import Editable from "@/components/invoices/Editable.jsx";
 import Order from "@/components/invoices/Order";
 import { PlusOutlined } from "@ant-design/icons";
 import ImageSelector from "@/components/invoices/ImageSelector";
+import RemoveModal from "@/components/invoices/RemoveModal";
 import { MinusCircleOutlined } from '@ant-design/icons';
 
 import {
@@ -13,7 +14,6 @@ import {
   MailOutlined,
   PrinterOutlined,
 } from "@ant-design/icons";
-
 
 const IconLink = ({ icon }) => (
   <div className="text-white text-lg flex justify-center !bg-secondary p-[6px] rounded-lg cursor-pointer h-[30px] w-[30px]">
@@ -27,12 +27,10 @@ function Table({ tableId = 'root' }) {
     dispatch,
   } = useBillContext();
 
-  const [tableLoading, setTableLoading] = useState(false);
   const [deleteRow, setDeleteRow] = useState(null);
-
   const subTotal = selectedInvoice.items.reduce((acc, item) => acc + item.amount, 0)
   const areaTotal = selectedInvoice.items.reduce((acc, item) => acc + Number(item.area), 0)
-  const total = subTotal - selectedInvoice.discount
+  const total = subTotal - selectedInvoice.discount;
 
   const handleAddRow = (order = null) => {
     dispatch({
@@ -54,18 +52,7 @@ function Table({ tableId = 'root' }) {
     [dispatch]
   );
 
-  const handleDeleteRow = () => {
-    dispatch({
-      type: 'deleteRow',
-      payload: {
-        key: deleteRow,
-      },
-    });
-    setDeleteRow()
-  }
-
-  const isOrderRow = (row) => row.order
-
+  const isOrderRow = (row) => row.order;
   const columns = [
     {
       title: "",
@@ -86,10 +73,11 @@ function Table({ tableId = 'root' }) {
     },
     {
       title: "Sr#",
-      dataIndex: "key",
-      key: "key",
       width: "3%",
       align: "center",
+      render: (_, record, index) => {
+        return index + 1;
+      }
     },
     {
       title: "Description",
@@ -211,23 +199,7 @@ function Table({ tableId = 'root' }) {
 
   return (
     <>
-      <Modal
-        open={Boolean(deleteRow)}
-        okText="Delete"
-        okButtonProps={{ className: 'btn-app-accent' }}
-        cancelButtonProps={{ className: 'text-primary' }}
-        title="Confirmation"
-        onOk={handleDeleteRow}
-        onCancel={() => setDeleteRow(null)}
-        footer={(_, { OkBtn, CancelBtn }) => (
-          <>
-            <CancelBtn />
-            <OkBtn />
-          </>
-        )}
-      >
-        <span>Are you sure you want to delete ? </span>
-      </Modal>
+    <RemoveModal deleteRow={deleteRow} setDeleteRow={setDeleteRow} />
       <div className="flex flex-col py-2 bg-stone-100 shadow-lg border rounded space-y-2 max-h-full">
         <div className="flex justify-between gap-2 mt-2 px-2">
           <p className="text-2xl font-bold">New Invoice</p>

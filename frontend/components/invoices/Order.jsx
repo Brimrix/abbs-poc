@@ -1,8 +1,9 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Table as AntDTable, Typography, InputNumber, Popover } from "antd";
 import { useBillContext } from "@/context/BillContext";
 import Editable from "@/components/invoices/Editable.jsx";
 import ImageSelector from "@/components/invoices/ImageSelector";
+import RemoveModal from "@/components/invoices/RemoveModal";
 import { MinusCircleOutlined } from '@ant-design/icons';
 
 
@@ -13,6 +14,7 @@ function Order({ tableId }) {
     dispatch,
   } = useBillContext();
 
+  const [deleteRow, setDeleteRow] = useState(null);
 
   const handleAddRows = () => {
     dispatch({
@@ -54,10 +56,11 @@ function Order({ tableId }) {
     },
     {
       title: "Sr#",
-      dataIndex: "key",
-      key: "key",
       width: "3%",
       align: "center",
+      render: (_, record, index) => {
+        return index + 1;
+      }
     },
     {
       title: "Description",
@@ -170,25 +173,30 @@ function Order({ tableId }) {
   });
 
   return (
+    <>
+    <RemoveModal deleteRow={deleteRow} setDeleteRow={setDeleteRow} />
     <div className="flex flex-col">
-      <AntDTable
-        components={components}
-        className="invoice-table"
-        style={{ marginLeft: "40px" }}
-        dataSource={selectedInvoice.items.filter(item => item.tableId === tableId)}
-        columns={columnsConfig}
-        size="small"
-        rowClassName={() => "editable-row"}
-        pagination={false}
-      />
-      <Typography.Text
-        onClick={handleAddRows}
-        className="text-primary cursor-pointer ml-32 px-2 p-px m-px hover:bg-primary hover:text-white max-w-max rounded-md"
-        strong
-      >
-        Add More Rows
-      </Typography.Text>
-    </div>
+
+  <AntDTable
+    components={components}
+    className="invoice-table"
+    style={{ marginLeft: "40px" }}
+    dataSource={selectedInvoice.items.filter(item => item.tableId === tableId)}
+    columns={columnsConfig}
+    size="small"
+    rowClassName={() => "editable-row"}
+    pagination={false}
+  />
+  <Typography.Text
+    onClick={handleAddRows}
+    className="text-primary cursor-pointer ml-32 px-2 p-px m-px hover:bg-primary hover:text-white max-w-max rounded-md"
+    strong
+  >
+    Add More Rows
+  </Typography.Text>
+</div>
+    </>
+
   );
 }
 
