@@ -80,6 +80,7 @@ function Order({ tableId }) {
           id={row.key}
           renderSource={row.image_src}
           tableId={tableId}
+          record={row}
         />
       }
     },
