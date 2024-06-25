@@ -227,7 +227,7 @@ function Table({ tableId = 'root' }) {
             expandedRowClassName: () => 'bg-sky-50'
           }}
         />
-        <div className="flex gap-2 px-10 items-center justify-between">
+        <div className="flex gap-2 px-10 items-center justify-between h-20">
           <div className="space-x-2">
             <Typography.Text
               onClick={() => handleAddRow()}
@@ -248,22 +248,33 @@ function Table({ tableId = 'root' }) {
             </Typography.Text>
           </div>
 
-          <div className="flex space-x-4 items-center">
-            <span>SubTotal: <Typography.Text className='float-right ' >{subTotal}</Typography.Text></span> <div className="border border-2 border-primary h-4 rounded-md"></div>
-            <span>Total Area: <Typography.Text className='float-right'>{areaTotal.toFixed(2)}</Typography.Text></span> <div className="border border-2 border-primary h-4 rounded-md"></div>
-            <span className="align-bottom">Discount: <InputNumber
-              min={0}
-              max={subTotal}
-              value={selectedInvoice.discount} onChange={(value) => dispatch({
-                type: 'setDiscount',
-                payload: {
-                  discount: value
-                }
-              }
-              )} />
-            </span> <div className="border border-2 border-primary h-4 rounded-md"></div>
-            <span>Grand Total: <Typography.Text className='float-right' >{total}</Typography.Text></span>
-          </div>
+  <div className="flex space-x-6 items-center">
+  <span className="flex justify-between items-center w-35">
+    SubTotal: <Typography.Text className="ml-2 font-bold text-primary">{subTotal}</Typography.Text>
+  </span>
+  <div className="border-2 border-primary h-4 rounded-md"></div>
+  <span className="flex justify-between items-center w-35">
+    Total Area: <Typography.Text className="ml-2 font-bold text-primary">{areaTotal.toFixed(2)}</Typography.Text>
+  </span>
+  <div className="border-2 border-primary h-4 rounded-md"></div>
+  <span className="flex justify-between items-center w-35">
+    Discount: <InputNumber
+      min={0}
+      max={subTotal}
+      value={selectedInvoice.discount}
+      onChange={(value) => dispatch({
+        type: 'setDiscount',
+        payload: { discount: value }
+      })}
+      className="ml-2"
+    />
+  </span>
+  <div className="border-2 border-primary h-4 rounded-md"></div>
+  <span className="flex justify-between items-center w-35">
+    Grand Total: <Typography.Text className="ml-2 font-bold text-primary">{total}</Typography.Text>
+  </span>
+</div>
+
         </div>
       </div>
     </>
