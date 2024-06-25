@@ -52,7 +52,6 @@ export function BillProvider({ children }) {
   }
 
   function setItemImage(row, payload) {
-    payload['area'] = calculateArea(payload.width, payload.height)
     return updateRow(row, payload)
   }
 
@@ -61,6 +60,7 @@ export function BillProvider({ children }) {
       ...row,
       ...items,
     }
+    newRow['area'] = calculateArea(newRow.width, newRow.height)
     newRow['amount'] = calculateRowAmount(newRow)
     return newRow
   }
@@ -90,21 +90,12 @@ export function BillProvider({ children }) {
 
       case "setPrice":
       case "setQuantity":
+      case "setHeight":
+      case "setWidth":
         newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
           item.key === action.payload.key ? updateRow(item, action.payload) : item
         )
         break;
-
-      case "setHeight":
-        newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
-          item.key === action.payload.key ? updateRow({...item, area: calculateArea(item.width, action.payload.height, 144)}, action.payload) : item )
-      break;
-      case "setWidth":
-        newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
-          item.key === action.payload.key ? updateRow({...item, area: calculateArea(action.payload.width, item.height, 144)}, action.payload) : item )
-
-
-      break;
 
       case "setImageData":
         newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
@@ -117,40 +108,39 @@ export function BillProvider({ children }) {
         newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.key !== action.payload.key)
         newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.tableId !== action.payload.key)
 
-        // I have Removed nested rows as well if any
         break;
 
-        case "updateRow":
-          const { key, tableId, cellSource, row } = action.payload;
-          const { dataIndex } = cellSource;
-          const updatedItems = state.selectedInvoice.items.map(item => {
-              if (item.key === key && item.tableId === tableId) {
-                  switch (dataIndex) {
-                      case "height":
-                          return {
-                              ...item,
-                              height: row.height || 0,
-                          };
+      case "updateRow":
+        const { key, tableId, cellSource, row } = action.payload;
+        const { dataIndex } = cellSource;
+        const updatedItems = state.selectedInvoice.items.map(item => {
+          if (item.key === key && item.tableId === tableId) {
+            switch (dataIndex) {
+              case "height":
+                return {
+                  ...item,
+                  height: row.height || 0,
+                };
 
-                      case "width":
-                          return {
-                              ...item,
-                              width: row.width || 0,
-                          };
-                      case "description":
-                          return {
-                              ...item,
-                              description: row.description || "\u200b",
-                          };
-                      default:
-                          return item;
-                  }
-              }
-              return item;
-          });
+              case "width":
+                return {
+                  ...item,
+                  width: row.width || 0,
+                };
+              case "description":
+                return {
+                  ...item,
+                  description: row.description || "\u200b",
+                };
+              default:
+                return item;
+            }
+          }
+          return item;
+        });
 
-          newState.selectedInvoice.items = updatedItems;
-          break;
+        newState.selectedInvoice.items = updatedItems;
+        break;
 
       default:
         break;

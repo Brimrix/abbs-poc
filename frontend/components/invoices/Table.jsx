@@ -1,4 +1,4 @@
-import {  useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Table as AntDTable, Typography, InputNumber, Modal, Popover } from "antd";
 import { useBillContext } from "@/context/BillContext";
 import Editable from "@/components/invoices/Editable.jsx";
@@ -32,12 +32,12 @@ function Table({ tableId = 'root' }) {
   const areaTotal = selectedInvoice.items.reduce((acc, item) => acc + Number(item.area), 0)
   const total = subTotal - selectedInvoice.discount;
 
-  const handleAddRow = (order = null) => {
+  const handleAddRow = (table, order = null) => {
     dispatch({
       type: "addItem",
       payload: {
         order,
-        tableId,
+        tableId: table,
       },
     });
   };
@@ -52,7 +52,19 @@ function Table({ tableId = 'root' }) {
     [dispatch]
   );
 
+  const handleUpdateRowCell = (row, payload, actionType) => {
+    dispatch({
+      type: actionType,
+      payload: {
+        key: row.key,
+        tableId: row.tableId,
+        ...payload
+      },
+    })
+  }
+
   const isOrderRow = (row) => row.order;
+
   const columns = [
     {
       title: "",
@@ -134,14 +146,7 @@ function Table({ tableId = 'root' }) {
       render(text, row) {
         return isOrderRow(row) ? "" : <InputNumber
           value={text}
-          onInput={(value) => dispatch({
-            type: 'setPrice',
-            payload: {
-              key: row.key,
-              tableId: row.tableId,
-              price: value,
-            },
-          })}
+          onInput={(value) => handleUpdateRowCell(row, { price: value }, 'setPrice')}
           min={1}
           variant="filled" precision={2} />
       }
@@ -154,14 +159,7 @@ function Table({ tableId = 'root' }) {
       render(text, row) {
         return isOrderRow(row) ? "" : <InputNumber
           value={text}
-          onInput={(value) => dispatch({
-            type: 'setQuantity',
-            payload: {
-              key: row.key,
-              tableId: row.tableId,
-              quantity: value,
-            },
-          })}
+          onInput={(value) => handleUpdateRowCell(row, { quantity: value }, 'setQuantity')}
           min={1}
           max={1000}
           variant="filled" precision={0} />
@@ -200,10 +198,10 @@ function Table({ tableId = 'root' }) {
 
   return (
     <>
-    <RemoveModal deleteRow={deleteRow} setDeleteRow={setDeleteRow} />
+      <RemoveModal deleteRow={deleteRow} setDeleteRow={setDeleteRow} />
       <div className="flex flex-col py-2 bg-stone-100 shadow-lg border rounded space-y-2 max-h-full">
         <div className="flex justify-between gap-2 mt-2 px-2">
-          <p className="text-2xl font-bold">New Invoice</p>
+          <p className="text-2xl font-bold text-primary">New Invoice</p>
 
           <div className="flex items-center gap-1">
             <IconLink icon={<MessageOutlined />} />
@@ -223,15 +221,22 @@ function Table({ tableId = 'root' }) {
           size="small"
           expandable={{
             columnWidth: "2%",
-            expandedRowRender: (row) => <Order tableId={row.key} />,
+            expandedRowRender: (row) => <Order
+              tableId={row.key}
+              rows={selectedInvoice.items.filter(item => item.tableId === row.key)}
+              onRowAdd={(nestedTableId) => handleAddRow(nestedTableId)}
+              onRowSave={(nestedTableId) => handleSaveRow(nestedTableId)}
+              onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
+              onRowDelete={(id) => setDeleteRow(id)}
+            />,
             rowExpandable: (row) => isOrderRow(row),
             expandedRowClassName: () => 'bg-sky-50'
           }}
         />
-        <div className="flex gap-2 px-10 items-center justify-between h-20">
+        <div className="flex gap-2 px-10 items-center justify-between">
           <div className="space-x-2">
             <Typography.Text
-              onClick={() => handleAddRow()}
+              onClick={() => handleAddRow(tableId)}
               className="text-primary p-2 hover:bg-primary hover:text-white border border-primary rounded-md"
               strong
             >
@@ -240,7 +245,7 @@ function Table({ tableId = 'root' }) {
             </Typography.Text>
 
             <Typography.Text
-              onClick={() => handleAddRow('order')}
+              onClick={() => handleAddRow(tableId, 'order')}
               className="text-primary  p-2  hover:bg-primary hover:text-white border border-primary rounded-md"
               strong
             >
@@ -249,32 +254,32 @@ function Table({ tableId = 'root' }) {
             </Typography.Text>
           </div>
 
-  <div className="flex space-x-6 items-center">
-  <span className="flex justify-between items-center w-35">
-    SubTotal: <Typography.Text className="ml-2 font-bold text-primary">{subTotal}</Typography.Text>
-  </span>
-  <div className="border-2 border-primary h-4 rounded-md"></div>
-  <span className="flex justify-between items-center w-35">
-    Total Area: <Typography.Text className="ml-2 font-bold text-primary">{areaTotal.toFixed(2)}</Typography.Text>
-  </span>
-  <div className="border-2 border-primary h-4 rounded-md"></div>
-  <span className="flex justify-between items-center w-35">
-    Discount: <InputNumber
-      min={0}
-      max={subTotal}
-      value={selectedInvoice.discount}
-      onChange={(value) => dispatch({
-        type: 'setDiscount',
-        payload: { discount: value }
-      })}
-      className="ml-2"
-    />
-  </span>
-  <div className="border-2 border-primary h-4 rounded-md"></div>
-  <span className="flex justify-between items-center w-35">
-    Grand Total: <Typography.Text className="ml-2 font-bold text-primary">{total}</Typography.Text>
-  </span>
-</div>
+          <div className="flex space-x-6 items-center">
+            <span className="flex justify-between items-center w-35">
+              SubTotal: <Typography.Text className="ml-2 font-bold text-primary">{subTotal}</Typography.Text>
+            </span>
+            <div className="border-2 border-primary h-4 rounded-md"></div>
+            <span className="flex justify-between items-center w-35">
+              Total Area: <Typography.Text className="ml-2 font-bold text-primary">{areaTotal.toFixed(2)}</Typography.Text>
+            </span>
+            <div className="border-2 border-primary h-4 rounded-md"></div>
+            <span className="flex justify-between items-center w-35">
+              Discount: <InputNumber
+                min={0}
+                max={subTotal}
+                value={selectedInvoice.discount}
+                onChange={(value) => dispatch({
+                  type: 'setDiscount',
+                  payload: { discount: value }
+                })}
+                className="ml-2"
+              />
+            </span>
+            <div className="border-2 border-primary h-4 rounded-md"></div>
+            <span className="flex justify-between items-center w-35">
+              Grand Total: <Typography.Text className="ml-2 font-bold text-primary">{total}</Typography.Text>
+            </span>
+          </div>
 
         </div>
       </div>

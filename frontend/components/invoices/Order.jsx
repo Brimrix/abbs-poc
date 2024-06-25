@@ -1,38 +1,9 @@
-import { useCallback, useState } from "react";
 import { Table as AntDTable, Typography, InputNumber, Popover } from "antd";
-import { useBillContext } from "@/context/BillContext";
 import Editable from "@/components/invoices/Editable.jsx";
 import ImageSelector from "@/components/invoices/ImageSelector";
-import RemoveModal from "@/components/invoices/RemoveModal";
 import { MinusCircleOutlined } from '@ant-design/icons';
 
-function Order({ tableId }) {
-  const {
-    state: { selectedInvoice },
-    dispatch,
-  } = useBillContext();
-
-  const [deleteRow, setDeleteRow] = useState(null);
-
-  const handleAddRows = () => {
-    dispatch({
-      type: "addItem",
-      payload: {
-        order: tableId,
-        tableId,
-      },
-    });
-  };
-
-  const handleSave = useCallback(
-    (row, cellSource) => {
-      dispatch({
-        type: "updateRow",
-        payload: { row, key: row.key, cellSource, tableId },
-      });
-    },
-    [dispatch]
-  );
+function Order({ tableId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
 
   const columns = [
     {
@@ -48,7 +19,7 @@ function Order({ tableId }) {
         >
           <MinusCircleOutlined
             className="text-red-500"
-            onClick={() => setDeleteRow(row.key)} />
+            onClick={() => onRowDelete(row.key)} />
         </Popover>
       }
     },
@@ -111,14 +82,7 @@ function Order({ tableId }) {
       align: "center",
       render: (text, row) => <InputNumber
         value={text}
-        onInput={(value) => dispatch({
-          type: 'setPrice',
-          payload: {
-            key: row.key,
-            tableId: row.tableId,
-            price: value,
-          },
-        })}
+        onInput={(value) => onRowEdit(row, { price: value }, 'setPrice')}
         min={1}
         variant="filled" precision={2} />
     },
@@ -129,14 +93,7 @@ function Order({ tableId }) {
       align: "center",
       render: (text, row) => <InputNumber
         value={text}
-        onInput={(value) => dispatch({
-          type: 'setQuantity',
-          payload: {
-            key: row.key,
-            tableId: row.tableId,
-            quantity: value,
-          },
-        })}
+        onInput={(value) => onRowEdit(row, { quantity: value }, 'setQuantity')}
         min={1}
         max={1000}
         variant="filled" precision={0} />
@@ -166,34 +123,31 @@ function Order({ tableId }) {
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        handleSave,
+        onRowSave,
       }),
     };
   });
 
   return (
     <>
-    <RemoveModal deleteRow={deleteRow} setDeleteRow={setDeleteRow} />
-    <div className="flex flex-col">
-
-  <AntDTable
-    components={components}
-    className="invoice-table"
-    style={{ marginLeft: "40px" }}
-    dataSource={selectedInvoice.items.filter(item => item.tableId === tableId)}
-    columns={columnsConfig}
-    size="small"
-    rowClassName={() => "editable-row"}
-    pagination={false}
-  />
-  <Typography.Text
-    onClick={handleAddRows}
-    className="text-primary cursor-pointer ml-32 px-2 p-px m-px hover:bg-primary hover:text-white max-w-max rounded-md"
-    strong
-  >
-    Add More Rows
-  </Typography.Text>
-</div>
+      <div className="flex flex-col">
+        <AntDTable
+          components={components}
+          style={{ marginLeft: "40px" }}
+          dataSource={rows}
+          columns={columnsConfig}
+          size="small"
+          rowClassName={() => "editable-row"}
+          pagination={false}
+        />
+        <Typography.Text
+          onClick={() => onRowAdd(tableId)}
+          className="text-primary cursor-pointer ml-32 px-2 p-px m-px hover:bg-primary hover:text-white max-w-max rounded-md"
+          strong
+        >
+          Add More Rows
+        </Typography.Text>
+      </div>
     </>
 
   );
