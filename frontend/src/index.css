@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer components {
+
   .btn-app-primary {
     @apply bg-secondary hover:!bg-hover-color-secondary;
   }

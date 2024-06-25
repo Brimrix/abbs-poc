@@ -213,6 +213,8 @@ function Table({ tableId = 'root' }) {
         </div>
         <AntDTable
           sticky={true}
+          pagination={false}
+
           components={components}
           className="invoice-table max-h-[75vh] overflow-auto border-y-2"
           dataSource={selectedInvoice.items.filter(item => item.tableId === 'root')}

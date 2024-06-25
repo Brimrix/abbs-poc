@@ -95,6 +95,17 @@ export function BillProvider({ children }) {
         )
         break;
 
+      case "setHeight":
+        newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
+          item.key === action.payload.key ? updateRow({...item, area: calculateArea(item.width, action.payload.height, 144)}, action.payload) : item )
+      break;
+      case "setWidth":
+        newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
+          item.key === action.payload.key ? updateRow({...item, area: calculateArea(action.payload.width, item.height, 144)}, action.payload) : item )
+
+
+      break;
+
       case "setImageData":
         newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
           item.key === action.payload.key
@@ -119,13 +130,12 @@ export function BillProvider({ children }) {
                           return {
                               ...item,
                               height: row.height || 0,
-                              area: calculateArea(item.width, row.height, 144),
                           };
+
                       case "width":
                           return {
                               ...item,
                               width: row.width || 0,
-                              area: calculateArea(row.width, item.height, 144),
                           };
                       case "description":
                           return {

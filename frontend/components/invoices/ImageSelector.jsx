@@ -82,7 +82,7 @@ function ImageSelector({ id, renderSource, tableId = null }) {
             }
           }
         } catch (exc) {
-          message.error("There is an error in the image");
+          alert(exc);
         }
 
         imageFile.onerror = function () {

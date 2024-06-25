@@ -6,8 +6,6 @@ import ImageSelector from "@/components/invoices/ImageSelector";
 import RemoveModal from "@/components/invoices/RemoveModal";
 import { MinusCircleOutlined } from '@ant-design/icons';
 
-
-import React from "react";
 function Order({ tableId }) {
   const {
     state: { selectedInvoice },
