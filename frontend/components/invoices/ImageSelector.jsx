@@ -2,16 +2,10 @@ import { useState, useEffect } from "react";
 import {
   FileAddOutlined,
 } from "@ant-design/icons";
-import { message, Upload, Popover, Button, Descriptions } from "antd";
+import { message, Upload, Popover, Button } from "antd";
 import { useBillContext } from "@/context/BillContext";
 import exifr from "exifr";
-
-const imageHoverPopover = (actualImageURL, isProcess) =>
-  actualImageURL && isProcess ? (
-    <img className="h-[200px] w-[160px] object-cover" src={actualImageURL} />
-  ) : (
-    <span>Upload image</span>
-  );
+import imageHoverPopover from "@/components/invoices/imagePopover";
 
 const getBase64 = (file, callback) => {
   const reader = new FileReader();
@@ -19,20 +13,17 @@ const getBase64 = (file, callback) => {
   reader.readAsDataURL(file);
 };
 
-function ImageSelector({ id, renderSource, tableId = null }) {
+function ImageSelector({ id, renderSource, tableId = null, record }) {
   const [imageUrl, setImageUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState();
 
   const [success, setSuccess] = useState(false);
-  const [isProcess, setIsProcess] = useState(false);
-
   const { state, dispatch } = useBillContext()
 
   useEffect(() => {
     let flag = true;
     if (flag) {
       setImageUrl(renderSource);
-      setIsProcess(true);
     }
 
     return () => (flag = false);
@@ -60,6 +51,7 @@ function ImageSelector({ id, renderSource, tableId = null }) {
               Math.round((this.width / xResolution) * 100) / 100;
 
             {
+              record.image_src==="" &&
               dispatch({
                 type: "addItem",
                 payload: {
@@ -77,7 +69,6 @@ function ImageSelector({ id, renderSource, tableId = null }) {
                   tableId,
                 },
               });
-              setIsProcess(true);
               message.success("Successfully uploaded");
             }
           }
@@ -115,7 +106,7 @@ function ImageSelector({ id, renderSource, tableId = null }) {
   return (
     <Popover
       placement="left"
-      content={imageHoverPopover(imageUrl, isProcess)} // FIXME: One file should have one component only
+      content={imageHoverPopover(record)}
     >
       <Upload
         accept="*.jpg,*.png"

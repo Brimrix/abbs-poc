@@ -99,6 +99,7 @@ function Table({ tableId = 'root' }) {
           id={row.key}
           renderSource={row.image_src}
           tableId={tableId}
+          record={row}
         />
       }
     },
