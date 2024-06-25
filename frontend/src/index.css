@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer components {
+
   .btn-app-primary {
     @apply bg-secondary hover:!bg-hover-color-secondary;
   }
@@ -15,18 +16,11 @@
     @apply bg-accent hover:!bg-hover-color-accent;
   }
 
+
   /* Invoice upload class */
 
   .sider-menu > .ant-menu-item-selected {
     @apply bg-secondary !important;
-  }
-
-  .invoice-upload .ant-upload {
-    @apply !h-[20px] !w-[100px];
-  }
-
-  .ant-table {
-    @apply !text-sm;
   }
 
   .ant-table-tbody > tr > td {
@@ -41,10 +35,6 @@
 
   .invoice-table .my-tag {
     @apply text-xs w-36 h-4;
-  }
-
-  .invoice-table .ant-table-tbody > tr > td {
-    @apply !h-[5px] !p-[4px];
   }
 
   .invoice-table .ant-table-thead > tr > th {

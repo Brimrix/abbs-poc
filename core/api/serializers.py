@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from core.models import Profile
+from core import models
 from django.contrib.auth.password_validation import validate_password
 
 
@@ -43,13 +43,42 @@ class SignUpSerializer(serializers.Serializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
+        company = models.Company.objects.get_or_create(
+            name=validated_data.pop("company")
+        )
         user_data = {
             field: validated_data[field]
             for field in ["username", "first_name", "last_name"]
         }
+
         User = get_user_model()
-        user = User.objects.create(**user_data, is_active=True)
+        user = User.objects.create(
+            **user_data,
+            is_active=True,
+            company=company,
+        )
         user.set_password(validated_data["password"])
         user.save()
-        Profile.objects.create(user=user, **validated_data["profile"])
+        models.Profile.objects.create(user=user, **validated_data["profile"])
+
         return user
+
+
+class InvoiceSerializer(serializers.ModelSerializer):
+    company_name = serializers.ReadOnlyField(source="company.name")
+
+    class Meta:
+        model = models.Invoice
+        fields = ["id", "company", "company_name", "paid", "created_at"]
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Order
+        fields = ["invoice"]
+
+
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Item
+        fields = ["width", "height", "unit_price", "quantity"]

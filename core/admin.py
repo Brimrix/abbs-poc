@@ -12,4 +12,28 @@ class UserAdmin(UserAdmin):
 
 @admin.register(models.Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ["user", "company"]
+    list_display = ["user"]
+
+
+@admin.register(models.Company)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+
+
+@admin.register(models.Invoice)
+class InvoiceAdmin(admin.ModelAdmin):
+    list_display = ["id", "paid", "created_at"]
+    list_filter = [
+        "paid",
+        "company",
+    ]
+
+
+@admin.register(models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ["invoice"]
+
+
+@admin.register(models.Item)
+class ItemAdmin(admin.ModelAdmin):
+    pass

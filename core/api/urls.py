@@ -1,10 +1,10 @@
-from core.api.viewsets import UserViewSet, SignUpViewSet
+from core.api import viewsets
 from django.urls import path
 
 urlpatterns = [
     path(
         "users/",
-        UserViewSet.as_view(
+        viewsets.UserViewSet.as_view(
             {
                 "get": "list",
                 "post": "create",
@@ -13,11 +13,74 @@ urlpatterns = [
     ),
     path(
         "users/<int:pk>/",
-        UserViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"}),
+        viewsets.UserViewSet.as_view(
+            {
+                "get": "retrieve",
+                "put": "update",
+                "delete": "destroy",
+            }
+        ),
+    ),
+    path(
+        "invoices/",
+        viewsets.InvoiceViewSet.as_view(
+            {
+                "get": "list",
+                "post": "create",
+            }
+        ),
+    ),
+    path(
+        "invoices/<int:pk>/",
+        viewsets.InvoiceViewSet.as_view(
+            {
+                "get": "retrieve",
+                "put": "update",
+                "delete": "destroy",
+            }
+        ),
+    ),
+    path(
+        "orders/",
+        viewsets.OrderViewSet.as_view(
+            {
+                "get": "list",
+                "post": "create",
+            }
+        ),
+    ),
+    path(
+        "orders/<int:pk>/",
+        viewsets.OrderViewSet.as_view(
+            {
+                "get": "retrieve",
+                "put": "update",
+                "delete": "destroy",
+            }
+        ),
+    ),
+    path(
+        "items/",
+        viewsets.ItemViewSet.as_view(
+            {
+                "get": "list",
+                "post": "create",
+            }
+        ),
+    ),
+    path(
+        "items/<int:pk>/",
+        viewsets.ItemViewSet.as_view(
+            {
+                "get": "retrieve",
+                "put": "update",
+                "delete": "destroy",
+            }
+        ),
     ),
     path(
         "signup/",
-        SignUpViewSet.as_view(
+        viewsets.SignUpViewSet.as_view(
             {
                 "post": "create",
             }

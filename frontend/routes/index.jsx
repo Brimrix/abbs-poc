@@ -1,13 +1,19 @@
 import { createBrowserRouter } from "react-router-dom";
 import Customers from "@/pages/Customers";
 import Dashboard from "@/pages/Dashboard";
-import Invoices from "@/pages/Invoices";
 import Login from "@/pages/Login";
 import LayoutMain from "@/components/layouts/Base";
+import Context from "@/components/invoices/Context";
+
+import Index from "@/pages/invoices/index";
+import InvoiceCreate from "@/pages/invoices/create";
+import InvoiceUpdate from "@/pages/invoices/update";
+
 import NotFound from "@/pages/NotFound";
 import { Navigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import SignUp from "@/pages/Signup";
+
 
 
 function ProtectedRoute({ element }) {
@@ -31,7 +37,21 @@ const router = createBrowserRouter([
       },
       {
         path: "invoices",
-        element: <Invoices />,
+        element: <Context />,
+        children: [
+          {
+            path: '',
+            element: <Index />,
+          },
+          {
+            path: "create",
+            element: <InvoiceCreate />
+          },
+          {
+            path: ":id",
+            element: <InvoiceUpdate />
+          }
+        ]
       },
     ],
   },

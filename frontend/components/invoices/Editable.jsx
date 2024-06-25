@@ -1,10 +1,15 @@
 import React,{ useState, useEffect } from 'react';
+import { useBillContext } from '../../context/BillContext';
 import { Input, Form, InputNumber } from 'antd';
 
 const Editable = ({ title, editable, children, dataIndex, record, handleSave, ...restProps }) => {
   const [editing, setEditing] = useState(false);
   const inputRef = React.useRef(null);
   const [form] = Form.useForm(); // Get the form instance
+  const {
+    state: { selectedInvoice },
+    dispatch,
+  } = useBillContext();
 
   const toggleEdit = () => {
     setEditing(!editing);
@@ -31,7 +36,7 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
 
   let childNode = children;
 
-  const isEditable = editable && (dataIndex === "height" && record.image_src === '' || dataIndex === "width" && record.image_src === '' || dataIndex === "image_name");
+  const isEditable = editable && (dataIndex === "height" && record.image_src === '' || dataIndex === "width" && record.image_src === '' || dataIndex === "description");
 
   if (isEditable) {
     childNode = editing ? (
@@ -46,17 +51,38 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
             },
           ]}
         >
-          {dataIndex === "height" && record.image_src === '' || dataIndex === "width" && record.image_src === '' ? (
+          {dataIndex === "height" || dataIndex === "width" ? (
             <InputNumber
               ref={inputRef}
               variant="filled"
               onPressEnter={save}
               min={0}
-              max={1000}
+              max={2000}
               precision={2}
               onBlur={save}
+              onChange={(value) => {
+                if(dataIndex === "height")
+                dispatch({
+                  type: "setHeight",
+                  payload: {
+                    key: record.key,
+                    height: value
+
+                  }
+                })
+                else
+                dispatch({
+                  type: "setWidth",
+                  payload: {
+                    key: record.key,
+                    width: value
+
+                  }
+                })
+
+              }}
             />
-          ) : dataIndex === "image_name" ? (
+          ) : dataIndex === "description" ? (
             <Input
               ref={inputRef}
               variant="filled"

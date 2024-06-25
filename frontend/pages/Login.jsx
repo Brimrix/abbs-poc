@@ -33,7 +33,6 @@ const Login = () => {
         message.error(non_field_errors);
       }
     } catch (error) {
-      console.error(error);
       message.error("An error occurred during login");
     }
   };

@@ -1,162 +1,153 @@
-import {
-  createContext, useContext, useReducer,
-} from 'react';
-import ImageSelector from '@/components/invoices/ImageSelector';
-import PriceComponent from '@/components/invoices/PriceComponent';
-import QuantityComponent from '@/components/invoices/QuantityComponent';
-import DeleteIcon from '@/components/invoices/RemoveComponent';
+import { createContext, useContext, useReducer } from "react";
 
 const billContext = createContext();
 
+
 export function BillProvider({ children }) {
   const initialState = {
-    billData: [
-      {
-        key: 0,
-        image_name: '\u200b',
-        upload: <ImageSelector _id={0} reRender={false} />,
-        height: 0,
-        width: 0,
-        area: 0,
-        actualPrice: 0,
-        actualQuantity: 0,
-        actions: <DeleteIcon _id={0} />,
-        price: <PriceComponent _id={0} defaultInputValue={0} reRender={false} />,
-        quantity: <QuantityComponent _id={0} defaultInputValue={1} reRender={false} />,
-        amount: 0,
-        order: 1,
-        image_src: '',
+    selectedInvoice: {
+      items: [],
+      customer: {
+        name: '',
+        defaultRate: 0
       },
-    ],
-
-    clientDetails: {
-      clientName: '',
-      billDate: '',
+      discount: 0,
     },
-
-    utilities: {
-      selectedKey: '2',
-      collapsed: false,
-    },
-
-    shouldReRender: false,
-
   };
+
+  function calculateArea(width, height, unit = 144) {
+    return Number((width * height) / unit).toFixed(2);
+  }
+
+  function calculateRowAmount(row) {
+    return Number((row.area * row.quantity * row.price).toFixed(2))
+  }
+
+  const createItemKey = () => {
+    // Generating Unique Keys
+    let key = Number(Date.now());
+    return key
+  }
+
+  const createItemDescription = (state, payload) => {
+    let description = "\u200b"
+    return description
+  }
+
+  function addItem(state, action) {
+    return {
+      tableId: action.payload.tableId,
+      key: createItemKey(state, action.payload),
+      description: createItemDescription(state, action.payload),
+      upload: null,
+      image_src: "",
+      height: 0,
+      width: 0,
+      area: 0,
+      price: state.selectedInvoice.customer.defaultRate,
+      quantity: 1,
+      amount: 0,
+      order: Boolean(action.payload.order)
+    };
+  }
+
+  function setItemImage(row, payload) {
+    return updateRow(row, payload)
+  }
+
+  function updateRow(row, items) {
+    const newRow = {
+      ...row,
+      ...items,
+    }
+    newRow['area'] = calculateArea(newRow.width, newRow.height)
+    newRow['amount'] = calculateRowAmount(newRow)
+    return newRow
+  }
 
   const reducerMethod = (state, action) => {
     const newState = { ...state }; // Create a new state variable
 
     switch (action.type) {
-      case 'PRICE_CHANGE':
-        newState.billData = state.billData.map((item) => (item.key === action.payload._key
-          ? { ...item, actualPrice: action.payload.actualPrice, amount: action.payload.AMOUNT }
-          : item));
+      case 'setCustomerDetails':
+        newState.selectedInvoice.customer = action.payload
+        break
+
+      case 'setCustomerRate':
+        newState.selectedInvoice.customer.defaultRate = action.payload
+        break
+
+      case 'setDiscount':
+        newState.selectedInvoice.discount = action.payload.discount
+        break
+      case "addItem":
+        // Adds all type of rows, depends on tableId & order
+        newState.selectedInvoice.items = [
+          ...state.selectedInvoice.items,
+          addItem(state, action)
+        ]
         break;
 
-      case 'QUANTITY_CHANGE':
-        newState.billData = state.billData.map((item) => (item.key === action.payload._key
-          ? { ...item, actualQuantity: action.payload.actualQuantity, amount: action.payload.AMOUNT }
-          : item));
+      case "setPrice":
+      case "setQuantity":
+      case "setHeight":
+      case "setWidth":
+        newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
+          item.key === action.payload.key ? updateRow(item, action.payload) : item
+        )
         break;
 
-      case 'ADD_ROW':
-        const newItem = {
-          key: state.billData.length,
-          image_name: '\u200b',
-          height: 0,
-          width: 0,
-          area: 0,
-          actualPrice: 0,
-          actualQuantity: 0,
-          upload: <ImageSelector _id={state.billData.length} reRender={false} />,
-          price: <PriceComponent _id={state.billData.length} defaultInputValue={0} reRender={false} />,
-          quantity: <QuantityComponent _id={state.billData.length} defaultInputValue={1} reRender={false} />,
-          amount: 0,
-          order: state.billData.length + 1,
-          actions: <DeleteIcon _id={state.billData.length} />,
-          image_src: '',
-        };
-        newState.billData = [...state.billData, newItem];
+      case "setImageData":
+        newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
+          item.key === action.payload.key
+            ? setItemImage(item, action.payload)
+            : item)
         break;
 
-      case 'SET_DIMENSION':
-        newState.billData = state.billData.map((item) => (item.key === action.payload._key
-          ? {
-            ...item,
-            height: action.payload.HEIGHT,
-            image_name: action.payload.name,
-            width: action.payload.WIDTH,
-            area: action.payload.area,
-            image_src: action.payload.IMAGE_SOURCE,
-            amount: action.payload.AMOUNT,
-          }
-          : item));
+      case "deleteRow":
+        newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.key !== action.payload.key)
+        newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.tableId !== action.payload.key)
+
         break;
 
-      case 'REMOVE_ROW':
-        const filteredData = state.billData.filter((item) => item.key !== action.payload._key);
-        const newShouldReRender = !state.shouldReRender;
-        newState.shouldReRender = newShouldReRender;
-        newState.billData = filteredData.map((item, index) => ({
-          ...item,
-          upload: <ImageSelector _id={Number(index)} reRender={newShouldReRender} renderSource={filteredData[index].image_src} />,
-          price: <PriceComponent _id={Number(index)} defaultInputValue={filteredData[index].actualPrice} reRender={newShouldReRender} />,
-          quantity: <QuantityComponent _id={Number(index)} defaultInputValue={filteredData[index].actualQuantity} reRender={newShouldReRender} />,
-          actions: <DeleteIcon _id={Number(index)} />,
-          key: index,
-          order: index + 1,
-        }));
-        break;
+      case "updateRow":
+        const { key, tableId, cellSource, row } = action.payload;
+        const { dataIndex } = cellSource;
+        const updatedItems = state.selectedInvoice.items.map(item => {
+          if (item.key === key && item.tableId === tableId) {
+            switch (dataIndex) {
+              case "height":
+                return {
+                  ...item,
+                  height: row.height || 0,
+                };
 
-      case 'SET_CLIENT_DETAILS':
-        newState.clientDetails = {
-          clientName: action.payload.name,
-          billDate: action.payload.date,
-        };
-        break;
-
-      case 'UPDATE_ROW':
-        newState.billData = state.billData.map((item) => {
-          if (item.key === action.payload.key) {
-            if (action.payload.cellSource.dataIndex === "height") {
-              return {
-                ...item,
-                height: action.payload.row.height ? Number(action.payload.row.height) : 0,
-                area: Math.round((item.width * Number(action.payload.row.height) / 144) * 100) / 100
-              };
-            } else if (action.payload.cellSource.dataIndex === "width") {
-              return {
-                ...item,
-                width: action.payload.row.width ? Number(action.payload.row.width) : 0,
-                area: Math.round((item.height * Number(action.payload.row.width) / 144) * 100) / 100
-              };
-            } else if (action.payload.cellSource.dataIndex === "image_name") {
-              return {
-                ...item,
-                image_name: action.payload.row.image_name ? action.payload.row.image_name : '\u200b'
-              };
+              case "width":
+                return {
+                  ...item,
+                  width: row.width || 0,
+                };
+              case "description":
+                return {
+                  ...item,
+                  description: row.description || "\u200b",
+                };
+              default:
+                return item;
             }
           }
           return item;
         });
-        break;
 
-      case 'DISPATCH_SELECT_KEY':
-        newState.utilities.selectedKey = action.payload.key;
-        break;
-
-      case 'DISPATCH_COLLAPSE':
-        newState.utilities.collapsed = action.payload.collapse;
+        newState.selectedInvoice.items = updatedItems;
         break;
 
       default:
         break;
     }
-
     return newState;
   };
 
-  // UseReducer setup
   const [state, dispatch] = useReducer(reducerMethod, initialState);
   return (
     <billContext.Provider value={{ state, dispatch }}>
@@ -165,4 +156,4 @@ export function BillProvider({ children }) {
   );
 }
 
-export const useBillContext = () => useContext(billContext)
+export const useBillContext = () => useContext(billContext);

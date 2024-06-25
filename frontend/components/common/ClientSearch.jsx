@@ -52,11 +52,11 @@ function ClientSearch() {
         />
         <Popover placement="top" content={<span>Due Date</span>}>
           <DatePicker
-            suffixIcon={<CalendarOutlined className="!text-secondary !text-lg" />}
+            suffixIcon={<CalendarOutlined className="text-secondary text-lg" />}
           />
         </Popover>
       </div>
-      <div className="flex items-center gap-1 mr-5">
+      <div className="flex items-center gap-1">
         <IconLink icon={<MessageOutlined />} />
         <IconLink icon={<CloudDownloadOutlined />} />
         <IconLink icon={<MailOutlined />} />

@@ -70,10 +70,10 @@ function SideBar() {
         )}
       </div>
       <Menu
-        className="sider-menu !bg-primary"
+        className="sider-menu bg-primary"
         theme="dark"
         mode="inline"
-        selectedKeys={[route.pathname]}
+        selectedKeys={["/" + route.pathname.slice(1).split('/')[0]]}
         items={menuItems}
         onClick={(props) => {
           navigate(props.key);
