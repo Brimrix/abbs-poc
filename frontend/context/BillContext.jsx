@@ -166,13 +166,12 @@ export function BillProvider({ children }) {
 
       case "setImageData":
 
-        newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
+           newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
           item.key === action.payload.key
             ? setItemImage(item, action.payload)
             : item);
 
-          updateOrderRow(state, action);
-
+            updateOrderRow(state, action);
 
         break;
 

@@ -13,21 +13,12 @@ const getBase64 = (file, callback) => {
   reader.readAsDataURL(file);
 };
 
-function ImageSelector({ id, renderSource, tableId = null, record }) {
+function ImageSelector({ id, tableId = null, record }) {
   const [imageUrl, setImageUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState();
 
   const [success, setSuccess] = useState(false);
   const { state, dispatch } = useBillContext()
-
-  useEffect(() => {
-    let flag = true;
-    if (flag) {
-      setImageUrl(renderSource);
-    }
-
-    return () => (flag = false);
-  }, [renderSource]);
 
   useEffect(() => {
     if (imageUrl && selectedFile) {
@@ -57,10 +48,10 @@ function ImageSelector({ id, renderSource, tableId = null, record }) {
                   type: "addItem",
                   payload: {
                     tableId,
+                    order: record.order
                   }
                 });
               }
-
               dispatch({
                 type: "setImageData",
                 payload: {
@@ -70,7 +61,7 @@ function ImageSelector({ id, renderSource, tableId = null, record }) {
                   width: calculatedWidth,
                   key: id,
                   tableId,
-                  order: record.tableId
+                  order: record.order
                 },
               });
               message.success("Successfully uploaded");

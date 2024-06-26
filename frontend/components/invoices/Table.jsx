@@ -28,8 +28,15 @@ function Table({ tableId = 'root' }) {
   } = useBillContext();
 
   const [deleteRow, setDeleteRow] = useState(null);
-  const subTotal = selectedInvoice.items.reduce((acc, item) => acc + item.amount, 0)
-  const areaTotal = selectedInvoice.items.reduce((acc, item) => acc + Number(item.area), 0)
+
+  const subTotal = selectedInvoice.items
+  .filter(item => item.tableId === 'root')
+  .reduce((acc, item) => acc + Number(item.amount), 0);
+
+  const areaTotal = selectedInvoice.items
+  .filter(item => item.tableId === 'root')
+  .reduce((acc, item) => acc + Number(item.area), 0);
+
   const total = subTotal - selectedInvoice.discount;
 
   const handleAddRow = (table, order = null) => {
@@ -110,7 +117,6 @@ function Table({ tableId = 'root' }) {
       render(_, row) {
         return isOrderRow(row) ? "" : <ImageSelector
           id={row.key}
-          renderSource={row.image_src}
           tableId={tableId}
           record={row}
         />
@@ -262,11 +268,11 @@ function Table({ tableId = 'root' }) {
 
           <div className="flex space-x-6 items-center">
             <span className="flex justify-between items-center w-35">
-              SubTotal: <Typography.Text className="ml-2 font-bold text-primary">{subTotal}</Typography.Text>
+              SubTotal: <Typography.Text className="ml-2 font-bold text-primary">{Number(subTotal).toFixed(2)}</Typography.Text>
             </span>
             <div className="border-2 border-primary h-4 rounded-md"></div>
             <span className="flex justify-between items-center w-35">
-              Total Area: <Typography.Text className="ml-2 font-bold text-primary">{areaTotal.toFixed(2)}</Typography.Text>
+              Total Area: <Typography.Text className="ml-2 font-bold text-primary">{Number(areaTotal).toFixed(2)}</Typography.Text>
             </span>
             <div className="border-2 border-primary h-4 rounded-md"></div>
             <span className="flex justify-between items-center w-35">
@@ -283,7 +289,7 @@ function Table({ tableId = 'root' }) {
             </span>
             <div className="border-2 border-primary h-4 rounded-md"></div>
             <span className="flex justify-between items-center w-35">
-              Grand Total: <Typography.Text className="ml-2 font-bold text-primary">{total}</Typography.Text>
+              Grand Total: <Typography.Text className="ml-2 font-bold text-primary">{Number(total).toFixed(2)}</Typography.Text>
             </span>
           </div>
 
