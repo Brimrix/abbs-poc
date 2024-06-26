@@ -5,7 +5,7 @@ const useFetch = async (url, options) => {
         headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": getCookieValue("csrftoken"),
-            "Authorization": `Token ${getCookieValue('accessToken')}`
+            ...(getCookieValue("accessToken") && { "Authorization": `Token ${getCookieValue('accessToken')}` })
         },
         ...options
     })
