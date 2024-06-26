@@ -46,7 +46,7 @@ function Table({ tableId = 'root' }) {
     (row, cellSource) => {
       dispatch({
         type: "updateRow",
-        payload: { row, key: row.key, cellSource, tableId },
+        payload: { row, key: row.key, cellSource, tableId, order: row.order },
       });
     },
     [dispatch]
@@ -58,7 +58,8 @@ function Table({ tableId = 'root' }) {
       payload: {
         key: row.key,
         tableId: row.tableId,
-        ...payload
+        ...payload,
+        order: row.order
       },
     })
   }
@@ -147,6 +148,7 @@ function Table({ tableId = 'root' }) {
         return isOrderRow(row) ? "" : <InputNumber
           value={text}
           onInput={(value) => handleUpdateRowCell(row, { price: value }, 'setPrice')}
+
           min={1}
           variant="filled" precision={2} />
       }
@@ -224,8 +226,12 @@ function Table({ tableId = 'root' }) {
             expandedRowRender: (row) => <Order
               tableId={row.key}
               rows={selectedInvoice.items.filter(item => item.tableId === row.key)}
-              onRowAdd={(nestedTableId) => handleAddRow(nestedTableId, row.key)}
-              onRowSave={(nestedTableId) => handleSaveRow(nestedTableId)}
+              onRowAdd={(nestedTableId) => {
+
+                handleAddRow(nestedTableId, row.key);
+
+              }}
+              onRowSave={() => handleSaveRow(row.key)}
               onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
               onRowDelete={(id) => setDeleteRow(id)}
             />,

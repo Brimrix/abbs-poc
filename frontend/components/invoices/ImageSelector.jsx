@@ -51,13 +51,16 @@ function ImageSelector({ id, renderSource, tableId = null, record }) {
               Math.round((this.width / xResolution) * 100) / 100;
 
             {
-              record.image_src==="" &&
-              dispatch({
-                type: "addItem",
-                payload: {
-                  tableId,
-                }
-              });
+
+              if(record.image_src === ""){
+                dispatch({
+                  type: "addItem",
+                  payload: {
+                    tableId,
+                  }
+                });
+              }
+
               dispatch({
                 type: "setImageData",
                 payload: {
@@ -67,6 +70,7 @@ function ImageSelector({ id, renderSource, tableId = null, record }) {
                   width: calculatedWidth,
                   key: id,
                   tableId,
+                  order: record.tableId
                 },
               });
               message.success("Successfully uploaded");

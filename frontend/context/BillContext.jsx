@@ -31,7 +31,7 @@ export function BillProvider({ children }) {
 
   const createItemDescription = (state, payload) => {
     if(payload.order && payload.tableId==="root") {
-      return "HELLO WORLD"
+      return `Order #${(Date.now().toString().substring(7,14))}`
     }
     let description = "\u200b"
     return description
@@ -49,7 +49,7 @@ export function BillProvider({ children }) {
       width: 0,
       area: 0,
       price: state.selectedInvoice.customer.defaultRate,
-      quantity: 1,
+      quantity: action.payload.order && action.payload.tableId === "root" ? 0 : 1,
       amount: 0,
       order: action.payload.order
     };
@@ -82,15 +82,14 @@ export function BillProvider({ children }) {
   };
 
   const calculateTotalArea = (items) => {
-    const totalArea =  items.map((item) => item.area).reduce((acc, area) => acc + area, 0);
+    const totalArea =  items.map((item) => Number(item.area)).reduce((acc, area) => acc + area, 0);
     return Number(totalArea).toFixed(2);
 
   };
 
   const calculateOrderQuantity = (items) => {
-    return items.map((item) => item.quantity).reduce((acc, quantity) => acc + quantity, 0);
+    return items.reduce((sum, item) => sum + Number(item.quantity), 0);
   };
-
 
   const updateOrderRow = (state, action) => {
     if (action.payload.order) {
@@ -109,12 +108,9 @@ export function BillProvider({ children }) {
       }
 
       if(orderRow) {
-        alert(totalAmountRow);
-        alert(totalOrderArea);
-        alert(totalOrderQuantity);
         state.selectedInvoice.items = state.selectedInvoice.items.map((item) => {
           if (item.key === orderRow?.key){
-            return {...item,  amount: totalAmountRow, quantity: totalOrderQuantity, area: totalOrderArea}
+            return {...item,  amount: Number(totalAmountRow).toFixed(2), quantity: totalOrderQuantity, area: Number(totalOrderArea).toFixed(2)}
           }
           return item
         });
@@ -150,8 +146,6 @@ export function BillProvider({ children }) {
         ]
 
         updateOrderRow(state, action)
-        // newState.selectedInvoice.items = updateOrderRow(state, action)
-
 
         break;
 
@@ -160,31 +154,37 @@ export function BillProvider({ children }) {
       case "setHeight":
       case "setWidth":
 
-      updateOrderRow(state, action)
 
         newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
           item.key === action.payload.key ? updateRow(item, action.payload) : item
-        )
+        );
+
+        updateOrderRow(state, action)
+
 
         break;
 
       case "setImageData":
-        updateOrderRow(state, action)
 
         newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
           item.key === action.payload.key
             ? setItemImage(item, action.payload)
-            : item)
+            : item);
+
+          updateOrderRow(state, action);
 
 
         break;
 
       case "deleteRow":
-        updateOrderRow(state, action)
+
+        const index = newState.selectedInvoice.items.findIndex((item) => item.key === action.payload.key);
+        const order = newState.selectedInvoice.items[index].order;
 
         newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.key !== action.payload.key)
         newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.tableId !== action.payload.key)
 
+        updateOrderRow(newState, {payload: {order}});
 
 
         break;
