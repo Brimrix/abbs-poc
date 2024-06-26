@@ -39,6 +39,7 @@ function Order({ tableId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
       width: "30%",
       align: "start",
       editable: true,
+
     },
     {
       title: "Image",

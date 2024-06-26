@@ -28,8 +28,15 @@ function Table({ tableId = 'root' }) {
   } = useBillContext();
 
   const [deleteRow, setDeleteRow] = useState(null);
-  const subTotal = selectedInvoice.items.reduce((acc, item) => acc + item.amount, 0)
-  const areaTotal = selectedInvoice.items.reduce((acc, item) => acc + Number(item.area), 0)
+
+  const subTotal = selectedInvoice.items
+  .filter(item => item.tableId === 'root')
+  .reduce((acc, item) => acc + Number(item.amount), 0);
+
+  const areaTotal = selectedInvoice.items
+  .filter(item => item.tableId === 'root')
+  .reduce((acc, item) => acc + Number(item.area), 0);
+
   const total = subTotal - selectedInvoice.discount;
 
   const handleAddRow = (table, order = null) => {
@@ -46,7 +53,7 @@ function Table({ tableId = 'root' }) {
     (row, cellSource) => {
       dispatch({
         type: "updateRow",
-        payload: { row, key: row.key, cellSource, tableId },
+        payload: { row, key: row.key, cellSource, tableId, order: row.order },
       });
     },
     [dispatch]
@@ -58,7 +65,8 @@ function Table({ tableId = 'root' }) {
       payload: {
         key: row.key,
         tableId: row.tableId,
-        ...payload
+        ...payload,
+        order: row.order
       },
     })
   }
@@ -109,7 +117,6 @@ function Table({ tableId = 'root' }) {
       render(_, row) {
         return isOrderRow(row) ? "" : <ImageSelector
           id={row.key}
-          renderSource={row.image_src}
           tableId={tableId}
           record={row}
         />
@@ -136,7 +143,7 @@ function Table({ tableId = 'root' }) {
       dataIndex: "area",
       key: "area",
       align: "center",
-      render: (text, row) => isOrderRow(row) ? 'Order Area' : text
+      render: (text, row) => isOrderRow(row) ? row.area>0 ? row.area : 0 : text
     },
     {
       title: "Price",
@@ -147,6 +154,7 @@ function Table({ tableId = 'root' }) {
         return isOrderRow(row) ? "" : <InputNumber
           value={text}
           onInput={(value) => handleUpdateRowCell(row, { price: value }, 'setPrice')}
+
           min={1}
           variant="filled" precision={2} />
       }
@@ -157,7 +165,7 @@ function Table({ tableId = 'root' }) {
       key: "quantity",
       align: "center",
       render(text, row) {
-        return isOrderRow(row) ? "" : <InputNumber
+        return isOrderRow(row) ? row.quantity : <InputNumber
           value={text}
           onInput={(value) => handleUpdateRowCell(row, { quantity: value }, 'setQuantity')}
           min={1}
@@ -170,7 +178,7 @@ function Table({ tableId = 'root' }) {
       dataIndex: "amount",
       key: "amount",
       align: "center",
-      render: (value, row) => isOrderRow(row) ? 'Order Total' : Number(value.toFixed(2))
+      render: (value, row) => isOrderRow(row) ? row.amount : Number(value.toFixed(2))
     },
   ];
 
@@ -224,8 +232,12 @@ function Table({ tableId = 'root' }) {
             expandedRowRender: (row) => <Order
               tableId={row.key}
               rows={selectedInvoice.items.filter(item => item.tableId === row.key)}
-              onRowAdd={(nestedTableId) => handleAddRow(nestedTableId)}
-              onRowSave={(nestedTableId) => handleSaveRow(nestedTableId)}
+              onRowAdd={(nestedTableId) => {
+
+                handleAddRow(nestedTableId, row.key);
+
+              }}
+              onRowSave={() => handleSaveRow(row.key)}
               onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
               onRowDelete={(id) => setDeleteRow(id)}
             />,
@@ -256,11 +268,11 @@ function Table({ tableId = 'root' }) {
 
           <div className="flex space-x-6 items-center">
             <span className="flex justify-between items-center w-35">
-              SubTotal: <Typography.Text className="ml-2 font-bold text-primary">{subTotal}</Typography.Text>
+              SubTotal: <Typography.Text className="ml-2 font-bold text-primary">{Number(subTotal).toFixed(2)}</Typography.Text>
             </span>
             <div className="border-2 border-primary h-4 rounded-md"></div>
             <span className="flex justify-between items-center w-35">
-              Total Area: <Typography.Text className="ml-2 font-bold text-primary">{areaTotal.toFixed(2)}</Typography.Text>
+              Total Area: <Typography.Text className="ml-2 font-bold text-primary">{Number(areaTotal).toFixed(2)}</Typography.Text>
             </span>
             <div className="border-2 border-primary h-4 rounded-md"></div>
             <span className="flex justify-between items-center w-35">
@@ -277,7 +289,7 @@ function Table({ tableId = 'root' }) {
             </span>
             <div className="border-2 border-primary h-4 rounded-md"></div>
             <span className="flex justify-between items-center w-35">
-              Grand Total: <Typography.Text className="ml-2 font-bold text-primary">{total}</Typography.Text>
+              Grand Total: <Typography.Text className="ml-2 font-bold text-primary">{Number(total).toFixed(2)}</Typography.Text>
             </span>
           </div>
 

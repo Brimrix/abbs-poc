@@ -30,8 +30,12 @@ export function BillProvider({ children }) {
   }
 
   const createItemDescription = (state, payload) => {
+    if(payload.order && payload.tableId==="root") {
+      return `Order #${(Date.now().toString().substring(7,14))}`
+    }
     let description = "\u200b"
     return description
+
   }
 
   function addItem(state, action) {
@@ -45,9 +49,9 @@ export function BillProvider({ children }) {
       width: 0,
       area: 0,
       price: state.selectedInvoice.customer.defaultRate,
-      quantity: 1,
+      quantity: action.payload.order && action.payload.tableId === "root" ? 0 : 1,
       amount: 0,
-      order: Boolean(action.payload.order)
+      order: action.payload.order
     };
   }
 
@@ -64,6 +68,60 @@ export function BillProvider({ children }) {
     newRow['amount'] = calculateRowAmount(newRow)
     return newRow
   }
+
+  const findOrderRow = (items, orderKey) => {
+    return items.find((item) => item.key === orderKey);
+  };
+
+  const filterNestedItems = (items, tableId) => {
+    return items.filter((item) => item.tableId === tableId);
+  };
+
+  const calculateTotalAmount = (items) => {
+    return items.map((item) => item.amount).reduce((acc, amount) => acc + amount, 0);
+  };
+
+  const calculateTotalArea = (items) => {
+    const totalArea =  items.map((item) => Number(item.area)).reduce((acc, area) => acc + area, 0);
+    return Number(totalArea).toFixed(2);
+
+  };
+
+  const calculateOrderQuantity = (items) => {
+    return items.reduce((sum, item) => sum + Number(item.quantity), 0);
+  };
+
+  const updateOrderRow = (state, action) => {
+    if (action.payload.order) {
+      let totalAmountRow = 0;
+      let totalOrderQuantity = 0;
+      let totalOrderArea = 0;
+      const orderRow = findOrderRow(state.selectedInvoice.items, action.payload.order);
+
+      if (orderRow) {
+        const nestedItems = filterNestedItems(state.selectedInvoice.items, orderRow.key);
+        if (nestedItems.length > 0) {
+          totalAmountRow = calculateTotalAmount(nestedItems);
+          totalOrderArea = calculateTotalArea(nestedItems);
+          totalOrderQuantity = calculateOrderQuantity(nestedItems);
+        }
+      }
+
+      if(orderRow) {
+        state.selectedInvoice.items = state.selectedInvoice.items.map((item) => {
+          if (item.key === orderRow?.key){
+            return {...item,  amount: Number(totalAmountRow).toFixed(2), quantity: totalOrderQuantity, area: Number(totalOrderArea).toFixed(2)}
+          }
+          return item
+        });
+      }
+
+
+    }
+
+    return state.selectedInvoice.items
+  }
+
 
   const reducerMethod = (state, action) => {
     const newState = { ...state }; // Create a new state variable
@@ -86,27 +144,47 @@ export function BillProvider({ children }) {
           ...state.selectedInvoice.items,
           addItem(state, action)
         ]
+
+        updateOrderRow(state, action)
+
         break;
 
       case "setPrice":
       case "setQuantity":
       case "setHeight":
       case "setWidth":
+
+
         newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
           item.key === action.payload.key ? updateRow(item, action.payload) : item
-        )
+        );
+
+        updateOrderRow(state, action)
+
+
         break;
 
       case "setImageData":
-        newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
+
+           newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
           item.key === action.payload.key
             ? setItemImage(item, action.payload)
-            : item)
+            : item);
+
+            updateOrderRow(state, action);
+
         break;
 
       case "deleteRow":
+
+        const index = newState.selectedInvoice.items.findIndex((item) => item.key === action.payload.key);
+        const order = newState.selectedInvoice.items[index].order;
+
         newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.key !== action.payload.key)
         newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.tableId !== action.payload.key)
+
+        updateOrderRow(newState, {payload: {order}});
+
 
         break;
 
