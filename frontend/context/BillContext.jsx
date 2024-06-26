@@ -42,7 +42,7 @@ export function BillProvider({ children }) {
   function addItem(state, action) {
     return {
       id: createItemKey(),
-      object_id: action.payload.object_id,
+      objectId: action.payload.objectId,
       description: createItemDescription(state, action.payload),
       upload: null,
       image_src: "",
@@ -85,9 +85,11 @@ export function BillProvider({ children }) {
   const handleSaveInvoice = async () => {
     const { ok, data } = await useFetch('api/invoices/', {
       method: 'POST',
-      body: JSON.stringify({ ...state.selectedInvoice, company: state.selectedInvoice.company.id, })
+      body: JSON.stringify({
+        items: state.selectedInvoice.items.map(item => ({ ...item, object_id: item.objectId })), company: state.selectedInvoice.company.id,
+      })
     })
-    console.log(ok, "???")
+
     if (ok) {
       message.success(`Invoice saved. Id ${data.id}`)
       dispatch({
@@ -144,7 +146,7 @@ export function BillProvider({ children }) {
 
       case "setImageData":
         newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
-          item.key === action.payload.key
+          item.id === action.payload.id
             ? setItemImage(item, action.payload)
             : item)
         break;
@@ -156,10 +158,10 @@ export function BillProvider({ children }) {
         break;
 
       case "updateRow":
-        const { id, cellSource, object_id, row } = action.payload;
+        const { id, cellSource, objectId, row } = action.payload;
         const { dataIndex } = cellSource;
         const updatedItems = state.selectedInvoice.items.map(item => {
-          if (item.id === id && item.object_id === object_id) {
+          if (item.id === id && item.objectId === objectId) {
             switch (dataIndex) {
               case "height":
                 return {
@@ -194,6 +196,9 @@ export function BillProvider({ children }) {
         newState.selectedInvoice = action.payload
         break;
 
+      case 'resetSelectedInvoice':
+        newState.selectedInvoice = initialState.selectedInvoice
+        break
       default:
         break;
     }
@@ -201,6 +206,7 @@ export function BillProvider({ children }) {
   };
 
   const [state, dispatch] = useReducer(reducerMethod, initialState);
+
   return (
     <billContext.Provider value={{ state, dispatch, handleLoadInvoices, handleSaveInvoice, handleLoadInvoiceDetail }}>
       {children}

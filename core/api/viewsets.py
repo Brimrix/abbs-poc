@@ -30,8 +30,10 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     )
 
     def get_serializer_class(self):
-        if self.action in ["create", "retrieve"]:
+        if self.action == "create":
             return serializers.InvoiceCreateSerializer
+        elif self.action == "retrieve":
+            return serializers.InvoiceDetailSerializer
         return serializers.InvoiceSerializer
 
 

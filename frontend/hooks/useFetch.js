@@ -5,13 +5,13 @@ const useFetch = async (url, options) => {
         headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": getCookieValue("csrftoken"),
+            "Authorization": `Token ${getCookieValue('accessToken')}`
         },
         ...options
     })
     const data = await response.json()
 
     if (response.ok) {
-        console.log(response.ok)
         return { ok: response.ok, data, status: response.status }
     } else {
         alert("Failed to fetch")

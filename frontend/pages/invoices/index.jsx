@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
     const { Column } = Table
-    const { state: { invoices, selectedInvoice: { company } }, dispatch, handleLoadInvoices } = useBillContext();
+    const { state: { invoices, selectedInvoice }, dispatch, handleLoadInvoices } = useBillContext();
     const navigate = useNavigate()
 
     const [open, setOpen] = useState(false)
@@ -16,6 +16,9 @@ const Index = () => {
 
     useEffect(() => {
         handleLoadInvoices();
+        dispatch({
+            type: "resetSelectedInvoice",
+        })
     }, []);
 
     useEffect(() => {
@@ -37,19 +40,21 @@ const Index = () => {
         <Table
             dataSource={invoices}
             size="small"
+            className='shadow border rounded'
             scroll={{ y: 900 }}
             pagination={{ pageSize: 15 }}
         >
             <Column
-                width="5%"
+                width="3%"
                 title="Sr#"
+                align='center'
                 dataIndex='id'
                 key='id'
                 render={srNo => <Link to={`${srNo}`}
                     className="text-primary font-bold">{srNo}
                 </Link>}
             />
-            <Column title="Customer" dataIndex='company_name' key='company_name'
+            <Column title="Customer" dataIndex='company' key='company'
             />
             <Column
                 title='Paid'
@@ -86,7 +91,7 @@ const Index = () => {
                     <AutoComplete
                         autoFocus={true}
                         options={customers}
-                        value={company.name}
+                        value={selectedInvoice.company.name}
                         placeholder="Select a customer, staring typing for suggestions"
                         onChange={(value) => dispatch({
                             type: "setCustomerDetails",
@@ -109,7 +114,7 @@ const Index = () => {
                     label="Default Price"
                     required
                 >
-                    <Input type='number' value={company.defaultRate} onInput={(event) => dispatch({
+                    <Input type='number' value={selectedInvoice.company.defaultRate} onInput={(event) => dispatch({
                         type: 'setCustomerRate',
                         payload: {
                             defaultRate: event.currentTarget.value

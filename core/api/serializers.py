@@ -68,11 +68,11 @@ class CompanySerializer(serializers.ModelSerializer):
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
-    company_name = serializers.ReadOnlyField(source="company.name")
+    company = serializers.ReadOnlyField(source="company.name")
 
     class Meta:
         model = models.Invoice
-        fields = ["id", "company", "company_name", "paid", "created_at"]
+        fields = ["id", "company", "paid", "created_at"]
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -88,7 +88,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class InvoiceItemSerializer(ItemSerializer):
-    object_id = serializers.IntegerField()
+    object_id = serializers.IntegerField(required=False, allow_null=True)
     model = serializers.SlugRelatedField(
         slug_field="model",
         source="content_type",
@@ -110,9 +110,9 @@ class InvoiceItemSerializer(ItemSerializer):
 
 class InvoiceOrderSerializer(serializers.ModelSerializer):
     object_id = serializers.PrimaryKeyRelatedField(
-        source="invoice", queryset=models.Invoice.objects.all()
+        source="invoice", queryset=models.Invoice.objects.all(), required=False
     )
-    items = InvoiceItemSerializer(many=True)
+    items = InvoiceItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Order
@@ -149,22 +149,23 @@ class InvoiceCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         items = validated_data.pop("items")
-        orders = validated_data.pop("orders")
+        orders = validated_data.pop("orders") if "orders" in validated_data else None
         invoice = super().create(validated_data)
 
-        orders_serializer = InvoiceOrderSerializer(
-            data=[
-                {
-                    **order,
-                    "object_id": invoice.id,
-                }
-                for order in orders
-            ],
-            many=True,
-        )
+        if orders:
+            orders_serializer = InvoiceOrderSerializer(
+                data=[
+                    {
+                        **order,
+                        "object_id": invoice.id,
+                    }
+                    for order in orders
+                ],
+                many=True,
+            )
 
-        orders_serializer.is_valid(raise_exception=True)
-        orders_serializer.save()
+            orders_serializer.is_valid(raise_exception=True)
+            orders_serializer.save()
 
         items_serializer = InvoiceItemSerializer(
             data=[
@@ -182,3 +183,7 @@ class InvoiceCreateSerializer(serializers.ModelSerializer):
         items_serializer.save()
 
         return invoice
+
+
+class InvoiceDetailSerializer(InvoiceCreateSerializer):
+    company = CompanySerializer(read_only=True)

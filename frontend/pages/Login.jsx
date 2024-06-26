@@ -25,6 +25,7 @@ const Login = () => {
         message.error(non_field_errors);
       }
     } catch (error) {
+      console.log(error)
       message.error("An error occurred during login");
     }
   };

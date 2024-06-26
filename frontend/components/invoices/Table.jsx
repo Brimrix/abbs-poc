@@ -42,7 +42,7 @@ function Table({ title, invoiceId = null }) {
       type: "addItem",
       payload: {
         model: order ? 'order' : "invoice",
-        object_id: parent_id,
+        objectId: parent_id,
       },
     });
   };
@@ -51,7 +51,7 @@ function Table({ title, invoiceId = null }) {
     (row, cellSource) => {
       dispatch({
         type: "updateRow",
-        payload: { row, id: row.id, cellSource, object_id: invoiceId },
+        payload: { row, id: row.id, cellSource, objectId: invoiceId },
       });
     },
     [dispatch]
@@ -124,7 +124,7 @@ function Table({ title, invoiceId = null }) {
       width: "10%",
       render(_, row) {
         return isOrderRow(row) ? "" : <ImageSelector
-          id={row.key}
+          id={row.id}
           renderSource={row.image_src}
           tableId={invoiceId}
           record={row}
@@ -317,7 +317,7 @@ function Table({ title, invoiceId = null }) {
             columnWidth: "2%",
             expandedRowRender: (row) => <Order
               tableId={row.key}
-              rows={selectedInvoice.items.filter(item => item.object_id === row.key)}
+              rows={selectedInvoice.items.filter(item => item.objectId === row.key)}
               onRowAdd={(nestedTableId) => handleAddRow(nestedTableId)}
               onRowSave={(nestedTableId) => handleSaveRow(nestedTableId)}
               onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
