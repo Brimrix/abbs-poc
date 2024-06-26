@@ -1,22 +1,17 @@
-from rest_framework.test import APITestCase
+from core.tests.base import BaseTestCase
 from django.urls import reverse_lazy
-from core.tests import factories
 
 
-class UserTestCase(APITestCase):
-    @classmethod
-    def setUpTestData(cls) -> None:
-        cls.superuser = factories.UserFactory(is_superuser=True, is_staff=True)
-
+class UserTestCase(BaseTestCase):
     def test_user_sign_up(self):
         self.client.force_login(self.superuser)
         response = self.client.post(
-            reverse_lazy("core:signup"),
+            reverse_lazy("signup"),
             {
                 "username": "waqar@test.com",
                 "first_name": "Waqar",
                 "last_name": "Ali",
-                "company": "Brimrix",
+                "company": self.company.id,
                 "phone": "+9232342424",
                 "address": "Mars",
                 "password": "change_me",
@@ -29,12 +24,12 @@ class UserTestCase(APITestCase):
     def test_user_sign_up_weak_password(self):
         self.client.force_login(self.superuser)
         response = self.client.post(
-            reverse_lazy("core:signup"),
+            reverse_lazy("signup"),
             {
                 "username": "waqar@test.com",
                 "first_name": "Waqar",
                 "last_name": "Ali",
-                "company": "Brimrix",
+                "company": self.company.id,
                 "phone": "+9232342424",
                 "address": "Mars",
                 "password": "1234",
@@ -46,11 +41,11 @@ class UserTestCase(APITestCase):
     def test_user_sign_up_no_last_name(self):
         self.client.force_login(self.superuser)
         response = self.client.post(
-            reverse_lazy("core:signup"),
+            reverse_lazy("signup"),
             {
                 "username": "waqar@test.com",
                 "first_name": "Waqar",
-                "company": "Brimrix",
+                "company": self.company.id,
                 "phone": "+9232342424",
                 "address": "Mars",
                 "password": "change_me",

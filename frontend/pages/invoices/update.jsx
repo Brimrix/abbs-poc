@@ -1,4 +1,10 @@
+import { useBillContext } from "@/context/BillContext";
+import { useParams } from "react-router-dom";
+import Table from "@/components/invoices/Table";
+
 const InvoiceUpdate = () => {
-    return <div className="text-5xl">The details page,will show invoice in editable mode.</div>
+    const { id } = useParams()
+    const { state: { selectedInvoice } } = useBillContext()
+    return <Table invoiceId={id} title={`Edit invoice: ${id}`} />
 }
 export default InvoiceUpdate

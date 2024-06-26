@@ -8,6 +8,7 @@ import {
 import PhoneInput from "react-phone-input-2";
 import { Link, useNavigate } from "react-router-dom";
 import { getCookieValue } from "@/utils";
+import { useFetch } from "@/hooks/useFetch";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -26,14 +27,8 @@ const SignUp = () => {
     } = values;
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_SERVER}api/signup/`, {
+      const { ok, data, status } = await useFetch(`api/signup/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookieValue("csrftoken"),
-
-        },
-
         body: JSON.stringify({
           company,
           address,
@@ -46,11 +41,11 @@ const SignUp = () => {
         }),
       });
 
-      if (response.status === 201) {
+      if (ok && status === 201) {
         message.success("Account created successfully");
         navigate("/login");
       } else {
-        const { non_field_errors } = await response.json();
+        const { non_field_errors } = data
         message.error("non_field_errors");
       }
     }

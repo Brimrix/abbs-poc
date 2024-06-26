@@ -1,13 +1,18 @@
 import { createContext, useContext, useReducer } from "react";
+import { useFetch } from '@/hooks/useFetch';
+import { message } from "antd";
 
 const billContext = createContext();
 
 
 export function BillProvider({ children }) {
   const initialState = {
+    invoices: [],
     selectedInvoice: {
       items: [],
-      customer: {
+      orders: [],
+      company: {
+        id: -1,
         name: '',
         defaultRate: 0
       },
@@ -16,11 +21,11 @@ export function BillProvider({ children }) {
   };
 
   function calculateArea(width, height, unit = 144) {
-    return Number((width * height) / unit).toFixed(2);
+    return Number((width * height) / unit)
   }
 
   function calculateRowAmount(row) {
-    return Number((row.area * row.quantity * row.price).toFixed(2))
+    return Number((row.area * row.quantity * row.unit_price).toFixed(2))
   }
 
   const createItemKey = () => {
@@ -36,18 +41,18 @@ export function BillProvider({ children }) {
 
   function addItem(state, action) {
     return {
-      tableId: action.payload.tableId,
-      key: createItemKey(state, action.payload),
+      id: createItemKey(),
+      object_id: action.payload.object_id,
       description: createItemDescription(state, action.payload),
       upload: null,
       image_src: "",
       height: 0,
       width: 0,
       area: 0,
-      price: state.selectedInvoice.customer.defaultRate,
+      unit_price: state.selectedInvoice.company.defaultRate || 0,
       quantity: 1,
       amount: 0,
-      order: Boolean(action.payload.order)
+      model: action.payload.model
     };
   }
 
@@ -65,16 +70,56 @@ export function BillProvider({ children }) {
     return newRow
   }
 
+  const handleLoadInvoices = async () => {
+    try {
+      const { ok, data } = await useFetch(`api/invoices/`);
+      dispatch({
+        type: "setInvoices",
+        payload: data
+      })
+    } catch (error) {
+      console.error('Failed to fetch invoices:', error);
+    }
+  };
+
+  const handleSaveInvoice = async () => {
+    const { ok, data } = await useFetch('api/invoices/', {
+      method: 'POST',
+      body: JSON.stringify({ ...state.selectedInvoice, company: state.selectedInvoice.company.id, })
+    })
+    console.log(ok, "???")
+    if (ok) {
+      message.success(`Invoice saved. Id ${data.id}`)
+      dispatch({
+        type: "setSelectedInvoice",
+        payload: initialState.selectedInvoice
+      })
+    } else {
+      message.error('Failed to store')
+    }
+  }
+
+  const handleLoadInvoiceDetail = async (id) => {
+    const { ok, data } = await useFetch(`api/invoices/${id}/`)
+    if (ok) {
+      message.info('Invoice opened in edit mode')
+      dispatch({
+        type: "setSelectedInvoice",
+        payload: data
+      })
+    }
+  }
+
   const reducerMethod = (state, action) => {
     const newState = { ...state }; // Create a new state variable
 
     switch (action.type) {
       case 'setCustomerDetails':
-        newState.selectedInvoice.customer = action.payload
+        newState.selectedInvoice.company = action.payload
         break
 
       case 'setCustomerRate':
-        newState.selectedInvoice.customer.defaultRate = action.payload
+        newState.selectedInvoice.company.defaultRate = action.payload
         break
 
       case 'setDiscount':
@@ -93,7 +138,7 @@ export function BillProvider({ children }) {
       case "setHeight":
       case "setWidth":
         newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
-          item.key === action.payload.key ? updateRow(item, action.payload) : item
+          item.id === action.payload.id ? updateRow(item, action.payload) : item
         )
         break;
 
@@ -105,23 +150,22 @@ export function BillProvider({ children }) {
         break;
 
       case "deleteRow":
-        newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.key !== action.payload.key)
+        newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.id !== action.payload.key)
         newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.tableId !== action.payload.key)
 
         break;
 
       case "updateRow":
-        const { key, tableId, cellSource, row } = action.payload;
+        const { id, cellSource, object_id, row } = action.payload;
         const { dataIndex } = cellSource;
         const updatedItems = state.selectedInvoice.items.map(item => {
-          if (item.key === key && item.tableId === tableId) {
+          if (item.id === id && item.object_id === object_id) {
             switch (dataIndex) {
               case "height":
                 return {
                   ...item,
                   height: row.height || 0,
                 };
-
               case "width":
                 return {
                   ...item,
@@ -142,6 +186,14 @@ export function BillProvider({ children }) {
         newState.selectedInvoice.items = updatedItems;
         break;
 
+      case 'setInvoices':
+        newState.invoices = action.payload
+        break;
+
+      case 'setSelectedInvoice':
+        newState.selectedInvoice = action.payload
+        break;
+
       default:
         break;
     }
@@ -150,7 +202,7 @@ export function BillProvider({ children }) {
 
   const [state, dispatch] = useReducer(reducerMethod, initialState);
   return (
-    <billContext.Provider value={{ state, dispatch }}>
+    <billContext.Provider value={{ state, dispatch, handleLoadInvoices, handleSaveInvoice, handleLoadInvoiceDetail }}>
       {children}
     </billContext.Provider>
   );

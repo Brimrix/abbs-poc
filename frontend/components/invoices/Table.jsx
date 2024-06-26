@@ -1,43 +1,48 @@
-import { useState, useCallback } from "react";
-import { Table as AntDTable, Typography, InputNumber, Modal, Popover } from "antd";
+import { useState, useCallback, useEffect } from "react";
+import { Table as AntDTable, Typography, InputNumber, Popover, Button, Modal, Form, AutoComplete, Input } from "antd";
 import { useBillContext } from "@/context/BillContext";
 import Editable from "@/components/invoices/Editable.jsx";
 import Order from "@/components/invoices/Order";
 import { PlusOutlined } from "@ant-design/icons";
 import ImageSelector from "@/components/invoices/ImageSelector";
-import RemoveModal from "@/components/invoices/RemoveModal";
+import { useFetch } from '@/hooks/useFetch';
+
+
 import { MinusCircleOutlined } from '@ant-design/icons';
 
 import {
-  MessageOutlined,
-  CloudDownloadOutlined,
-  MailOutlined,
   PrinterOutlined,
 } from "@ant-design/icons";
 
 const IconLink = ({ icon }) => (
-  <div className="text-white text-lg flex justify-center !bg-secondary p-[6px] rounded-lg cursor-pointer h-[30px] w-[30px]">
+  <div className="text-white text-lg flex justify-center bg-secondary p-[6px] rounded-lg cursor-pointer h-[30px] w-[30px]">
     {icon}
   </div>
 );
 
-function Table({ tableId = 'root' }) {
+function Table({ title, invoiceId = null }) {
   const {
     state: { selectedInvoice },
     dispatch,
+    handleSaveInvoice,
+    handleLoadInvoiceDetail
   } = useBillContext();
 
   const [deleteRow, setDeleteRow] = useState(null);
+  const [saveInvoice, setSaveInvoice] = useState(false)
+  const [customers, setCustomers] = useState([])
+
+  const [form] = Form.useForm()
   const subTotal = selectedInvoice.items.reduce((acc, item) => acc + item.amount, 0)
   const areaTotal = selectedInvoice.items.reduce((acc, item) => acc + Number(item.area), 0)
   const total = subTotal - selectedInvoice.discount;
 
-  const handleAddRow = (table, order = null) => {
+  const handleAddRow = (parent_id, order = null) => {
     dispatch({
       type: "addItem",
       payload: {
-        order,
-        tableId: table,
+        model: order ? 'order' : "invoice",
+        object_id: parent_id,
       },
     });
   };
@@ -46,7 +51,7 @@ function Table({ tableId = 'root' }) {
     (row, cellSource) => {
       dispatch({
         type: "updateRow",
-        payload: { row, key: row.key, cellSource, tableId },
+        payload: { row, id: row.id, cellSource, object_id: invoiceId },
       });
     },
     [dispatch]
@@ -56,14 +61,25 @@ function Table({ tableId = 'root' }) {
     dispatch({
       type: actionType,
       payload: {
-        key: row.key,
-        tableId: row.tableId,
+        id: row.id,
         ...payload
       },
     })
   }
 
-  const isOrderRow = (row) => row.order;
+  const isOrderRow = (row) => row.model==='order';
+
+  useEffect(() => {
+    invoiceId && handleLoadInvoiceDetail(invoiceId)
+  }, [])
+
+  useEffect(() => {
+    saveInvoice && (async function () {
+      const { data } = await useFetch('api/companies/')
+      setCustomers(data.map(customer => ({ value: customer.name, data: { rate: customer.defaultRate, id: customer.id } })))
+    }())
+  }, [saveInvoice])
+
 
   const columns = [
     {
@@ -79,7 +95,7 @@ function Table({ tableId = 'root' }) {
         >
           <MinusCircleOutlined
             className="text-red-500"
-            onClick={() => setDeleteRow(row.key)} />
+            onClick={() => setDeleteRow(row.id)} />
         </Popover>
       }
     },
@@ -110,7 +126,7 @@ function Table({ tableId = 'root' }) {
         return isOrderRow(row) ? "" : <ImageSelector
           id={row.key}
           renderSource={row.image_src}
-          tableId={tableId}
+          tableId={invoiceId}
           record={row}
         />
       }
@@ -136,17 +152,17 @@ function Table({ tableId = 'root' }) {
       dataIndex: "area",
       key: "area",
       align: "center",
-      render: (text, row) => isOrderRow(row) ? 'Order Area' : text
+      render: (text, row) => isOrderRow(row) ? 'Order Area' : Number(text).toFixed(2)
     },
     {
       title: "Price",
-      dataIndex: "price",
-      key: "price",
+      dataIndex: "unit_price",
+      key: "unit_price",
       align: "center",
       render(text, row) {
         return isOrderRow(row) ? "" : <InputNumber
           value={text}
-          onInput={(value) => handleUpdateRowCell(row, { price: value }, 'setPrice')}
+          onInput={(value) => handleUpdateRowCell(row, { unit_price: value }, 'setPrice')}
           min={1}
           variant="filled" precision={2} />
       }
@@ -170,7 +186,7 @@ function Table({ tableId = 'root' }) {
       dataIndex: "amount",
       key: "amount",
       align: "center",
-      render: (value, row) => isOrderRow(row) ? 'Order Total' : Number(value.toFixed(2))
+      render: (value, row) => isOrderRow(row) ? 'Order Total' : Number(value?.toFixed(2))
     },
   ];
 
@@ -198,32 +214,110 @@ function Table({ tableId = 'root' }) {
 
   return (
     <>
-      <RemoveModal deleteRow={deleteRow} setDeleteRow={setDeleteRow} />
+      <Modal
+        open={Boolean(deleteRow)}
+        okText="Delete"
+        okButtonProps={{ className: 'btn-app-accent' }}
+        cancelButtonProps={{ className: 'text-primary' }}
+        title="Confirmation"
+        onOk={() => {
+          dispatch({
+            type: 'deleteRow',
+            payload: {
+              key: deleteRow,
+            },
+          })
+          setDeleteRow(null)
+        }}
+        onCancel={() => setDeleteRow(null)}
+        footer={(_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <OkBtn />
+          </>
+        )}
+      >
+        <span>Are you sure you want to delete ? </span>
+      </Modal>
+      <Modal
+        open={saveInvoice}
+        okText="Save"
+        cancelButtonProps={{ className: 'text-primary' }}
+        okButtonProps={{ className: 'bg-primary' }}
+        title="Save Invoice"
+        onCancel={() => setSaveInvoice(false)}
+        onOk={() => {
+          form
+            .validateFields()
+            .then(values => {
+              handleSaveInvoice()
+              setSaveInvoice(false)
+            })
+        }}
+      >
+        <Form
+          form={form}
+          layout='vertical mt-5'
+        >
+          <Form.Item
+            name="company"
+            label="Company"
+            rules={[{ required: true, message: 'Please select a customer!' }]}
+            initialValue={selectedInvoice.company.name}
+          >
+            <AutoComplete
+              autoFocus={true}
+              options={customers}
+              value={selectedInvoice.company.name}
+              placeholder="Select a customer, staring typing for suggestions"
+              onChange={(value) => dispatch({
+                type: "setCustomerDetails",
+                payload: {
+                  name: value,
+                  defaultRate: 0
+                }
+              })}
+              onSelect={(value, option) => dispatch({
+                type: "setCustomerDetails",
+                payload: {
+                  id: option.data.id,
+                  name: value,
+                  defaultRate: option.data.rate
+                }
+              })
+              }
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
       <div className="flex flex-col py-2 bg-stone-100 shadow-lg border rounded space-y-2 max-h-full">
-        <div className="flex justify-between gap-2 mt-2 px-2">
-          <p className="text-2xl font-bold text-primary">New Invoice</p>
-
+        <div className="flex justify-between gap-2 mt-2 px-3">
+          <p className="text-2xl font-bold text-primary">{title}</p>
           <div className="flex items-center gap-1">
-            <IconLink icon={<MessageOutlined />} />
-            <IconLink icon={<CloudDownloadOutlined />} />
-            <IconLink icon={<MailOutlined />} />
             <IconLink icon={<PrinterOutlined />} />
+            <Button
+              type="text"
+              className="bg-primary border-0 text-white hover:bg-secondary"
+              onClick={() => setSaveInvoice(true)}
+              styles={{
+                defaultHoverBg: "#ff4d4f"
+              }}>Save</Button>
+
           </div>
         </div>
         <AntDTable
           sticky={true}
           pagination={false}
-
           components={components}
           className="invoice-table max-h-[75vh] overflow-auto border-y-2"
-          dataSource={selectedInvoice.items.filter(item => item.tableId === 'root')}
+          dataSource={selectedInvoice.items || []}
           columns={columnsConfig}
           size="small"
           expandable={{
             columnWidth: "2%",
             expandedRowRender: (row) => <Order
               tableId={row.key}
-              rows={selectedInvoice.items.filter(item => item.tableId === row.key)}
+              rows={selectedInvoice.items.filter(item => item.object_id === row.key)}
               onRowAdd={(nestedTableId) => handleAddRow(nestedTableId)}
               onRowSave={(nestedTableId) => handleSaveRow(nestedTableId)}
               onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
@@ -236,7 +330,7 @@ function Table({ tableId = 'root' }) {
         <div className="flex gap-2 px-10 items-center justify-between">
           <div className="space-x-2">
             <Typography.Text
-              onClick={() => handleAddRow(tableId)}
+              onClick={() => handleAddRow(invoiceId)}
               className="text-primary p-2 hover:bg-primary hover:text-white border border-primary rounded-md"
               strong
             >
@@ -245,7 +339,7 @@ function Table({ tableId = 'root' }) {
             </Typography.Text>
 
             <Typography.Text
-              onClick={() => handleAddRow(tableId, 'order')}
+              onClick={() => handleAddRow(invoiceId, 'order')}
               className="text-primary  p-2  hover:bg-primary hover:text-white border border-primary rounded-md"
               strong
             >
@@ -256,11 +350,11 @@ function Table({ tableId = 'root' }) {
 
           <div className="flex space-x-6 items-center">
             <span className="flex justify-between items-center w-35">
-              SubTotal: <Typography.Text className="ml-2 font-bold text-primary">{subTotal}</Typography.Text>
+              SubTotal: <Typography.Text className="ml-2 font-bold text-primary p-1 border rounded-md shadow px-2">{subTotal.toFixed(2)}</Typography.Text>
             </span>
             <div className="border-2 border-primary h-4 rounded-md"></div>
             <span className="flex justify-between items-center w-35">
-              Total Area: <Typography.Text className="ml-2 font-bold text-primary">{areaTotal.toFixed(2)}</Typography.Text>
+              Total Area: <Typography.Text className="ml-2 font-bold text-primary p-1 border rounded-md shadow px-2">{areaTotal.toFixed(2)}</Typography.Text>
             </span>
             <div className="border-2 border-primary h-4 rounded-md"></div>
             <span className="flex justify-between items-center w-35">
@@ -277,7 +371,7 @@ function Table({ tableId = 'root' }) {
             </span>
             <div className="border-2 border-primary h-4 rounded-md"></div>
             <span className="flex justify-between items-center w-35">
-              Grand Total: <Typography.Text className="ml-2 font-bold text-primary">{total}</Typography.Text>
+              Grand Total: <Typography.Text className="ml-2 font-bold text-primary p-1 border rounded-md shadow px-2">{total.toFixed(2)}</Typography.Text>
             </span>
           </div>
 

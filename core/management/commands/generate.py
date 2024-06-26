@@ -12,5 +12,9 @@ class Command(BaseCommand):
             user__is_staff=True,
         )
         factories.InvoiceFactory.create_batch(size=30)
+        factories.InvoiceItemFactory.create_batch(size=200)
+
         factories.OrderFactory.create_batch(size=40)
+        factories.OrderItemFactory.create_batch(size=80)
+
         self.stdout.write("Database Populated", self.style.SUCCESS)

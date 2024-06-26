@@ -5,43 +5,23 @@ import { useBillContext } from "@/context/BillContext";
 import { useEffect, useState } from "react";
 import { useFetch } from '@/hooks/useFetch';
 import { useNavigate } from 'react-router-dom';
+
 const Index = () => {
     const { Column } = Table
-    const { state: { selectedInvoice: { customer } }, dispatch } = useBillContext();
+    const { state: { invoices, selectedInvoice: { company } }, dispatch, handleLoadInvoices } = useBillContext();
     const navigate = useNavigate()
 
-    const [invoices, setInvoices] = useState([])
     const [open, setOpen] = useState(false)
     const [customers, setCustomers] = useState([])
 
     useEffect(() => {
-        const fetchInvoices = async () => {
-            try {
-                const response = await fetch(`${import.meta.env.VITE_BASE_SERVER}api/invoices/`);
-                if (!response.ok) {
-                    throw new Error('Response was not ok');
-                }
-                const data = await response.json();
-                setInvoices(data);
-            } catch (error) {
-                console.error('Failed to fetch invoices:', error);
-            }
-        };
-
-        fetchInvoices();
+        handleLoadInvoices();
     }, []);
 
     useEffect(() => {
-        dispatch({
-            type: "setInvoices",
-            payload: invoices
-        })
-    }, [invoices])
-
-    useEffect(() => {
         open && (async function () {
-            const data = await useFetch('api/users/')
-            setCustomers(data.map(customer => ({ value: customer.username })))
+            const { data } = await useFetch('api/companies/')
+            setCustomers(data.map(customer => ({ value: customer.name, data: { rate: customer.defaultRate, id: customer.id } })))
         }())
     }, [open])
 
@@ -106,13 +86,21 @@ const Index = () => {
                     <AutoComplete
                         autoFocus={true}
                         options={customers}
-                        value={customer.name}
+                        value={company.name}
                         placeholder="Select a customer, staring typing for suggestions"
                         onChange={(value) => dispatch({
                             type: "setCustomerDetails",
                             payload: {
                                 name: value,
-                                defaultRate: value ? 100:0,
+                                defaultRate: 0
+                            }
+                        })}
+                        onSelect={(value, option) => dispatch({
+                            type: "setCustomerDetails",
+                            payload: {
+                                id: option.data.id,
+                                name: value,
+                                defaultRate: option.data.rate
                             }
                         })}
                     />
@@ -121,7 +109,7 @@ const Index = () => {
                     label="Default Price"
                     required
                 >
-                    <Input type='number' value={customer.defaultRate} onInput={(event) => dispatch({
+                    <Input type='number' value={company.defaultRate} onInput={(event) => dispatch({
                         type: 'setCustomerRate',
                         payload: {
                             defaultRate: event.currentTarget.value
