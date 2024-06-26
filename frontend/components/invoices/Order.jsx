@@ -39,6 +39,7 @@ function Order({ tableId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
       width: "30%",
       align: "start",
       editable: true,
+
     },
     {
       title: "Image",
@@ -93,7 +94,7 @@ function Order({ tableId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
       align: "center",
       render: (text, row) => <InputNumber
         value={text}
-        onInput={(value) => onRowEdit(row, { quantity: value }, 'setQuantity')}
+        onInput={(value) => onRowEdit(row, { quantity }, 'setQuantity')}
         min={1}
         max={1000}
         variant="filled" precision={0} />
