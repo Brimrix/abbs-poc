@@ -9,10 +9,7 @@ dependencies = [
     "django>=5.0.6",
     "djangorestframework>=3.15.1",
     "django-vite>=3.0.4",
-    "django-cors-headers>=4.3.1",
-    "pre-commit>=3.7.1",
     "drf-spectacular>=0.27.2",
-    "factory-boy>=3.3.0",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"
@@ -21,3 +18,11 @@ license = {text = "CLP"}
 
 [tool.pdm]
 distribution = false
+
+[tool.pdm.dev-dependencies]
+test = [
+    "factory-boy>=3.3.0",
+]
+dev = [
+    "pre-commit>=3.7.1",
+]

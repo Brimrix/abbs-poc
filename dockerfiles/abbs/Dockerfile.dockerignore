@@ -1,0 +1,19 @@
+*
+
+# Backend
+!abbs
+!core
+
+!manage.py
+!pyproject.toml
+!pdm.lock
+
+# Frontend
+!frontend
+!templates
+
+!package-lock.json
+!package.json
+!postcss.config.js
+!tailwind.config.js
+!vite.config.js

@@ -1,0 +1,3 @@
+ARG NGINX_IMAGE=1.27.0-bookworm
+
+FROM ${NGINX_IMAGE}

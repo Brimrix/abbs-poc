@@ -1,0 +1,22 @@
+name: abbs
+services:
+  web:
+    build:
+      context: ../..
+      dockerfile: dockerfiles/abbs/Dockerfile
+      target: production
+    command: [ 'python', 'manage.py', 'runserver', '0.0.0.0:8000' ]
+    container_name: abbs-app
+    depends_on:
+      - database
+    env_file:
+      - ../../.env
+    ports:
+      - 8000:8000
+
+  database:
+    image: postgres
+    env_file:
+      - ../../.env
+
+volumes:
