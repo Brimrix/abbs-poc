@@ -128,7 +128,7 @@ export function BillProvider({ children }) {
         newState.selectedInvoice.discount = action.payload.discount
         break
       case "addItem":
-        // Adds all type of rows, depends on tableId & order
+        // Adds all type of rows, depends on objectId & order
         newState.selectedInvoice.items = [
           ...state.selectedInvoice.items,
           addItem(state, action)
@@ -153,7 +153,7 @@ export function BillProvider({ children }) {
 
       case "deleteRow":
         newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.id !== action.payload.key)
-        newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.tableId !== action.payload.key)
+        newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.objectId !== action.payload.key)
 
         break;
 

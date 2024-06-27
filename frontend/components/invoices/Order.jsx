@@ -3,7 +3,7 @@ import Editable from "@/components/invoices/Editable.jsx";
 import ImageSelector from "@/components/invoices/ImageSelector";
 import { MinusCircleOutlined } from '@ant-design/icons';
 
-function Order({ tableId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
+function Order({ objectId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
 
   const columns = [
     {
@@ -19,7 +19,7 @@ function Order({ tableId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
         >
           <MinusCircleOutlined
             className="text-red-500"
-            onClick={() => onRowDelete(row.key)} />
+            onClick={() => onRowDelete(row.id)} />
         </Popover>
       }
     },
@@ -48,9 +48,9 @@ function Order({ tableId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
       width: "10%",
       render(text, row) {
         return <ImageSelector
-          id={row.key}
+          id={row.id}
           renderSource={row.image_src}
-          tableId={tableId}
+          objectId={objectId}
           record={row}
         />
       }
@@ -78,11 +78,11 @@ function Order({ tableId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
     {
       title: "Price",
       dataIndex: "price",
-      key: "price",
+      key: "unit_price",
       align: "center",
       render: (text, row) => <InputNumber
-        value={text}
-        onInput={(value) => onRowEdit(row, { price: value }, 'setPrice')}
+        value={row.unit_price}
+        onInput={(value) => onRowEdit(row, { unit_price: value }, 'setPrice')}
         min={1}
         variant="filled" precision={2} />
     },
@@ -141,7 +141,7 @@ function Order({ tableId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
           pagination={false}
         />
         <Typography.Text
-          onClick={() => onRowAdd(tableId)}
+          onClick={() => onRowAdd(objectId)}
           className="text-primary cursor-pointer ml-32 px-2 p-px m-px hover:bg-primary hover:text-white max-w-max rounded-md"
           strong
         >

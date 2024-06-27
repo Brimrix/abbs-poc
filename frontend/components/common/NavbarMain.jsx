@@ -21,13 +21,13 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 
 
+
 const { Header } = Layout;
 const { Search } = Input;
 
 function NavbarMain() {
   const navigate = useNavigate();
-  const [_, setCookie] = useCookies()
-
+  const [_, setCookie, removeCookie] = useCookies();
   const items = [
     {
       key: "1",
@@ -35,7 +35,7 @@ function NavbarMain() {
         <div className="position-relative p-1 w-[250px]">
           <div className="flex justify-between items-center"
             onClick={() => {
-              setCookie('accessToken', null)
+              removeCookie("accessToken");
               navigate("/login")
             }}>
             Logout <LogoutOutlined />

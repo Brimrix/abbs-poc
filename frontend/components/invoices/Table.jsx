@@ -20,7 +20,7 @@ const IconLink = ({ icon }) => (
   </div>
 );
 
-function Table({ title, invoiceId = null }) {
+function Table({ title, invoiceId = null, objectId }) {
   const {
     state: { selectedInvoice },
     dispatch,
@@ -51,7 +51,7 @@ function Table({ title, invoiceId = null }) {
     (row, cellSource) => {
       dispatch({
         type: "updateRow",
-        payload: { row, id: row.id, cellSource, objectId: invoiceId },
+        payload: { row, id: row.id, cellSource, objectId: row.objectId },
       });
     },
     [dispatch]
@@ -126,7 +126,7 @@ function Table({ title, invoiceId = null }) {
         return isOrderRow(row) ? "" : <ImageSelector
           id={row.id}
           renderSource={row.image_src}
-          tableId={invoiceId}
+          objectId={"root"}
           record={row}
         />
       }
@@ -310,27 +310,30 @@ function Table({ title, invoiceId = null }) {
           pagination={false}
           components={components}
           className="invoice-table max-h-[75vh] overflow-auto border-y-2"
-          dataSource={selectedInvoice.items || []}
+          dataSource={selectedInvoice.items.filter(item => item.objectId === "root") || []}
           columns={columnsConfig}
           size="small"
           expandable={{
             columnWidth: "2%",
             expandedRowRender: (row) => <Order
-              tableId={row.key}
-              rows={selectedInvoice.items.filter(item => item.objectId === row.key)}
-              onRowAdd={(nestedTableId) => handleAddRow(nestedTableId)}
-              onRowSave={(nestedTableId) => handleSaveRow(nestedTableId)}
+              objectId={row.id}
+              rows={selectedInvoice.items.filter(item => item.objectId === row.id)}
+              onRowAdd={(nestedobjectId) => handleAddRow(nestedobjectId)}
+              onRowSave={(nestedobjectId) => handleSaveRow(nestedobjectId)}
               onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
               onRowDelete={(id) => setDeleteRow(id)}
             />,
             rowExpandable: (row) => isOrderRow(row),
             expandedRowClassName: () => 'bg-sky-50'
+
+
+
           }}
         />
         <div className="flex gap-2 px-10 items-center justify-between">
           <div className="space-x-2">
             <Typography.Text
-              onClick={() => handleAddRow(invoiceId)}
+              onClick={() => handleAddRow(objectId)}
               className="text-primary p-2 hover:bg-primary hover:text-white border border-primary rounded-md"
               strong
             >
@@ -339,7 +342,7 @@ function Table({ title, invoiceId = null }) {
             </Typography.Text>
 
             <Typography.Text
-              onClick={() => handleAddRow(invoiceId, 'order')}
+              onClick={() => handleAddRow(objectId, 'order')}
               className="text-primary  p-2  hover:bg-primary hover:text-white border border-primary rounded-md"
               strong
             >
