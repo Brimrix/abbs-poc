@@ -20,7 +20,7 @@ const IconLink = ({ icon }) => (
   </div>
 );
 
-function Table({ title, invoiceId = null, objectId }) {
+function Table({ title, invoiceId = null, objectId=null }) {
   const {
     state: { selectedInvoice },
     dispatch,
@@ -31,6 +31,14 @@ function Table({ title, invoiceId = null, objectId }) {
   const [deleteRow, setDeleteRow] = useState(null);
   const [saveInvoice, setSaveInvoice] = useState(false)
   const [customers, setCustomers] = useState([])
+  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+
+  const handleExpand = (expanded, record) => {
+    const keys = expanded
+      ? [...expandedRowKeys, record.id]
+      : expandedRowKeys.filter(key => key !== record.id);
+    setExpandedRowKeys(keys);
+  };
 
   const [form] = Form.useForm()
   const subTotal = selectedInvoice.items.reduce((acc, item) => acc + item.amount, 0)
@@ -41,11 +49,23 @@ function Table({ title, invoiceId = null, objectId }) {
     dispatch({
       type: "addItem",
       payload: {
-        model: order ? 'order' : "invoice",
+        model: order ? "order" : "invoice",
         objectId: parent_id,
       },
     });
   };
+
+  const handleOrderItem = (parent_id, order = null) => {
+    dispatch({
+      type: "addOrderItem",
+      payload: {
+        model: order ? "order" : "invoice",
+        objectId: parent_id,
+      },
+    });
+  };
+
+
 
   const handleSaveRow = useCallback(
     (row, cellSource) => {
@@ -62,6 +82,7 @@ function Table({ title, invoiceId = null, objectId }) {
       type: actionType,
       payload: {
         id: row.id,
+        objectId: row.objectId,
         ...payload
       },
     })
@@ -126,7 +147,7 @@ function Table({ title, invoiceId = null, objectId }) {
         return isOrderRow(row) ? "" : <ImageSelector
           id={row.id}
           renderSource={row.image_src}
-          objectId={"root"}
+          objectId={1}
           record={row}
         />
       }
@@ -161,7 +182,7 @@ function Table({ title, invoiceId = null, objectId }) {
       align: "center",
       render(text, row) {
         return isOrderRow(row) ? "" : <InputNumber
-          value={text}
+          value={row.price}
           onInput={(value) => handleUpdateRowCell(row, { unit_price: value }, 'setPrice')}
           min={1}
           variant="filled" precision={2} />
@@ -310,25 +331,28 @@ function Table({ title, invoiceId = null, objectId }) {
           pagination={false}
           components={components}
           className="invoice-table max-h-[75vh] overflow-auto border-y-2"
-          dataSource={selectedInvoice.items.filter(item => item.objectId === "root") || []}
+          dataSource={selectedInvoice.items}
           columns={columnsConfig}
           size="small"
           expandable={{
             columnWidth: "2%",
             expandedRowRender: (row) => <Order
               objectId={row.id}
-              rows={selectedInvoice.items.filter(item => item.objectId === row.id)}
-              onRowAdd={(nestedobjectId) => handleAddRow(nestedobjectId)}
+              rows={(selectedInvoice.orders.filter(item => item.id === row.id))[0].items}
+              onRowAdd={(nestedobjectId) => handleOrderItem(nestedobjectId)}
               onRowSave={(nestedobjectId) => handleSaveRow(nestedobjectId)}
               onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
               onRowDelete={(id) => setDeleteRow(id)}
             />,
             rowExpandable: (row) => isOrderRow(row),
-            expandedRowClassName: () => 'bg-sky-50'
+            expandedRowClassName: () => 'bg-sky-50',
+            expandedRowKeys: expandedRowKeys,
+            onExpand: handleExpand
 
 
 
           }}
+          rowKey = "id"
         />
         <div className="flex gap-2 px-10 items-center justify-between">
           <div className="space-x-2">

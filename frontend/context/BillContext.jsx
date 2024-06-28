@@ -40,10 +40,11 @@ export function BillProvider({ children }) {
   }
 
   function addItem(state, action) {
-    return {
+    return  {
       id: createItemKey(),
       objectId: action.payload.objectId,
       description: createItemDescription(state, action.payload),
+      model: action.payload.model,
       upload: null,
       image_src: "",
       height: 0,
@@ -52,7 +53,6 @@ export function BillProvider({ children }) {
       unit_price: state.selectedInvoice.company.defaultRate || 0,
       quantity: 1,
       amount: 0,
-      model: action.payload.model
     };
   }
 
@@ -103,6 +103,7 @@ export function BillProvider({ children }) {
 
   const handleLoadInvoiceDetail = async (id) => {
     const { ok, data } = await useFetch(`api/invoices/${id}/`)
+    console.log(data);
     if (ok) {
       message.info('Invoice opened in edit mode')
       dispatch({
@@ -128,27 +129,72 @@ export function BillProvider({ children }) {
         newState.selectedInvoice.discount = action.payload.discount
         break
       case "addItem":
+        console.log(newState.selectedInvoice);
+        const item = addItem(state, action);
+        if(action.payload.model === "order"){
+          newState.selectedInvoice.orders = [
+            ...state.selectedInvoice.orders,
+            {...item, items: []}
+          ]
+        }
         // Adds all type of rows, depends on objectId & order
         newState.selectedInvoice.items = [
           ...state.selectedInvoice.items,
-          addItem(state, action)
+          item
         ]
         break;
+
+      case "addOrderItem":
+
+      let Index = newState.selectedInvoice.orders.findIndex(item => item.id === action.payload.objectId);
+
+
+        let updatedOrders = [...newState.selectedInvoice.orders];
+        const items = updatedOrders[Index].items;
+        updatedOrders[Index].items = [...items, (addItem(state, action))]
+        console.log(updatedOrders);
+        newState.selectedInvoice.orders = [...updatedOrders];
+
+
+      break;
+
 
       case "setPrice":
       case "setQuantity":
       case "setHeight":
       case "setWidth":
+        let orderedIndex = newState.selectedInvoice.orders?.findIndex(item => item.id === action.payload.objectId);
+        if(typeof orderedIndex !== "undefined" && orderedIndex !== -1){
+          newState.selectedInvoice.orders[orderedIndex].items = state.selectedInvoice.orders[orderedIndex].items.map(item =>
+            item.id === action.payload.id
+              ? updateRow(item, action.payload) : item)
+        }
+        else{
         newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
           item.id === action.payload.id ? updateRow(item, action.payload) : item
         )
+      }
         break;
 
       case "setImageData":
-        newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
-          item.id === action.payload.id
-            ? setItemImage(item, action.payload)
-            : item)
+        let orderIndex = newState.selectedInvoice.orders.findIndex(item => item.id === action.payload.objectId);
+        if(typeof orderIndex !== "undefined" && orderIndex !== -1){
+          newState.selectedInvoice.orders[orderIndex].items = state.selectedInvoice.orders[orderIndex].items.map(item =>
+            item.id === action.payload.id
+              ? setItemImage(item, action.payload)
+              : item)
+        }
+        else{
+
+          newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
+            item.id === action.payload.id
+              ? setItemImage(item, action.payload)
+              : item)
+
+        }
+
+
+
         break;
 
       case "deleteRow":

@@ -66,7 +66,7 @@ function ImageSelector({ id, renderSource, objectId = null, record }) {
                   image_src: imageUrl,
                   height: calculatedHeight,
                   width: calculatedWidth,
-                  objectId: objectId
+                  objectId: objectId,
                 },
               });
               message.success("Successfully uploaded");

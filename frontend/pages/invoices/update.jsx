@@ -4,6 +4,6 @@ import Table from "@/components/invoices/Table";
 
 const InvoiceUpdate = () => {
     const { id } = useParams()
-    return <Table invoiceId={id} title={`Edit invoice: ${id}`} />
+    return <Table objectId={id} invoiceId={id} title={`Edit invoice: ${id}`} />
 }
 export default InvoiceUpdate
