@@ -21,15 +21,6 @@ function ImageSelector({ id, renderSource, objectId = null, record }) {
   const { dispatch } = useBillContext()
 
   useEffect(() => {
-    let flag = true;
-    if (flag) {
-      setImageUrl(renderSource);
-    }
-
-    return () => (flag = false);
-  }, [renderSource]);
-
-  useEffect(() => {
     if (imageUrl && selectedFile) {
       const imageFile = new Image();
       imageFile.src = imageUrl;

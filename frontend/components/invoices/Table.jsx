@@ -50,7 +50,7 @@ function Table({ title, invoiceId = null, objectId=null }) {
     dispatch({
       type: "addItem",
       payload: {
-        model: order ? "order" : "invoice",
+        model: order? "order" : "invoice",
         objectId: parent_id,
       },
     });
@@ -58,9 +58,9 @@ function Table({ title, invoiceId = null, objectId=null }) {
 
   const handleOrderItem = (parent_id, order = null) => {
     dispatch({
-      type: "addOrderItem",
+      type: "addInnerOrderItem",
       payload: {
-        model: order ? "order" : "invoice",
+        model: "order",
         objectId: parent_id,
       },
     });
@@ -334,7 +334,7 @@ function Table({ title, invoiceId = null, objectId=null }) {
           pagination={false}
           components={components}
           className="invoice-table max-h-[75vh] overflow-auto border-y-2"
-          dataSource={selectedInvoice.items}
+          dataSource={[...selectedInvoice.items, ...selectedInvoice.orders]}
           columns={columnsConfig}
           size="small"
           expandable={{

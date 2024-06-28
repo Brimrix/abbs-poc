@@ -4,7 +4,6 @@ import { message } from "antd";
 
 const billContext = createContext();
 
-
 export function BillProvider({ children }) {
   const initialState = {
     invoices: [],
@@ -143,25 +142,24 @@ export function BillProvider({ children }) {
             {...item, items: []}
           ]
         }
-
-        newState.selectedInvoice.items = [
+        else
+        {newState.selectedInvoice.items = [
           ...state.selectedInvoice.items,
           item
-        ]
+        ]}
 
 
         break;
 
-      case "addOrderItem":
+      case "addInnerOrderItem":
 
       let Index = getOrderIndex(state, action.payload.objectId);
 
-
-        let updatedOrders = [...newState.selectedInvoice.orders];
-        const items = updatedOrders[Index].items;
-        updatedOrders[Index].items = [...items, (addItem(state, action))]
-        console.log(updatedOrders);
-        newState.selectedInvoice.orders = [...updatedOrders];
+      let updatedOrders = [...newState.selectedInvoice.orders];
+      const items = updatedOrders[Index].items;
+      updatedOrders[Index].items = [...items, addItem(state, action)];
+      console.log(updatedOrders);
+      newState.selectedInvoice.orders = updatedOrders;
 
 
       break;
@@ -204,11 +202,18 @@ export function BillProvider({ children }) {
         break;
 
       case "deleteRow":
+
+      // check if we need to remove item or order
+      // check if order exists against row id
+
         if(action.payload.objectId){
           const id = getOrderIndex(state, action.payload.objectId);
           newState.selectedInvoice.orders[id].items = state.selectedInvoice.orders[id].items.filter(item => item.id !== action.payload.key)
         }
-        newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.id !== action.payload.key)
+        else{
+          newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.id !== action.payload.key)
+        }
+
         break;
 
       case "updateRow":
