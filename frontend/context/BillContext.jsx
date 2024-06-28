@@ -63,6 +63,10 @@ export function BillProvider({ children }) {
     return state.selectedInvoice.orders.findIndex(order => order.id === id)
   }
 
+  function isOrderRow(state, id){
+    return state.selectedInvoice.orders.some(order => order.id === id);
+  }
+
   function updateRow(row, items) {
     const newRow = {
       ...row,
@@ -92,6 +96,7 @@ export function BillProvider({ children }) {
       method: 'POST',
       body: JSON.stringify({
         items: state.selectedInvoice.items.map(item => ({ ...item, object_id: item.objectId })), company: state.selectedInvoice.company.id,
+        orders: state.selectedInvoice.orders.map(item => ({ ...item, object_id: item.objectId }))
       })
     })
 
@@ -205,8 +210,14 @@ export function BillProvider({ children }) {
 
       // check if we need to remove item or order
       // check if order exists against row id
+       debugger;
+        if(isOrderRow(state, action.payload.key)){
+          // The complete order needs to be deleted
+          newState.selectedInvoice.orders = state.selectedInvoice.orders.filter(order => order.id !== action.payload.key)
 
-        if(action.payload.objectId){
+        }
+        else if(action.payload.objectId){
+          // The item inside an order row needs to be deleted
           const id = getOrderIndex(state, action.payload.objectId);
           newState.selectedInvoice.orders[id].items = state.selectedInvoice.orders[id].items.filter(item => item.id !== action.payload.key)
         }
@@ -252,7 +263,11 @@ export function BillProvider({ children }) {
         break;
 
       case 'setSelectedInvoice':
-        newState.selectedInvoice = action.payload
+        debugger;
+        let orders = action.payload.orders;
+        newState.selectedInvoice = action.payload;
+        orders = orders.map(item => ({...item, model: "order"}));
+        newState.selectedInvoice.orders = orders;
         break;
 
       case 'resetSelectedInvoice':

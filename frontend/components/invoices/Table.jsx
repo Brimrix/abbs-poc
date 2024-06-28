@@ -117,7 +117,8 @@ function Table({ title, invoiceId = null, objectId=null }) {
         >
           <MinusCircleOutlined
             className="text-red-500"
-            onClick={() => setDeleteRow(row.id)} />
+            onClick={() =>  setDeleteRow(row.id)}
+             />
         </Popover>
       }
     },
@@ -334,7 +335,7 @@ function Table({ title, invoiceId = null, objectId=null }) {
           pagination={false}
           components={components}
           className="invoice-table max-h-[75vh] overflow-auto border-y-2"
-          dataSource={[...selectedInvoice.items, ...selectedInvoice.orders]}
+          dataSource={[...selectedInvoice.orders, ...selectedInvoice.items]}
           columns={columnsConfig}
           size="small"
           expandable={{
