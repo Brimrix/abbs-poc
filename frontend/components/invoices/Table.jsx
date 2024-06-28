@@ -32,6 +32,7 @@ function Table({ title, invoiceId = null, objectId=null }) {
   const [saveInvoice, setSaveInvoice] = useState(false)
   const [customers, setCustomers] = useState([])
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+  const [deleteObjectId, setDeleteObjectId] = useState(null);
 
   const handleExpand = (expanded, record) => {
     const keys = expanded
@@ -246,9 +247,11 @@ function Table({ title, invoiceId = null, objectId=null }) {
             type: 'deleteRow',
             payload: {
               key: deleteRow,
+              objectId: deleteObjectId
             },
           })
-          setDeleteRow(null)
+          setDeleteRow(null);
+          setDeleteObjectId(null);
         }}
         onCancel={() => setDeleteRow(null)}
         footer={(_, { OkBtn, CancelBtn }) => (
@@ -342,7 +345,10 @@ function Table({ title, invoiceId = null, objectId=null }) {
               onRowAdd={(nestedobjectId) => handleOrderItem(nestedobjectId)}
               onRowSave={(nestedobjectId) => handleSaveRow(nestedobjectId)}
               onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
-              onRowDelete={(id) => setDeleteRow(id)}
+              onRowDelete={(id, objectId) => {
+                setDeleteRow(id);
+                setDeleteObjectId(objectId);
+              }}
             />,
             rowExpandable: (row) => isOrderRow(row),
             expandedRowClassName: () => 'bg-sky-50',

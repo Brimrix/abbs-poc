@@ -60,6 +60,10 @@ export function BillProvider({ children }) {
     return updateRow(row, payload)
   }
 
+  function getOrderIndex(state, id) {
+    return state.selectedInvoice.orders.findIndex(order => order.id === id)
+  }
+
   function updateRow(row, items) {
     const newRow = {
       ...row,
@@ -73,6 +77,7 @@ export function BillProvider({ children }) {
   const handleLoadInvoices = async () => {
     try {
       const { ok, data } = await useFetch(`api/invoices/`);
+      console.log(data);
       dispatch({
         type: "setInvoices",
         payload: data
@@ -83,6 +88,7 @@ export function BillProvider({ children }) {
   };
 
   const handleSaveInvoice = async () => {
+
     const { ok, data } = await useFetch('api/invoices/', {
       method: 'POST',
       body: JSON.stringify({
@@ -137,16 +143,18 @@ export function BillProvider({ children }) {
             {...item, items: []}
           ]
         }
-        // Adds all type of rows, depends on objectId & order
+
         newState.selectedInvoice.items = [
           ...state.selectedInvoice.items,
           item
         ]
+
+
         break;
 
       case "addOrderItem":
 
-      let Index = newState.selectedInvoice.orders.findIndex(item => item.id === action.payload.objectId);
+      let Index = getOrderIndex(state, action.payload.objectId);
 
 
         let updatedOrders = [...newState.selectedInvoice.orders];
@@ -163,7 +171,7 @@ export function BillProvider({ children }) {
       case "setQuantity":
       case "setHeight":
       case "setWidth":
-        let orderedIndex = newState.selectedInvoice.orders?.findIndex(item => item.id === action.payload.objectId);
+        let orderedIndex = getOrderIndex(state, action.payload.objectId);
         if(typeof orderedIndex !== "undefined" && orderedIndex !== -1){
           newState.selectedInvoice.orders[orderedIndex].items = state.selectedInvoice.orders[orderedIndex].items.map(item =>
             item.id === action.payload.id
@@ -177,7 +185,7 @@ export function BillProvider({ children }) {
         break;
 
       case "setImageData":
-        let orderIndex = newState.selectedInvoice.orders.findIndex(item => item.id === action.payload.objectId);
+        let orderIndex = getOrderIndex(state, action.payload.objectId);
         if(typeof orderIndex !== "undefined" && orderIndex !== -1){
           newState.selectedInvoice.orders[orderIndex].items = state.selectedInvoice.orders[orderIndex].items.map(item =>
             item.id === action.payload.id
@@ -193,14 +201,14 @@ export function BillProvider({ children }) {
 
         }
 
-
-
         break;
 
       case "deleteRow":
+        if(action.payload.objectId){
+          const id = getOrderIndex(state, action.payload.objectId);
+          newState.selectedInvoice.orders[id].items = state.selectedInvoice.orders[id].items.filter(item => item.id !== action.payload.key)
+        }
         newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.id !== action.payload.key)
-        newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.objectId !== action.payload.key)
-
         break;
 
       case "updateRow":
