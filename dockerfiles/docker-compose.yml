@@ -1,0 +1,36 @@
+name: abbs
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: dockerfiles/abbs/Dockerfile
+      target: production
+    command: [ 'python', 'manage.py', 'runserver', '0.0.0.0:8000' ]
+    depends_on:
+      - database
+    env_file:
+      - ../.env
+    expose:
+      - 8000
+    volumes:
+      - static:/app/staticfiles/
+
+  database:
+    image: postgres
+    env_file:
+      - ../.env
+    expose:
+      - 5432
+
+  server:
+    build:
+      context: ..
+      dockerfile: dockerfiles/nginx/Dockerfile
+    ports:
+      - 80:80
+      # - 443:443 #HTTPs ports
+    volumes:
+      - static:/staticfiles/
+
+volumes:
+  static:

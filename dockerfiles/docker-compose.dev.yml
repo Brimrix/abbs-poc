@@ -4,7 +4,7 @@ services:
       file: docker-compose.yml
       service: web
     volumes:
-      - ../../:/app
+      - ../:/app
     build:
       target: testing
     command:
