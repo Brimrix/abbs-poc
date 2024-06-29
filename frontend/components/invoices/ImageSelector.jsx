@@ -13,7 +13,7 @@ const getBase64 = (file, callback) => {
   reader.readAsDataURL(file);
 };
 
-function ImageSelector({ id, renderSource, objectId = null, record }) {
+function ImageSelector({ id, image_src, order = null }) {
   const [imageUrl, setImageUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState();
 
@@ -42,7 +42,7 @@ function ImageSelector({ id, renderSource, objectId = null, record }) {
               Math.round((this.width / xResolution) * 100) / 100;
 
             {
-              record.image_src === "" &&
+              image_src === "" &&
                 dispatch({
                   type: "addItem",
                   payload: {
@@ -100,7 +100,7 @@ function ImageSelector({ id, renderSource, objectId = null, record }) {
   return (
     <Popover
       placement="left"
-      content={imageHoverPopover(record)}
+      content={imageHoverPopover(image_src)}
     >
       <Upload
         accept="*.jpg,*.png"
