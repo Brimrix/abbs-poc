@@ -20,7 +20,7 @@ const IconLink = ({ icon }) => (
   </div>
 );
 
-function Table({ title, invoiceId = null, objectId=null }) {
+function Table({ title, invoiceId = null, objectId = null }) {
   const {
     state: { selectedInvoice },
     dispatch,
@@ -29,17 +29,10 @@ function Table({ title, invoiceId = null, objectId=null }) {
   } = useBillContext();
 
   const [deleteRow, setDeleteRow] = useState(null);
+  const [deleteOrderRow, setDeleteOrderRow] = useState(null);
+
   const [saveInvoice, setSaveInvoice] = useState(false)
   const [customers, setCustomers] = useState([])
-  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
-  const [deleteObjectId, setDeleteObjectId] = useState(null);
-
-  const handleExpand = (expanded, record) => {
-    const keys = expanded
-      ? [...expandedRowKeys, record.id]
-      : expandedRowKeys.filter(key => key !== record.id);
-    setExpandedRowKeys(keys);
-  };
 
   const [form] = Form.useForm()
   const subTotal = selectedInvoice.items.reduce((acc, item) => acc + item.amount, 0)
@@ -50,23 +43,11 @@ function Table({ title, invoiceId = null, objectId=null }) {
     dispatch({
       type: "addItem",
       payload: {
-        model: order? "order" : "invoice",
+        model: order ? "order" : "invoice",
         objectId: parent_id,
       },
     });
   };
-
-  const handleOrderItem = (parent_id, order = null) => {
-    dispatch({
-      type: "addInnerOrderItem",
-      payload: {
-        model: "order",
-        objectId: parent_id,
-      },
-    });
-  };
-
-
 
   const handleSaveRow = useCallback(
     (row, cellSource) => {
@@ -90,8 +71,16 @@ function Table({ title, invoiceId = null, objectId=null }) {
       },
     })
   }
-
-  const isOrderRow = (row) => row.model==='order';
+  const handleOrderItem = (parent_id, order = null) => {
+    dispatch({
+      type: "addInnerOrderItem",
+      payload: {
+        model: "order",
+        objectId: parent_id,
+      },
+    });
+  };
+  const isOrderRow = (row) => row.model === 'order';
 
   useEffect(() => {
     invoiceId && handleLoadInvoiceDetail(invoiceId)
@@ -119,8 +108,8 @@ function Table({ title, invoiceId = null, objectId=null }) {
         >
           <MinusCircleOutlined
             className="text-red-500"
-            onClick={() =>  setDeleteRow(row.id)}
-             />
+            onClick={() => isOrderRow(row) ? setDeleteOrderRow(row.uniqueId) : setDeleteRow(row.uniqueId)}
+          />
         </Popover>
       }
     },
@@ -149,10 +138,8 @@ function Table({ title, invoiceId = null, objectId=null }) {
       width: "10%",
       render(_, row) {
         return isOrderRow(row) ? "" : <ImageSelector
-          id={row.id}
-          renderSource={row.image_src}
-          objectId={1}
-          record={row}
+          itemId={row.uniqueId}
+          imgSrc={row.img_src}
         />
       }
     },
@@ -186,7 +173,7 @@ function Table({ title, invoiceId = null, objectId=null }) {
       align: "center",
       render(text, row) {
         return isOrderRow(row) ? "" : <InputNumber
-          value={row.price}
+          value={row.unit_price}
           onInput={(value) => handleUpdateRowCell(row, { unit_price: value }, 'setPrice')}
           min={1}
           variant="filled" precision={2} />
@@ -240,7 +227,7 @@ function Table({ title, invoiceId = null, objectId=null }) {
   return (
     <>
       <Modal
-        open={Boolean(deleteRow)}
+        open={Boolean(deleteRow) || Boolean(deleteOrderRow)}
         okText="Delete"
         okButtonProps={{ className: 'btn-app-accent' }}
         cancelButtonProps={{ className: 'text-primary' }}
@@ -249,14 +236,17 @@ function Table({ title, invoiceId = null, objectId=null }) {
           dispatch({
             type: 'deleteRow',
             payload: {
-              key: deleteRow,
-              objectId: deleteObjectId
+              itemId: deleteRow,
+              orderId: deleteOrderRow
             },
           })
           setDeleteRow(null);
-          setDeleteObjectId(null);
+          setDeleteOrderRow(null);
         }}
-        onCancel={() => setDeleteRow(null)}
+        onCancel={() => {
+          setDeleteRow(null)
+          setDeleteOrderRow(null)
+        }}
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
             <CancelBtn />
@@ -341,26 +331,22 @@ function Table({ title, invoiceId = null, objectId=null }) {
           columns={columnsConfig}
           rowKey={record => record.id}
           size="small"
+          rowKey={(record => record.uniqueId)}
           expandable={{
             columnWidth: "2%",
             expandedRowRender: (row) => <Order
-              objectId={row.id}
-              rows={(selectedInvoice.orders.filter(item => item.id === row.id))[0].items}
+              objectId={row.uniqueId}
+              rows={(selectedInvoice.orders.find(order => order.id === row.id)).items}
               onRowAdd={(nestedobjectId) => handleOrderItem(nestedobjectId)}
-              onRowSave={(nestedobjectId) => handleSaveRow(nestedobjectId)}
-              onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
-              onRowDelete={(id, objectId) => {
-                setDeleteRow(id);
-                setDeleteObjectId(objectId);
+              // onRowSave={(nestedobjectId) => handleSaveRow(nestedobjectId)}
+              // onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
+              onRowDelete={(uniqueId, orderId) => {
+                setDeleteRow(uniqueId);
+                setDeleteOrderRow(orderId);
               }}
             />,
             rowExpandable: (row) => isOrderRow(row),
             expandedRowClassName: () => 'bg-sky-50',
-            expandedRowKeys: expandedRowKeys,
-            onExpand: handleExpand
-
-
-
           }}
         />
         <div className="flex gap-2 px-10 items-center justify-between">
