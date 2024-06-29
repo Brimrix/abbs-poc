@@ -12,7 +12,7 @@ FROM ${PYTHON_IMAGE} as builder
 
 WORKDIR /app
 COPY . .
-COPY --from=dashboard /dist /app/dist/
+COPY --from=dashboard /dist /app/dist
 
 RUN apt-get update \
     && apt upgrade \
@@ -33,7 +33,7 @@ FROM ${PYTHON_IMAGE} as production
 WORKDIR /app
 COPY --from=builder /app/ /app
 COPY --from=dashboard /dist /app/dist/
-ENV PATH='/app/.venv/bin:$PATH'
+ENV PATH=/app/.venv/bin:$PATH
 
 
 FROM builder as testing
