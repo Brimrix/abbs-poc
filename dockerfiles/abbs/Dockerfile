@@ -10,9 +10,9 @@ RUN npm install \
 
 FROM ${PYTHON_IMAGE} as builder
 
-WORKDIR /app
+WORKDIR /opt/abbs
 COPY . .
-COPY --from=dashboard /dist /app/dist
+COPY --from=dashboard /dist/ /app/dist/
 
 RUN apt-get update \
     && apt upgrade \
