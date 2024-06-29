@@ -19,12 +19,18 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
+from django.conf import settings
 
-apiurlpatterns = [
+schemaurls = [
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path("docs/", SpectacularSwaggerView.as_view(), name="documentation"),
+]
+
+apiurlpatterns = [
     path("", include("core.api.urls")),
 ]
+if settings.DEBUG:
+    apiurlpatterns.extend(schemaurls)
 
 urlpatterns = [
     path("login/", obtain_auth_token),

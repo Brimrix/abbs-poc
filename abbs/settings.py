@@ -10,22 +10,28 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+env = environ.Env(
+    DEBUG=(bool, False),
+    SECRET_KEY=(str, ""),
+    ALLOWED_HOSTS=(list, []),
+    DATABASES=(dict, {}),
+)
+environ.Env.read_env(BASE_DIR.joinpath(".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-98tio&fs$r6@hsuh(#+u0&d8%v01y!vv#pl$ac3uxhq!_)xc@@"
-
+SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 AUTH_USER_MODEL = "core.User"
 
 # Application definition
@@ -125,8 +131,6 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = "staticfiles"
 
-STATICFILES_DIRS = [BASE_DIR / "dist"]
-
 DJANGO_VITE = {"default": {"dev_mode": DEBUG}}
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -153,3 +157,6 @@ SPECTACULAR_SETTINGS = {
     # include schema endpoint into schema
     "SERVE_INCLUDE_SCHEMA": False,
 }
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
