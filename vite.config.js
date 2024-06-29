@@ -12,9 +12,6 @@ export default defineConfig({
       input: {
         home: path.resolve(__dirname, 'frontend/main.jsx'),
       },
-      output:{
-        dir:'staticfiles'
-      }
     },
   },
   resolve: {
