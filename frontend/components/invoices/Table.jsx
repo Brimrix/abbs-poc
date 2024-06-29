@@ -70,6 +70,7 @@ function Table({ title, invoiceId = null, objectId=null }) {
 
   const handleSaveRow = useCallback(
     (row, cellSource) => {
+      debugger;
       dispatch({
         type: "updateRow",
         payload: { row, id: row.id, cellSource, objectId: row.objectId },
@@ -79,6 +80,7 @@ function Table({ title, invoiceId = null, objectId=null }) {
   );
 
   const handleUpdateRowCell = (row, payload, actionType) => {
+    debugger;
     dispatch({
       type: actionType,
       payload: {
@@ -337,6 +339,7 @@ function Table({ title, invoiceId = null, objectId=null }) {
           className="invoice-table max-h-[75vh] overflow-auto border-y-2"
           dataSource={[...selectedInvoice.orders, ...selectedInvoice.items]}
           columns={columnsConfig}
+          rowKey={record => record.id}
           size="small"
           expandable={{
             columnWidth: "2%",
@@ -359,7 +362,6 @@ function Table({ title, invoiceId = null, objectId=null }) {
 
 
           }}
-          rowKey = "id"
         />
         <div className="flex gap-2 px-10 items-center justify-between">
           <div className="space-x-2">

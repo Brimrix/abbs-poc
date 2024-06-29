@@ -1,6 +1,8 @@
 import { createContext, useContext, useReducer } from "react";
 import { useFetch } from '@/hooks/useFetch';
 import { message } from "antd";
+import { v4 as uuidv4 } from 'uuid';
+
 
 const billContext = createContext();
 
@@ -29,13 +31,19 @@ export function BillProvider({ children }) {
 
   const createItemKey = () => {
     // Generating Unique Keys
-    let key = Number(Date.now());
+    let key = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
+
     return key
   }
 
   const createItemDescription = (state, payload) => {
     let description = "\u200b"
     return description
+  }
+
+  const addUniqueKeys = (items, uniqueId = null) => {
+    // The method to manage the unique keys for each item to prevent react error.
+    return items?.map(item => ({ ...item, itemId: item.id, id: uniqueId? uniqueId : createItemKey() }));
   }
 
   function addItem(state, action) {
@@ -80,7 +88,6 @@ export function BillProvider({ children }) {
   const handleLoadInvoices = async () => {
     try {
       const { ok, data } = await useFetch(`api/invoices/`);
-      console.log(data);
       dispatch({
         type: "setInvoices",
         payload: data
@@ -96,9 +103,8 @@ export function BillProvider({ children }) {
       method: 'POST',
       body: JSON.stringify({
         items: state.selectedInvoice.items.map(item => ({ ...item, object_id: item.objectId })), company: state.selectedInvoice.company.id,
-        orders: state.selectedInvoice.orders.map(item => ({ ...item, object_id: item.objectId }))
-      })
     })
+  })
 
     if (ok) {
       message.success(`Invoice saved. Id ${data.id}`)
@@ -114,6 +120,14 @@ export function BillProvider({ children }) {
   const handleLoadInvoiceDetail = async (id) => {
     const { ok, data } = await useFetch(`api/invoices/${id}/`)
     console.log(data);
+    data.items = addUniqueKeys(data.items);
+    data.orders = addUniqueKeys(data.orders);
+    data.orders = data.orders.map(order =>
+      {
+        debugger;
+         order.items = addUniqueKeys(order.items, id = order.id)
+        return order;
+      });
     if (ok) {
       message.info('Invoice opened in edit mode')
       dispatch({
@@ -162,6 +176,7 @@ export function BillProvider({ children }) {
 
       let updatedOrders = [...newState.selectedInvoice.orders];
       const items = updatedOrders[Index].items;
+      debugger;
       updatedOrders[Index].items = [...items, addItem(state, action)];
       console.log(updatedOrders);
       newState.selectedInvoice.orders = updatedOrders;
@@ -176,6 +191,7 @@ export function BillProvider({ children }) {
       case "setWidth":
         let orderedIndex = getOrderIndex(state, action.payload.objectId);
         if(typeof orderedIndex !== "undefined" && orderedIndex !== -1){
+          debugger;
           newState.selectedInvoice.orders[orderedIndex].items = state.selectedInvoice.orders[orderedIndex].items.map(item =>
             item.id === action.payload.id
               ? updateRow(item, action.payload) : item)
@@ -188,6 +204,7 @@ export function BillProvider({ children }) {
         break;
 
       case "setImageData":
+        debugger;
         let orderIndex = getOrderIndex(state, action.payload.objectId);
         if(typeof orderIndex !== "undefined" && orderIndex !== -1){
           newState.selectedInvoice.orders[orderIndex].items = state.selectedInvoice.orders[orderIndex].items.map(item =>
@@ -228,33 +245,69 @@ export function BillProvider({ children }) {
         break;
 
       case "updateRow":
+        debugger;
         const { id, cellSource, objectId, row } = action.payload;
         const { dataIndex } = cellSource;
-        const updatedItems = state.selectedInvoice.items.map(item => {
-          if (item.id === id && item.objectId === objectId) {
-            switch (dataIndex) {
-              case "height":
-                return {
-                  ...item,
-                  height: row.height || 0,
-                };
-              case "width":
-                return {
-                  ...item,
-                  width: row.width || 0,
-                };
-              case "description":
-                return {
-                  ...item,
-                  description: row.description || "\u200b",
-                };
-              default:
-                return item;
+        let orderDataIndex = getOrderIndex(state, action.payload.objectId);
+        let updatedItems;
+        if(typeof orderDataIndex !== "undefined" && orderDataIndex !== -1){
+          updatedItems = state.selectedInvoice.orders[orderDataIndex].items.map(item => {
+            if (item.id === id && item.objectId === objectId) {
+              switch (dataIndex) {
+                case "height":
+                  return {
+                    ...item,
+                    height: row.height || 0,
+                  };
+                case "width":
+                  return {
+                    ...item,
+                    width: row.width || 0,
+                  };
+                case "description":
+                  return {
+                    ...item,
+                    description: row.description || "\u200b",
+                  };
+                default:
+                  return item;
+              }
             }
-          }
-          return item;
-        });
+            return item;
+          });
 
+
+
+        }
+
+        else{
+
+          updatedItems = state.selectedInvoice.items.map(item => {
+            if (item.id === id && item.objectId === objectId) {
+              switch (dataIndex) {
+                case "height":
+                  return {
+                    ...item,
+                    height: row.height || 0,
+                  };
+                case "width":
+                  return {
+                    ...item,
+                    width: row.width || 0,
+                  };
+                case "description":
+                  return {
+                    ...item,
+                    description: row.description || "\u200b",
+                  };
+                default:
+                  return item;
+              }
+            }
+            return item;
+          });
+
+        }
         newState.selectedInvoice.items = updatedItems;
         break;
 

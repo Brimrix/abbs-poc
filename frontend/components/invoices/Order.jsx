@@ -123,7 +123,7 @@ function Order({ objectId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) 
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        onRowSave,
+        handleSave: onRowSave,
       }),
     };
   });
