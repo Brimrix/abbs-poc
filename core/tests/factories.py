@@ -1,6 +1,7 @@
 import factory
 from django.contrib.auth import get_user_model
 from core import models
+from django.contrib.contenttypes.models import ContentType
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -47,3 +48,35 @@ class OrderFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = models.Order
+
+
+class ItemsFactory(factory.django.DjangoModelFactory):
+    object_id = factory.SelfAttribute("content_object.id")
+    content_type = factory.LazyAttribute(
+        lambda obj: ContentType.objects.get_for_model(obj.content_object)
+    )
+    description = factory.Faker("pystr")
+
+    width = factory.Faker("pyfloat", min_value=1, max_value=1000, positive=True)
+    height = factory.Faker("pyfloat", min_value=1, max_value=1000, positive=True)
+    unit_price = factory.Faker("pyfloat", min_value=1, max_value=1000, positive=True)
+
+    quantity = factory.Faker("pyint", min_value=1, max_value=100)
+
+    class Meta:
+        exclude = ["content_object"]
+        abstract = True
+
+
+class InvoiceItemFactory(ItemsFactory):
+    content_object = factory.Iterator(models.Invoice.objects.all())
+
+    class Meta:
+        model = models.Item
+
+
+class OrderItemFactory(ItemsFactory):
+    content_object = factory.Iterator(models.Order.objects.all())
+
+    class Meta:
+        model = models.Item

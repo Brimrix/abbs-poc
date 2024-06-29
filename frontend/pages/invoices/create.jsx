@@ -14,7 +14,7 @@ const InvoiceCreate = () => {
   return mount ? (
     <Spin spinning={mount} />
   ) : (
-    <Table />
+    <Table title='New Invoice' />
   );
 };
 

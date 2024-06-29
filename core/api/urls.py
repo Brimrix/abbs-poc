@@ -29,6 +29,7 @@ urlpatterns = [
                 "post": "create",
             }
         ),
+        name="invoices-list",
     ),
     path(
         "invoices/<int:pk>/",
@@ -39,6 +40,7 @@ urlpatterns = [
                 "delete": "destroy",
             }
         ),
+        name="invoices-detail",
     ),
     path(
         "orders/",
@@ -71,6 +73,25 @@ urlpatterns = [
     path(
         "items/<int:pk>/",
         viewsets.ItemViewSet.as_view(
+            {
+                "get": "retrieve",
+                "put": "update",
+                "delete": "destroy",
+            }
+        ),
+    ),
+    path(
+        "companies/",
+        viewsets.CompanyViewSet.as_view(
+            {
+                "get": "list",
+                "post": "create",
+            }
+        ),
+    ),
+    path(
+        "companies/<int:pk>/",
+        viewsets.CompanyViewSet.as_view(
             {
                 "get": "retrieve",
                 "put": "update",

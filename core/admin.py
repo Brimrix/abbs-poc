@@ -7,7 +7,7 @@ from core import models
 
 @admin.register(get_user_model())
 class UserAdmin(UserAdmin):
-    pass
+    fieldsets = UserAdmin.fieldsets + (("Company", {"fields": ("company",)}),)
 
 
 @admin.register(models.Profile)
@@ -31,9 +31,10 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ["invoice"]
+    list_display = ["id", "invoice", "description"]
 
 
 @admin.register(models.Item)
 class ItemAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["id", "content_type", "object_id"]
+    list_filter = ["content_type"]

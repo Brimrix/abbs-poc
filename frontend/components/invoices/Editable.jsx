@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useBillContext } from '../../context/BillContext';
 import { Input, Form, InputNumber } from 'antd';
 
@@ -7,7 +7,6 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
   const inputRef = React.useRef(null);
   const [form] = Form.useForm(); // Get the form instance
   const {
-    state: { selectedInvoice },
     dispatch,
   } = useBillContext();
 
@@ -61,24 +60,23 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
               precision={2}
               onBlur={save}
               onChange={(value) => {
-                if(dataIndex === "height")
-                dispatch({
-                  type: "setHeight",
-                  payload: {
-                    key: record.key,
-                    height: value
+                if (dataIndex === "height")
+                  dispatch({
+                    type: "setHeight",
+                    payload: {
+                      id: record.id,
+                      height: value
 
-                  }
-                })
+                    }
+                  })
                 else
-                dispatch({
-                  type: "setWidth",
-                  payload: {
-                    key: record.key,
-                    width: value
-
-                  }
-                })
+                  dispatch({
+                    type: "setWidth",
+                    payload: {
+                      id: record.id,
+                      width: value
+                    }
+                  })
 
               }}
             />
@@ -88,7 +86,7 @@ const Editable = ({ title, editable, children, dataIndex, record, handleSave, ..
               variant="filled"
               onPressEnter={save}
               onBlur={save}
-              style={{color: "#0B6E4F"}}
+              style={{ color: "#0B6E4F" }}
             />
           ) : null}
         </Form.Item>

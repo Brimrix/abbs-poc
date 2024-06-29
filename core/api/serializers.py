@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from core import models
 from django.contrib.auth.password_validation import validate_password
+from django.contrib.contenttypes.models import ContentType
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,7 +16,7 @@ class SignUpSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField(default="")
 
-    company = serializers.CharField(source="profile.company")
+    company = serializers.CharField()
     phone = serializers.CharField(source="profile.phone")
     address = serializers.CharField(source="profile.address")
     confirm_password = serializers.CharField(write_only=True)
@@ -43,19 +44,15 @@ class SignUpSerializer(serializers.Serializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
-        company = models.Company.objects.get_or_create(
-            name=validated_data.pop("company")
-        )
         user_data = {
             field: validated_data[field]
-            for field in ["username", "first_name", "last_name"]
+            for field in ["username", "first_name", "last_name", "company"]
         }
 
         User = get_user_model()
         user = User.objects.create(
             **user_data,
             is_active=True,
-            company=company,
         )
         user.set_password(validated_data["password"])
         user.save()
@@ -64,21 +61,129 @@ class SignUpSerializer(serializers.Serializer):
         return user
 
 
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Company
+        fields = ["id", "name", "defaultRate"]
+
+
 class InvoiceSerializer(serializers.ModelSerializer):
-    company_name = serializers.ReadOnlyField(source="company.name")
+    company = serializers.ReadOnlyField(source="company.name")
 
     class Meta:
         model = models.Invoice
-        fields = ["id", "company", "company_name", "paid", "created_at"]
+        fields = ["id", "company", "paid", "created_at"]
 
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Order
-        fields = ["invoice"]
+        fields = ["id", "invoice"]
 
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Item
         fields = ["width", "height", "unit_price", "quantity"]
+
+
+class InvoiceItemSerializer(ItemSerializer):
+    object_id = serializers.IntegerField(required=False, allow_null=True)
+    model = serializers.SlugRelatedField(
+        slug_field="model",
+        source="content_type",
+        required=False,
+        queryset=ContentType.objects.filter(model__in=["order", "invoice"]),
+    )
+
+    class Meta:
+        model = models.Item
+        fields = ItemSerializer.Meta.fields + [
+            "id",
+            "object_id",
+            "description",
+            "model",
+            "area",
+            "amount",
+        ]
+
+
+class InvoiceOrderSerializer(serializers.ModelSerializer):
+    object_id = serializers.PrimaryKeyRelatedField(
+        source="invoice", queryset=models.Invoice.objects.all(), required=False
+    )
+    items = InvoiceItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Order
+        fields = ["id", "object_id", "description", "items"]
+
+    def create(self, validated_data):
+        items = validated_data.pop("items")
+        order = super().create(validated_data)
+        items_serializer = InvoiceItemSerializer(
+            data=[
+                {
+                    **item,
+                    "object_id": order.id,
+                    "model": "order",
+                }
+                for item in items
+            ],
+            many=True,
+        )
+
+        items_serializer.is_valid(raise_exception=True)
+        items_serializer.save()
+
+        return order
+
+
+class InvoiceCreateSerializer(serializers.ModelSerializer):
+    items = InvoiceItemSerializer(many=True)
+    orders = InvoiceOrderSerializer(many=True, required=False)
+
+    class Meta:
+        model = models.Invoice
+        fields = ["id", "company", "items", "orders", "discount"]
+
+    def create(self, validated_data):
+        items = validated_data.pop("items")
+        orders = validated_data.pop("orders") if "orders" in validated_data else None
+        invoice = super().create(validated_data)
+
+        if orders:
+            orders_serializer = InvoiceOrderSerializer(
+                data=[
+                    {
+                        **order,
+                        "object_id": invoice.id,
+                    }
+                    for order in orders
+                ],
+                many=True,
+            )
+
+            orders_serializer.is_valid(raise_exception=True)
+            orders_serializer.save()
+
+        items_serializer = InvoiceItemSerializer(
+            data=[
+                {
+                    **item,
+                    "object_id": invoice.id,
+                    "model": "invoice",
+                }
+                for item in items
+            ],
+            many=True,
+        )
+
+        items_serializer.is_valid(raise_exception=True)
+        items_serializer.save()
+
+        return invoice
+
+
+class InvoiceDetailSerializer(InvoiceCreateSerializer):
+    company = CompanySerializer(read_only=True)

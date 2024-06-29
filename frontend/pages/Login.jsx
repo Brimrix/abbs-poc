@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate, Link } from "react-router-dom";
 import { message, Form, Input, Button } from "antd";
-import { getCookieValue } from "@/utils";
+import { useFetch } from "@/hooks/useFetch";
 
 import "@/assets/styles/LoginStyle.css";
 
@@ -12,30 +12,24 @@ const Login = () => {
   const [_, setCookie] = useCookies();
   const navigate = useNavigate();
 
-
   const handleFormSubmit = async () => {
-    const url = `${import.meta.env.VITE_BASE_SERVER}login/`;
-    const headers = {
-      "Content-Type": "application/json",
-      "X-CSRFToken": getCookieValue("csrftoken"),
-    };
-    const body = JSON.stringify({ username, password });
-
     try {
-      const response = await fetch(url, { method: "POST", headers, body });
-      if (response.ok) {
-        const { token } = await response.json();
+      const { ok, data } = await useFetch('login/', { method: "POST", body: JSON.stringify({ username, password }) });
+      if (ok) {
+        const { token } = data
         setCookie("accessToken", token);
         message.success("Successfully logged in");
         navigate("/");
       } else {
-        const { non_field_errors } = await response.json();
+        const { non_field_errors } = await data
         message.error(non_field_errors);
       }
     } catch (error) {
+      console.log(error)
       message.error("An error occurred during login");
     }
   };
+
   return (
     <div className="flex items-center justify-center h-screen bg-primary">
       <div className="bg-white rounded-lg shadow-lg p-8 w-[30%]">
@@ -100,7 +94,6 @@ const Login = () => {
             </p>
           </Form.Item>
         </Form>
-
       </div>
     </div>
   );

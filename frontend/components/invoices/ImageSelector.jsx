@@ -18,7 +18,7 @@ function ImageSelector({ id, renderSource, tableId = null, record }) {
   const [selectedFile, setSelectedFile] = useState();
 
   const [success, setSuccess] = useState(false);
-  const { state, dispatch } = useBillContext()
+  const { dispatch } = useBillContext()
 
   useEffect(() => {
     let flag = true;
@@ -51,33 +51,36 @@ function ImageSelector({ id, renderSource, tableId = null, record }) {
               Math.round((this.width / xResolution) * 100) / 100;
 
             {
-              record.image_src==="" &&
-              dispatch({
-                type: "addItem",
-                payload: {
-                  tableId,
-                }
-              });
+              record.image_src === "" &&
+                dispatch({
+                  type: "addItem",
+                  payload: {
+                    objectId: tableId,
+                  }
+                });
               dispatch({
                 type: "setImageData",
                 payload: {
+                  id,
                   description: selectedFile.name.split('.')[0],
                   image_src: imageUrl,
                   height: calculatedHeight,
                   width: calculatedWidth,
-                  key: id,
-                  tableId,
+                  objectId: tableId
                 },
               });
               message.success("Successfully uploaded");
             }
+          } else {
+            message.error("Invalid Image");
           }
         } catch (exc) {
+          message.error("Failed to load image");
           alert(exc);
         }
 
         imageFile.onerror = function () {
-          console.error("Image failed to load.");
+          message.error("Failed to load image");
         };
       };
     }

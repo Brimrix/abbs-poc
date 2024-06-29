@@ -16,7 +16,6 @@
     @apply bg-accent hover:!bg-hover-color-accent;
   }
 
-
   /* Invoice upload class */
 
   .sider-menu > .ant-menu-item-selected {
@@ -35,6 +34,10 @@
 
   .invoice-table .my-tag {
     @apply text-xs w-36 h-4;
+  }
+
+  .invoice-table .ant-table-tbody > tr > td {
+    @apply !h-[5px] !p-[4px];
   }
 
   .invoice-table .ant-table-thead > tr > th {
