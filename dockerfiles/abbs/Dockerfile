@@ -12,7 +12,7 @@ FROM ${PYTHON_IMAGE} as builder
 
 WORKDIR /opt/abbs
 COPY . .
-COPY --from=dashboard /dist/ /opt/abbs/dist/
+COPY --from=dashboard /staticfiles/ /opt/abbs/staticfiles/
 
 RUN apt-get update \
     && apt upgrade -y \
@@ -25,14 +25,14 @@ RUN pdm sync --prod
 ENV PATH=/opt/abbs/.venv/bin:$PATH
 
 RUN pdm run manage.py migrate \
-    && pdm run manage.py collectstatic
+    && pdm run manage.py collectstatic --noinput
 
 
 FROM ${PYTHON_IMAGE} as production
 
 WORKDIR /opt/abbs
-COPY --from=builder /opt/abbs/ /opt/abbs
-COPY --from=dashboard /dist /opt/abbs/dist/
+COPY --from=builder /opt/abbs/ /opt/abbs/
+COPY --from=dashboard /staticfiles /opt/abbs/staticfiles/
 ENV PATH=/opt/abbs/.venv/bin:$PATH
 
 

@@ -131,8 +131,6 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = "staticfiles"
 
-STATICFILES_DIRS = [BASE_DIR / "dist"]
-
 DJANGO_VITE = {"default": {"dev_mode": DEBUG}}
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

@@ -11,7 +11,7 @@ services:
     env_file:
       - ../.env
     volumes:
-      - static:/app/staticfiles/
+      - static:/opt/abbs/staticfiles/
     expose:
       - 8000
 

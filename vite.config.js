@@ -6,12 +6,15 @@ export default defineConfig({
   plugins: [react()],
   base: '/static/',
   build: {
-    manifest: true,
+    manifest: 'manifest.json',
     emptyOutDir: true,
     rollupOptions: {
       input: {
         home: path.resolve(__dirname, 'frontend/main.jsx'),
       },
+      output:{
+        dir:path.resolve(__dirname, 'staticfiles'),
+      }
     },
   },
   resolve: {

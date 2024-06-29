@@ -31,3 +31,4 @@ __pycache__
 .pdm-python
 .ruff_cache
 db.sqlite3
+staticfiles
