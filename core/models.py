@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
+import uuid
 
 
 class User(AbstractUser):
@@ -39,6 +40,7 @@ class Company(models.Model):
 
 
 class Invoice(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     company = models.ForeignKey(
         Company, on_delete=models.PROTECT, related_name="invoices"
     )
@@ -55,6 +57,7 @@ class Invoice(models.Model):
 
 
 class Order(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     invoice = models.ForeignKey(
         Invoice, on_delete=models.PROTECT, related_name="orders"
     )
@@ -70,12 +73,13 @@ class Order(models.Model):
 
 
 class Item(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     content_type = models.ForeignKey(
         ContentType,
         on_delete=models.CASCADE,
         limit_choices_to={"model__in": ["order", "invoice"]},
     )
-    object_id = models.PositiveIntegerField()
+    object_id = models.UUIDField(primary_key=False)
     content_object = GenericForeignKey()
 
     description = models.CharField(max_length=255, default="")

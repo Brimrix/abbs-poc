@@ -19,7 +19,7 @@ env = environ.Env(
     DEBUG=(bool, False),
     SECRET_KEY=(str, ""),
     ALLOWED_HOSTS=(list, []),
-    DATABASES=(dict, {}),
+    DATABASE_URL=(str, ""),
 )
 environ.Env.read_env(BASE_DIR.joinpath(".env"))
 
@@ -93,6 +93,8 @@ DATABASES = {
     }
 }
 
+if env("DATABASE_URL"):
+    DATABASES = {"default": env.db()}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

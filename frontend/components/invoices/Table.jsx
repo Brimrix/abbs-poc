@@ -20,7 +20,7 @@ const IconLink = ({ icon }) => (
   </div>
 );
 
-function Table({ title, invoiceId = null, objectId = null }) {
+function Table({ title, invoiceId = null }) {
   const {
     state: { selectedInvoice },
     dispatch,
@@ -51,7 +51,6 @@ function Table({ title, invoiceId = null, objectId = null }) {
 
   const handleSaveRow = useCallback(
     (row, cellSource) => {
-      debugger;
       dispatch({
         type: "updateRow",
         payload: { row, id: row.id, cellSource, objectId: row.objectId },
@@ -61,7 +60,6 @@ function Table({ title, invoiceId = null, objectId = null }) {
   );
 
   const handleUpdateRowCell = (row, payload, actionType) => {
-    debugger;
     dispatch({
       type: actionType,
       payload: {
@@ -71,6 +69,7 @@ function Table({ title, invoiceId = null, objectId = null }) {
       },
     })
   }
+
   const handleOrderItem = (parent_id, order = null) => {
     dispatch({
       type: "addInnerOrderItem",
@@ -80,6 +79,7 @@ function Table({ title, invoiceId = null, objectId = null }) {
       },
     });
   };
+
   const isOrderRow = (row) => row.model === 'order';
 
   useEffect(() => {
@@ -92,7 +92,6 @@ function Table({ title, invoiceId = null, objectId = null }) {
       setCustomers(data.map(customer => ({ value: customer.name, data: { rate: customer.defaultRate, id: customer.id } })))
     }())
   }, [saveInvoice])
-
 
   const columns = [
     {
@@ -108,7 +107,7 @@ function Table({ title, invoiceId = null, objectId = null }) {
         >
           <MinusCircleOutlined
             className="text-red-500"
-            onClick={() => isOrderRow(row) ? setDeleteOrderRow(row.uniqueId) : setDeleteRow(row.uniqueId)}
+            onClick={() => isOrderRow(row) ? setDeleteOrderRow(row.id) : setDeleteRow(row.id)}
           />
         </Popover>
       }
@@ -117,7 +116,7 @@ function Table({ title, invoiceId = null, objectId = null }) {
       title: "Sr#",
       width: "3%",
       align: "center",
-      render: (_, record, index) => {
+      render: (_, __, index) => {
         return index + 1;
       }
     },
@@ -329,13 +328,12 @@ function Table({ title, invoiceId = null, objectId = null }) {
           className="invoice-table max-h-[75vh] overflow-auto border-y-2"
           dataSource={[...selectedInvoice.orders, ...selectedInvoice.items]}
           columns={columnsConfig}
-          rowKey={record => record.id}
           size="small"
-          rowKey={(record => record.uniqueId)}
+          rowKey={(record => record.id)}
           expandable={{
             columnWidth: "2%",
             expandedRowRender: (row) => <Order
-              objectId={row.uniqueId}
+              objectId={row.id}
               rows={(selectedInvoice.orders.find(order => order.id === row.id)).items}
               onRowAdd={(nestedobjectId) => handleOrderItem(nestedobjectId)}
               // onRowSave={(nestedobjectId) => handleSaveRow(nestedobjectId)}

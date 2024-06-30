@@ -39,11 +39,6 @@ export function BillProvider({ children }) {
     return description
   }
 
-  const addUniqueKeys = (items, uniqueId = null) => {
-    // The method to manage the unique keys for each item to prevent react error.
-    return items?.map(item => ({ ...item, itemId: item.id, id: uniqueId ? uniqueId : createItemKey() }));
-  }
-
   function addItem(state, action) {
     return {
       id: createItemKey(),
@@ -62,8 +57,8 @@ export function BillProvider({ children }) {
     };
   }
 
-  function getOrderIndex(state, rowUniqueId) {
-    return state.selectedInvoice.orders.findIndex(order => order.uniqueId === rowUniqueId)
+  function getOrderIndex(state, rowId) {
+    return state.selectedInvoice.orders.findIndex(order => order.id === rowId)
   }
 
   function updateRow(row, items) {
@@ -89,7 +84,6 @@ export function BillProvider({ children }) {
   };
 
   const handleSaveInvoice = async () => {
-
     const { ok, data } = await useFetch('api/invoices/', {
       method: 'POST',
       body: JSON.stringify({
@@ -113,11 +107,10 @@ export function BillProvider({ children }) {
 
     const invoice = {
       ...data,
-      items: data.items.map(item => ({ ...item, uniqueId: createItemKey() })),
+      items: data.items,
       orders: data.orders.map(order => ({
         ...order,
-        uniqueId: createItemKey(),
-        items: order.items.map(item => ({ ...item, uniqueId: createItemKey() }))
+        model: "order"
       }))
     }
 
@@ -170,7 +163,6 @@ export function BillProvider({ children }) {
         newState.selectedInvoice.orders = updatedOrders;
         break;
 
-
       case "setPrice":
       case "setQuantity":
       case "setHeight":
@@ -220,21 +212,19 @@ export function BillProvider({ children }) {
 
         if (action.payload.orderId) {
           const orderIndex = getOrderIndex(state, action.payload.orderId)
-          debugger
           if (action.payload.itemId && orderIndex !== -1) {
             newState.selectedInvoice.orders[orderIndex].items = state.selectedInvoice.orders[orderIndex].items.filter(item =>
-              item.uniqueId !== action.payload.itemId
+              item.id !== action.payload.itemId
             )
           }
           else
-            newState.selectedInvoice.orders = state.selectedInvoice.orders.filter(order => order.uniqueId !== action.payload.orderId)
+            newState.selectedInvoice.orders = state.selectedInvoice.orders.filter(order => order.id !== action.payload.orderId)
         } else {
-          newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.uniqueId !== action.payload.itemId)
+          newState.selectedInvoice.items = state.selectedInvoice.items.filter(item => item.id !== action.payload.itemId)
         }
         break;
 
       case "updateRow":
-        debugger;
         const { id, cellSource, objectId, row } = action.payload;
         const { dataIndex } = cellSource;
         let orderDataIndex = getOrderIndex(state, action.payload.objectId);
@@ -305,10 +295,7 @@ export function BillProvider({ children }) {
         break;
 
       case 'setSelectedInvoice':
-        let orders = action.payload.orders;
         newState.selectedInvoice = action.payload;
-        orders = orders.map(item => ({ ...item, model: "order" }));
-        newState.selectedInvoice.orders = orders;
         break;
 
       case 'resetSelectedInvoice':

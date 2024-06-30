@@ -19,7 +19,7 @@ function Order({ objectId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) 
         >
           <MinusCircleOutlined
             className="text-red-500"
-            onClick={() => onRowDelete(row.uniqueId, objectId)} />
+            onClick={() => onRowDelete(row.id, objectId)} />
         </Popover>
       }
     },

@@ -3,6 +3,7 @@ services:
     extends:
       file: docker-compose.yml
       service: web
+      target: testing
     volumes:
       - ../:/app
     build:
@@ -20,3 +21,5 @@ services:
     extends:
       file: docker-compose.yml
       service: database
+volumes:
+  static:

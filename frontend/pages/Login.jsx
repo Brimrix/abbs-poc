@@ -14,7 +14,7 @@ const Login = () => {
 
   const handleFormSubmit = async () => {
     try {
-      const { ok, data } = await useFetch('login/', { method: "POST", body: JSON.stringify({ username, password }) });
+      const { ok, data } = await useFetch('login/', { method: "POST", body: JSON.stringify({ username, password }) },false);
       if (ok) {
         const { token } = data
         setCookie("accessToken", token);
