@@ -3,7 +3,7 @@ import Editable from "@/components/invoices/Editable.jsx";
 import ImageSelector from "@/components/invoices/ImageSelector";
 import { MinusCircleOutlined } from '@ant-design/icons';
 
-function Order({ objectId: orderId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
+function Order({ orderId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
 
   const columns = [
     {
@@ -48,10 +48,10 @@ function Order({ objectId: orderId, rows, onRowAdd, onRowSave, onRowEdit, onRowD
       width: "10%",
       render(text, row) {
         return <ImageSelector
-          id={row.id}
-          renderSource={row.image_src}
-          objectId={orderId}
-          record={row}
+          itemId={row.id}
+          image_src={row.image_src}
+          orderId={orderId}
+          model={"item"}
         />
       }
     },
@@ -82,7 +82,7 @@ function Order({ objectId: orderId, rows, onRowAdd, onRowSave, onRowEdit, onRowD
       align: "center",
       render: (text, row) => <InputNumber
         value={row.unit_price}
-        onInput={(value) => onRowEdit(row, { unit_price: value }, 'setPrice')}
+        onInput={(value) => onRowEdit(row, { unit_price: value, orderId, itemId: row.id }, 'setPrice')}
         min={1}
         variant="filled" precision={2} />
     },
@@ -93,7 +93,7 @@ function Order({ objectId: orderId, rows, onRowAdd, onRowSave, onRowEdit, onRowD
       align: "center",
       render: (text, row) => <InputNumber
         value={text}
-        onInput={(value) => onRowEdit(row, { quantity: value }, 'setQuantity')}
+        onInput={(value) => onRowEdit(row, { quantity: value, orderId, itemId: row.id }, 'setQuantity')}
         min={1}
         max={1000}
         variant="filled" precision={0} />

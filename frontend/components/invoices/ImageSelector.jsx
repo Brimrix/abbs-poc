@@ -13,7 +13,7 @@ const getBase64 = (file, callback) => {
   reader.readAsDataURL(file);
 };
 
-function ImageSelector({ id, image_src, order = null }) {
+function ImageSelector({ itemId, image_src, orderId, model }) {
   const [imageUrl, setImageUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState();
 
@@ -44,20 +44,23 @@ function ImageSelector({ id, image_src, order = null }) {
             {
               image_src === "" &&
                 dispatch({
-                  type: "addItem",
+                  type: "addRow",
                   payload: {
-                    objectId: objectId,
+                    itemId,
+                    orderId,
+                    model,
                   }
                 });
               dispatch({
                 type: "setImageData",
                 payload: {
-                  id,
+                  itemId,
                   description: selectedFile.name.split('.')[0],
                   image_src: imageUrl,
                   height: calculatedHeight,
                   width: calculatedWidth,
-                  objectId: objectId,
+                  orderId,
+                  model
                 },
               });
               message.success("Successfully uploaded");
