@@ -48,10 +48,10 @@ function Order({ objectId: orderId, rows, onRowAdd, onRowSave, onRowEdit, onRowD
       width: "10%",
       render(text, row) {
         return <ImageSelector
-          id={row.id}
-          renderSource={row.image_src}
-          objectId={orderId}
-          record={row}
+          itemId={row.id}
+          image_src={row.image_src}
+          orderId={orderId}
+          model={"item"}
         />
       }
     },

@@ -151,20 +151,23 @@ export function BillProvider({ children }) {
         break
 
       case "addRow":
-        // const item = addItem(state, action);
-        if (action.payload.model === "order") {
+        // if payload has an model of order then this will mean order is to be added in invoice
+        if (!action.payload.orderId && action.payload.model === "order") {
           newState.selectedInvoice.orders = [
             ...state.selectedInvoice.orders,
            addOrder(state)
           ]
         }
+        // If no orderId is found and model is item it would mean the item should be added
+        // in invoice rather than against an order
       else if(!action.payload.orderId && action.payload.model === "item") {
             newState.selectedInvoice.items = [
               ...state.selectedInvoice.items,
               addItem(state, action)
             ]
         }
-       else if(action.payload.orderId && action.payload.model === "item") {
+        // else the item will be added against an order
+       else{
         const index = getOrderIndex(state, action.payload.orderId);
         state.selectedInvoice.orders[index].items = [...state.selectedInvoice.orders[index].items, addItem(state, action)];
     }
@@ -190,24 +193,20 @@ export function BillProvider({ children }) {
         break;
 
       case "setImageData":
-        /* Pass in itemId, orderId if the item is in an order
-        {itemId:1,orderId;1}: Update image of order item with given order id.
-        {itemId:1,orderId;null}: Update image of invoice item
-        */
-        let orderIndex = getOrderIndex(state, action.payload.objectId);
-        if (typeof orderIndex !== "undefined" && orderIndex !== -1) {
-          newState.selectedInvoice.orders[orderIndex].items = state.selectedInvoice.orders[orderIndex].items.map(item =>
-            item.id === action.payload.id
+        // If payload has no orderId and model is item then the image will be set in invoice.
+        if(!action.payload.orderId && action.payload.model === "item") {
+          newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
+            item.id === action.payload.itemId
               ? updateRow(item, action.payload)
               : item)
         }
-        else {
-
-          newState.selectedInvoice.items = state.selectedInvoice.items.map(item =>
-            item.id === action.payload.id
-              ? updateRow(item, action.payload)
-              : item)
-
+        // If payload has orderId and model is item then the image will be set against an order
+        else{
+          const orderIndex = getOrderIndex(state, action.payload.orderId);
+            newState.selectedInvoice.orders[orderIndex].items = state.selectedInvoice.orders[orderIndex].items.map(item =>
+              item.id === action.payload.itemId
+                ? updateRow(item, action.payload)
+                : item)
         }
 
         break;

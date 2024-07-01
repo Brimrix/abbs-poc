@@ -129,8 +129,10 @@ function Table({ title, invoiceId = null }) {
       width: "10%",
       render(_, row) {
         return isOrderRow(row) ? "" : <ImageSelector
-          itemId={row.uniqueId}
-          imgSrc={row.img_src}
+          itemId={row.id}
+          image_src={row.image_src}
+          orderId = {null}
+          model = "item"
         />
       }
     },
