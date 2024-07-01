@@ -123,7 +123,8 @@ function Order({ orderId, rows, onRowAdd, onRowSave, onRowEdit, onRowDelete }) {
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        handleSave: onRowSave,
+        handleSave: ()=>{onRowSave(record, col.dataIndex, orderId, record.id)},
+        // record.id is the itemId
       }),
     };
   });

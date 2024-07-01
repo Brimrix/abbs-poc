@@ -234,13 +234,14 @@ export function BillProvider({ children }) {
         break;
 
       case "updateRow":
-        const { id, cellSource, objectId, row } = action.payload;
-        const { dataIndex } = cellSource;
-        let orderDataIndex = getOrderIndex(state, action.payload.objectId);
-        let updatedItems;
-        if (typeof orderDataIndex !== "undefined" && orderDataIndex !== -1) {
-          updatedItems = state.selectedInvoice.orders[orderDataIndex].items.map(item => {
-            if (item.id === id && item.objectId === objectId) {
+        const { itemId, cellSource, orderId, row } = action.payload;
+        const dataIndex = cellSource;
+        // The first case when orderId is null and itemId exists. We have to update a row from invoice.
+        // Please add debuggers and test why this does not work. Everything looks fine even from debugging point of view.
+        // I am struck here.
+        if(!orderId && itemId){
+          newState.selectedInvoice.items = newState.selectedInvoice.items.map(item => {
+            if (item.id === itemId) {
               switch (dataIndex) {
                 case "height":
                   return {
@@ -263,40 +264,7 @@ export function BillProvider({ children }) {
             }
             return item;
           });
-
-
-
         }
-
-        else {
-
-          updatedItems = state.selectedInvoice.items.map(item => {
-            if (item.id === id && item.objectId === objectId) {
-              switch (dataIndex) {
-                case "height":
-                  return {
-                    ...item,
-                    height: row.height || 0,
-                  };
-                case "width":
-                  return {
-                    ...item,
-                    width: row.width || 0,
-                  };
-                case "description":
-                  return {
-                    ...item,
-                    description: row.description || "\u200b",
-                  };
-                default:
-                  return item;
-              }
-            }
-            return item;
-          });
-
-        }
-        newState.selectedInvoice.items = updatedItems;
         break;
 
       case 'setInvoices':
