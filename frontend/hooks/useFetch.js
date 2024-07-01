@@ -1,11 +1,12 @@
 import { getCookieValue } from "@/utils";
+import { message } from "antd";
 
-const useFetch = async (url, options) => {
+const useFetch = async (url, options, authorized = true) => {
     const response = await fetch(import.meta.env.VITE_BASE_SERVER + url, {
         headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": getCookieValue("csrftoken"),
-            ...(getCookieValue("accessToken") && { "Authorization": `Token ${getCookieValue('accessToken')}` })
+            ...((getCookieValue("accessToken") && authorized) && { "Authorization": `Token ${getCookieValue('accessToken')}` })
         },
         ...options
     })
@@ -14,7 +15,10 @@ const useFetch = async (url, options) => {
     if (response.ok) {
         return { ok: response.ok, data, status: response.status }
     } else {
-        alert("Failed to fetch")
+        if (response.status === 401) {
+            message.error("Invalid credentials, token expired or outdated")
+        }
+        message.error("Something is wrong")
     }
 }
 

@@ -2,6 +2,7 @@ import factory
 from django.contrib.auth import get_user_model
 from core import models
 from django.contrib.contenttypes.models import ContentType
+import uuid
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -44,6 +45,7 @@ class InvoiceFactory(factory.django.DjangoModelFactory):
 
 
 class OrderFactory(factory.django.DjangoModelFactory):
+    id = factory.LazyFunction(uuid.uuid4)
     invoice = factory.Iterator(models.Invoice.objects.all())
 
     class Meta:
@@ -51,6 +53,7 @@ class OrderFactory(factory.django.DjangoModelFactory):
 
 
 class ItemsFactory(factory.django.DjangoModelFactory):
+    id = factory.LazyFunction(uuid.uuid4)
     object_id = factory.SelfAttribute("content_object.id")
     content_type = factory.LazyAttribute(
         lambda obj: ContentType.objects.get_for_model(obj.content_object)

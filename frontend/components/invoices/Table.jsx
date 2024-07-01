@@ -29,6 +29,8 @@ function Table({ title, invoiceId = null }) {
   } = useBillContext();
 
   const [deleteRow, setDeleteRow] = useState(null);
+  const [deleteOrderRow, setDeleteOrderRow] = useState(null);
+
   const [saveInvoice, setSaveInvoice] = useState(false)
   const [customers, setCustomers] = useState([])
 
@@ -41,7 +43,7 @@ function Table({ title, invoiceId = null }) {
     dispatch({
       type: "addItem",
       payload: {
-        model: order ? 'order' : "invoice",
+        model: order ? "order" : "invoice",
         objectId: parent_id,
       },
     });
@@ -51,7 +53,7 @@ function Table({ title, invoiceId = null }) {
     (row, cellSource) => {
       dispatch({
         type: "updateRow",
-        payload: { row, id: row.id, cellSource, objectId: invoiceId },
+        payload: { row, id: row.id, cellSource, objectId: row.objectId },
       });
     },
     [dispatch]
@@ -62,12 +64,23 @@ function Table({ title, invoiceId = null }) {
       type: actionType,
       payload: {
         id: row.id,
+        objectId: row.objectId,
         ...payload
       },
     })
   }
 
-  const isOrderRow = (row) => row.model==='order';
+  const handleOrderItem = (parent_id, order = null) => {
+    dispatch({
+      type: "addInnerOrderItem",
+      payload: {
+        model: "order",
+        objectId: parent_id,
+      },
+    });
+  };
+
+  const isOrderRow = (row) => row.model === 'order';
 
   useEffect(() => {
     invoiceId && handleLoadInvoiceDetail(invoiceId)
@@ -79,7 +92,6 @@ function Table({ title, invoiceId = null }) {
       setCustomers(data.map(customer => ({ value: customer.name, data: { rate: customer.defaultRate, id: customer.id } })))
     }())
   }, [saveInvoice])
-
 
   const columns = [
     {
@@ -95,7 +107,8 @@ function Table({ title, invoiceId = null }) {
         >
           <MinusCircleOutlined
             className="text-red-500"
-            onClick={() => setDeleteRow(row.id)} />
+            onClick={() => isOrderRow(row) ? setDeleteOrderRow(row.id) : setDeleteRow(row.id)}
+          />
         </Popover>
       }
     },
@@ -103,7 +116,7 @@ function Table({ title, invoiceId = null }) {
       title: "Sr#",
       width: "3%",
       align: "center",
-      render: (_, record, index) => {
+      render: (_, __, index) => {
         return index + 1;
       }
     },
@@ -124,10 +137,8 @@ function Table({ title, invoiceId = null }) {
       width: "10%",
       render(_, row) {
         return isOrderRow(row) ? "" : <ImageSelector
-          id={row.id}
-          renderSource={row.image_src}
-          tableId={invoiceId}
-          record={row}
+          itemId={row.uniqueId}
+          imgSrc={row.img_src}
         />
       }
     },
@@ -161,7 +172,7 @@ function Table({ title, invoiceId = null }) {
       align: "center",
       render(text, row) {
         return isOrderRow(row) ? "" : <InputNumber
-          value={text}
+          value={row.unit_price}
           onInput={(value) => handleUpdateRowCell(row, { unit_price: value }, 'setPrice')}
           min={1}
           variant="filled" precision={2} />
@@ -215,7 +226,7 @@ function Table({ title, invoiceId = null }) {
   return (
     <>
       <Modal
-        open={Boolean(deleteRow)}
+        open={Boolean(deleteRow) || Boolean(deleteOrderRow)}
         okText="Delete"
         okButtonProps={{ className: 'btn-app-accent' }}
         cancelButtonProps={{ className: 'text-primary' }}
@@ -224,12 +235,17 @@ function Table({ title, invoiceId = null }) {
           dispatch({
             type: 'deleteRow',
             payload: {
-              key: deleteRow,
+              itemId: deleteRow,
+              orderId: deleteOrderRow
             },
           })
-          setDeleteRow(null)
+          setDeleteRow(null);
+          setDeleteOrderRow(null);
         }}
-        onCancel={() => setDeleteRow(null)}
+        onCancel={() => {
+          setDeleteRow(null)
+          setDeleteOrderRow(null)
+        }}
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
             <CancelBtn />
@@ -310,27 +326,31 @@ function Table({ title, invoiceId = null }) {
           pagination={false}
           components={components}
           className="invoice-table max-h-[75vh] overflow-auto border-y-2"
-          dataSource={selectedInvoice.items || []}
+          dataSource={[...selectedInvoice.orders, ...selectedInvoice.items]}
           columns={columnsConfig}
           size="small"
+          rowKey={(record => record.id)}
           expandable={{
             columnWidth: "2%",
             expandedRowRender: (row) => <Order
-              tableId={row.key}
-              rows={selectedInvoice.items.filter(item => item.objectId === row.key)}
-              onRowAdd={(nestedTableId) => handleAddRow(nestedTableId)}
-              onRowSave={(nestedTableId) => handleSaveRow(nestedTableId)}
-              onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
-              onRowDelete={(id) => setDeleteRow(id)}
+              objectId={row.id}
+              rows={(selectedInvoice.orders.find(order => order.id === row.id)).items}
+              onRowAdd={(nestedobjectId) => handleOrderItem(nestedobjectId)}
+              // onRowSave={(nestedobjectId) => handleSaveRow(nestedobjectId)}
+              // onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
+              onRowDelete={(uniqueId, orderId) => {
+                setDeleteRow(uniqueId);
+                setDeleteOrderRow(orderId);
+              }}
             />,
             rowExpandable: (row) => isOrderRow(row),
-            expandedRowClassName: () => 'bg-sky-50'
+            expandedRowClassName: () => 'bg-sky-50',
           }}
         />
         <div className="flex gap-2 px-10 items-center justify-between">
           <div className="space-x-2">
             <Typography.Text
-              onClick={() => handleAddRow(invoiceId)}
+              onClick={() => handleAddRow(objectId)}
               className="text-primary p-2 hover:bg-primary hover:text-white border border-primary rounded-md"
               strong
             >
@@ -339,7 +359,7 @@ function Table({ title, invoiceId = null }) {
             </Typography.Text>
 
             <Typography.Text
-              onClick={() => handleAddRow(invoiceId, 'order')}
+              onClick={() => handleAddRow(objectId, 'order')}
               className="text-primary  p-2  hover:bg-primary hover:text-white border border-primary rounded-md"
               strong
             >

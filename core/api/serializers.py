@@ -109,14 +109,11 @@ class InvoiceItemSerializer(ItemSerializer):
 
 
 class InvoiceOrderSerializer(serializers.ModelSerializer):
-    object_id = serializers.PrimaryKeyRelatedField(
-        source="invoice", queryset=models.Invoice.objects.all(), required=False
-    )
     items = InvoiceItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Order
-        fields = ["id", "object_id", "description", "items"]
+        fields = ["id", "invoice_id", "description", "items"]
 
     def create(self, validated_data):
         items = validated_data.pop("items")

@@ -1,9 +1,11 @@
 from typing import Any
 from django.core.management import BaseCommand
 from core.tests import factories
+from django.db import transaction
 
 
 class Command(BaseCommand):
+    @transaction.atomic
     def handle(self, *args: Any, **options: Any) -> str | None:
         factories.CompanyFactory.create_batch(size=5)
         factories.ProfileFactory(

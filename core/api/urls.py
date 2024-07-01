@@ -32,7 +32,7 @@ urlpatterns = [
         name="invoices-list",
     ),
     path(
-        "invoices/<int:pk>/",
+        "invoices/<uuid:pk>/",
         viewsets.InvoiceViewSet.as_view(
             {
                 "get": "retrieve",
@@ -52,7 +52,7 @@ urlpatterns = [
         ),
     ),
     path(
-        "orders/<int:pk>/",
+        "orders/<uuid:pk>/",
         viewsets.OrderViewSet.as_view(
             {
                 "get": "retrieve",
@@ -71,7 +71,7 @@ urlpatterns = [
         ),
     ),
     path(
-        "items/<int:pk>/",
+        "items/<uuid:pk>/",
         viewsets.ItemViewSet.as_view(
             {
                 "get": "retrieve",

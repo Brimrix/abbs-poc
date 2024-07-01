@@ -50,8 +50,8 @@ const Index = () => {
                 align='center'
                 dataIndex='id'
                 key='id'
-                render={srNo => <Link to={`${srNo}`}
-                    className="text-primary font-bold">{srNo}
+                render={(id,_,index) => <Link to={`${id}`}
+                    className="text-primary font-bold">{index+1}
                 </Link>}
             />
             <Column title="Customer" dataIndex='company' key='company'

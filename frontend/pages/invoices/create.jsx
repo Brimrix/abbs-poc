@@ -7,7 +7,7 @@ const InvoiceCreate = () => {
   const [spinning, setSpinning] = useState(true);
   const [mount, setMount] = useState(true);
 
-   useEffect(() => {
+  useEffect(() => {
     setMount(false);
   }, [spinning]);
 
