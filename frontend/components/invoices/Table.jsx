@@ -6,6 +6,7 @@ import Order from "@/components/invoices/Order";
 import { PlusOutlined } from "@ant-design/icons";
 import ImageSelector from "@/components/invoices/ImageSelector";
 import { useFetch } from '@/hooks/useFetch';
+import { v4 as uuidv4 } from 'uuid';
 
 
 import { MinusCircleOutlined } from '@ant-design/icons';
@@ -39,12 +40,13 @@ function Table({ title, invoiceId = null }) {
   const areaTotal = selectedInvoice.items.reduce((acc, item) => acc + Number(item.area), 0)
   const total = subTotal - selectedInvoice.discount;
 
-  const handleAddRow = (parent_id, order = null) => {
+  const handleAddRow = (itemId = null, orderId = null, model) => {
     dispatch({
-      type: "addItem",
+      type: "addRow",
       payload: {
-        model: order ? "order" : "invoice",
-        objectId: parent_id,
+        itemId,
+        orderId,
+        model
       },
     });
   };
@@ -69,16 +71,6 @@ function Table({ title, invoiceId = null }) {
       },
     })
   }
-
-  const handleOrderItem = (parent_id, order = null) => {
-    dispatch({
-      type: "addInnerOrderItem",
-      payload: {
-        model: "order",
-        objectId: parent_id,
-      },
-    });
-  };
 
   const isOrderRow = (row) => row.model === 'order';
 
@@ -335,7 +327,7 @@ function Table({ title, invoiceId = null }) {
             expandedRowRender: (row) => <Order
               objectId={row.id}
               rows={(selectedInvoice.orders.find(order => order.id === row.id)).items}
-              onRowAdd={(nestedobjectId) => handleOrderItem(nestedobjectId)}
+              onRowAdd={(itemId, orderId, model) => handleAddRow(itemId, orderId, model)}
               // onRowSave={(nestedobjectId) => handleSaveRow(nestedobjectId)}
               // onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
               onRowDelete={(uniqueId, orderId) => {
@@ -350,7 +342,9 @@ function Table({ title, invoiceId = null }) {
         <div className="flex gap-2 px-10 items-center justify-between">
           <div className="space-x-2">
             <Typography.Text
-              onClick={() => handleAddRow(objectId)}
+              onClick={() => handleAddRow(true, null, 'item')}
+              // sending itemId and orderId as null and model as 'item'
+              // will add a new item to the invoice. The itemId will be generated in context
               className="text-primary p-2 hover:bg-primary hover:text-white border border-primary rounded-md"
               strong
             >
@@ -359,7 +353,7 @@ function Table({ title, invoiceId = null }) {
             </Typography.Text>
 
             <Typography.Text
-              onClick={() => handleAddRow(objectId, 'order')}
+              onClick={() => handleAddRow(null, 1, 'order')}
               className="text-primary  p-2  hover:bg-primary hover:text-white border border-primary rounded-md"
               strong
             >
