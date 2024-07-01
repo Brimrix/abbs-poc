@@ -65,8 +65,6 @@ function Table({ title, invoiceId = null }) {
     dispatch({
       type: actionType,
       payload: {
-        id: row.id,
-        objectId: row.objectId,
         ...payload
       },
     })
@@ -167,7 +165,7 @@ function Table({ title, invoiceId = null }) {
       render(text, row) {
         return isOrderRow(row) ? "" : <InputNumber
           value={row.unit_price}
-          onInput={(value) => handleUpdateRowCell(row, { unit_price: value }, 'setPrice')}
+          onInput={(value) => handleUpdateRowCell(row, { unit_price: value, itemId: row.id, orderId: null }, 'setPrice')}
           min={1}
           variant="filled" precision={2} />
       }
@@ -180,7 +178,7 @@ function Table({ title, invoiceId = null }) {
       render(text, row) {
         return isOrderRow(row) ? "" : <InputNumber
           value={text}
-          onInput={(value) => handleUpdateRowCell(row, { quantity: value }, 'setQuantity')}
+          onInput={(value) => handleUpdateRowCell(row, { quantity: value, itemId: row.id, orderId: null }, 'setQuantity')}
           min={1}
           max={1000}
           variant="filled" precision={0} />
@@ -327,11 +325,11 @@ function Table({ title, invoiceId = null }) {
           expandable={{
             columnWidth: "2%",
             expandedRowRender: (row) => <Order
-              objectId={row.id}
+              orderId={row.id}
               rows={(selectedInvoice.orders.find(order => order.id === row.id)).items}
               onRowAdd={(itemId, orderId, model) => handleAddRow(itemId, orderId, model)}
               // onRowSave={(nestedobjectId) => handleSaveRow(nestedobjectId)}
-              // onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
+              onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
               onRowDelete={(uniqueId, orderId) => {
                 setDeleteRow(uniqueId);
                 setDeleteOrderRow(orderId);

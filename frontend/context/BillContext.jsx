@@ -43,7 +43,6 @@ export function BillProvider({ children }) {
   function addItem(state, action) {
     return {
       id: createItemKey(),
-      uniqueId: createItemKey(),
       objectId: action.payload.objectId,
       description: createItemDescription(state, action.payload),
       model: "invoice",
@@ -179,17 +178,19 @@ export function BillProvider({ children }) {
       case "setQuantity":
       case "setHeight":
       case "setWidth":
-        let orderedIndex = getOrderIndex(state, action.payload.objectId);
-        if (typeof orderedIndex !== "undefined" && orderedIndex !== -1) {
+        debugger;
+        if(!action.payload.orderId && action.payload.itemId) {
+            newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
+            item.id === action.payload.itemId ? updateRow(item, action.payload) : item )
+        }
+        else{
+
+          let orderedIndex = getOrderIndex(state, action.payload.orderId);
           newState.selectedInvoice.orders[orderedIndex].items = state.selectedInvoice.orders[orderedIndex].items.map(item =>
-            item.id === action.payload.id
+            item.id === action.payload.itemId
               ? updateRow(item, action.payload) : item)
         }
-        else {
-          newState.selectedInvoice.items = state.selectedInvoice?.items.map(item =>
-            item.id === action.payload.id ? updateRow(item, action.payload) : item
-          )
-        }
+
         break;
 
       case "setImageData":
