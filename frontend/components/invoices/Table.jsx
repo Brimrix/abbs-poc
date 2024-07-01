@@ -52,10 +52,10 @@ function Table({ title, invoiceId = null }) {
   };
 
   const handleSaveRow = useCallback(
-    (row, cellSource) => {
+    (row, cellSource, orderId = null, itemId) => {
       dispatch({
         type: "updateRow",
-        payload: { row, id: row.id, cellSource, objectId: row.objectId },
+        payload: { row, itemId, cellSource, orderId },
       });
     },
     [dispatch]
@@ -210,7 +210,8 @@ function Table({ title, invoiceId = null }) {
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        handleSave: handleSaveRow,
+        handleSave: () => {handleSaveRow(record, col.dataIndex, null, record.id)},
+        orderId: null
       }),
     };
   });
@@ -328,7 +329,7 @@ function Table({ title, invoiceId = null }) {
               orderId={row.id}
               rows={(selectedInvoice.orders.find(order => order.id === row.id)).items}
               onRowAdd={(itemId, orderId, model) => handleAddRow(itemId, orderId, model)}
-              // onRowSave={(nestedobjectId) => handleSaveRow(nestedobjectId)}
+              onRowSave={(row, cellSource, orderId, itemId) => handleSaveRow(row, cellSource, orderId, itemId)}
               onRowEdit={(row, payload, actionType) => handleUpdateRowCell(row, payload, actionType)}
               onRowDelete={(uniqueId, orderId) => {
                 setDeleteRow(uniqueId);
