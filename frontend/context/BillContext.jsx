@@ -10,6 +10,7 @@ export function BillProvider({ children }) {
   const initialState = {
     invoices: [],
     selectedInvoice: {
+      id: uuidv4(),
       items: [],
       orders: [],
       company: {
@@ -45,7 +46,7 @@ export function BillProvider({ children }) {
       uniqueId: createItemKey(),
       objectId: action.payload.objectId,
       description: createItemDescription(state, action.payload),
-      model: action.payload.model,
+      model: "invoice",
       upload: null,
       image_src: "",
       height: 0,
@@ -55,6 +56,15 @@ export function BillProvider({ children }) {
       quantity: 1,
       amount: 0,
       state:'update/add'
+    };
+  }
+
+  function addOrder(state) {
+    return {
+      id: createItemKey(),
+      object_id: state.selectedInvoice.id,
+      items: [],
+      model: "order"
     };
   }
 
@@ -140,28 +150,26 @@ export function BillProvider({ children }) {
         newState.selectedInvoice.discount = action.payload.discount
         break
 
-      case "addItem":
-        const item = addItem(state, action);
+      case "addRow":
+        // const item = addItem(state, action);
         if (action.payload.model === "order") {
           newState.selectedInvoice.orders = [
             ...state.selectedInvoice.orders,
-            { ...item, items: [] }
+           addOrder(state)
           ]
         }
-        else {
-          newState.selectedInvoice.items = [
-            ...state.selectedInvoice.items,
-            item
-          ]
+      else if(!action.payload.orderId && action.payload.model === "item") {
+            newState.selectedInvoice.items = [
+              ...state.selectedInvoice.items,
+              addItem(state, action)
+            ]
         }
-        break;
+       else if(action.payload.orderId && action.payload.model === "item") {
+        const index = getOrderIndex(state, action.payload.orderId);
+        state.selectedInvoice.orders[index].items = [...state.selectedInvoice.orders[index].items, addItem(state, action)];
+    }
 
-      case "addInnerOrderItem":
-        let Index = getOrderIndex(state, action.payload.objectId);
-        let updatedOrders = [...newState.selectedInvoice.orders];
-        const items = updatedOrders[Index].items;
-        updatedOrders[Index].items = [...items, addItem(state, action)];
-        newState.selectedInvoice.orders = updatedOrders;
+
         break;
 
       case "setPrice":
