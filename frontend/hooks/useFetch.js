@@ -17,7 +17,6 @@ const useFetch = async (url, options, authorized = true) => {
     } else {
         if (response.status === 401) {
             message.error("Invalid credentials, token expired or outdated")
-            document.cookie = 'test=non';
         }
         message.error("Something is wrong")
     }

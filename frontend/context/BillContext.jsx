@@ -54,6 +54,7 @@ export function BillProvider({ children }) {
       unit_price: state.selectedInvoice.company.defaultRate || 0,
       quantity: 1,
       amount: 0,
+      state:'update/add'
     };
   }
 
